@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Check Upload History</title></head>
+<body>
+<h2>Upload History Data</h2>
+<pre id="output"></pre>
+<script>
+const history = localStorage.getItem('upload_history');
+const output = document.getElementById('output');
+if (history) {
+    const parsed = JSON.parse(history);
+    output.textContent = JSON.stringify(parsed, null, 2);
+} else {
+    output.textContent = 'No upload history found';
+}
+</script>
+</body>
+</html>

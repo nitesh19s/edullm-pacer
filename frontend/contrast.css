@@ -1,0 +1,673 @@
+/**
+ * Contrast Modes for EduLLM Platform
+ * Provides different color contrast options for accessibility and preference
+ */
+
+/* ==================== NORMAL CONTRAST (Default) ==================== */
+/* Uses existing CSS variables - no changes needed */
+
+/* ==================== HIGH CONTRAST MODE ==================== */
+.contrast-high {
+    /* High contrast color palette - Maximum visibility */
+    --background: 0 0% 100%;           /* Pure white */
+    --foreground: 0 0% 0%;             /* Pure black */
+
+    --card: 0 0% 100%;                 /* Pure white */
+    --card-foreground: 0 0% 0%;        /* Pure black */
+
+    --primary: 220 100% 40%;           /* Deep blue for better contrast */
+    --primary-foreground: 0 0% 100%;   /* White */
+
+    --secondary: 0 0% 95%;             /* Very light gray */
+    --secondary-foreground: 0 0% 0%;   /* Black */
+
+    --muted: 0 0% 95%;                 /* Light gray */
+    --muted-foreground: 0 0% 0%;       /* Black */
+
+    --accent: 220 100% 40%;            /* Deep blue */
+    --accent-foreground: 0 0% 100%;    /* White */
+
+    --border: 0 0% 0%;                 /* Black borders */
+    --input: 0 0% 0%;                  /* Black */
+
+    --sidebar-background: 0 0% 100%;   /* White */
+    --sidebar-foreground: 0 0% 0%;     /* Black */
+    --sidebar-border: 0 0% 0%;         /* Black */
+    --sidebar-accent: 0 0% 0%;         /* Black */
+    --sidebar-accent-foreground: 0 0% 100%; /* White */
+    --sidebar-primary: 220 100% 40%;   /* Deep blue */
+
+    /* Ring color for focus - high visibility */
+    --ring: 220 100% 40%;              /* Deep blue */
+
+    /* Status colors for high contrast */
+    --success: 120 100% 25%;           /* Dark green */
+    --warning: 45 100% 35%;            /* Dark yellow */
+    --error: 0 100% 35%;               /* Dark red */
+    --info: 200 100% 35%;              /* Dark cyan */
+}
+
+/* High contrast specific overrides - Enhanced for maximum visibility */
+.contrast-high body {
+    font-weight: 500; /* Slightly bolder text */
+    line-height: 1.6; /* Better readability */
+}
+
+/* All text elements bolder */
+.contrast-high h1,
+.contrast-high h2,
+.contrast-high h3,
+.contrast-high h4,
+.contrast-high h5,
+.contrast-high h6 {
+    font-weight: 700 !important;
+    color: hsl(var(--foreground)) !important;
+}
+
+.contrast-high p,
+.contrast-high span,
+.contrast-high div {
+    color: hsl(var(--foreground)) !important;
+}
+
+/* Buttons - Maximum visibility */
+.contrast-high .btn {
+    border: 3px solid hsl(var(--foreground)) !important;
+    font-weight: 700 !important;
+    padding: 0.625rem 1.25rem !important;
+    background: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    min-height: 44px;
+}
+
+.contrast-high .btn:hover {
+    background: hsl(var(--foreground)) !important;
+    color: hsl(var(--background)) !important;
+    transform: scale(1.02);
+}
+
+.contrast-high .btn-primary {
+    background: hsl(var(--foreground)) !important;
+    color: hsl(var(--background)) !important;
+    border: 3px solid hsl(var(--foreground)) !important;
+}
+
+.contrast-high .btn-primary:hover {
+    background: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    border: 3px solid hsl(var(--foreground)) !important;
+}
+
+.contrast-high .btn-secondary {
+    background: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    border: 3px solid hsl(var(--foreground)) !important;
+}
+
+/* Navigation - Very clear active states */
+.contrast-high .nav-link {
+    border: 2px solid transparent !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1rem !important;
+}
+
+.contrast-high .nav-link:hover {
+    background: hsl(var(--foreground)) !important;
+    color: hsl(var(--background)) !important;
+    border: 2px solid hsl(var(--foreground)) !important;
+}
+
+.contrast-high .nav-link.active {
+    background: hsl(var(--foreground)) !important;
+    color: hsl(var(--background)) !important;
+    border: 2px solid hsl(var(--foreground)) !important;
+    font-weight: 700 !important;
+}
+
+.contrast-high .nav-link.active::before {
+    background: hsl(var(--background)) !important;
+    width: 4px !important;
+    height: 100% !important;
+}
+
+/* Cards - Strong borders and clear separation */
+.contrast-high .stat-card,
+.contrast-high .health-card {
+    border: 3px solid hsl(var(--foreground)) !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4) !important;
+    background: hsl(var(--background)) !important;
+    padding: 1.5rem !important;
+}
+
+.contrast-high .stat-card:hover,
+.contrast-high .health-card:hover {
+    border-width: 4px !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5) !important;
+}
+
+.contrast-high .db-section {
+    border: 3px solid hsl(var(--foreground)) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    background: hsl(var(--background)) !important;
+    background-image: none !important;
+}
+
+/* Form elements - Very clear borders */
+.contrast-high input,
+.contrast-high select,
+.contrast-high textarea {
+    border: 3px solid hsl(var(--foreground)) !important;
+    background: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    font-weight: 500 !important;
+    padding: 0.625rem !important;
+}
+
+.contrast-high input:focus,
+.contrast-high select:focus,
+.contrast-high textarea:focus {
+    outline: 4px solid hsl(var(--primary)) !important;
+    outline-offset: 2px;
+    border: 3px solid hsl(var(--foreground)) !important;
+}
+
+.contrast-high input::placeholder {
+    color: hsl(0 0% 40%) !important;
+    font-weight: 500 !important;
+}
+
+/* Enhanced focus indicators - Maximum visibility */
+.contrast-high *:focus {
+    outline: 4px solid hsl(var(--primary)) !important;
+    outline-offset: 3px;
+}
+
+.contrast-high *:focus-visible {
+    outline: 4px solid hsl(var(--primary)) !important;
+    outline-offset: 3px;
+}
+
+/* Links - Always underlined and bold */
+.contrast-high a {
+    text-decoration: underline !important;
+    text-decoration-thickness: 2px !important;
+    text-underline-offset: 3px;
+    font-weight: 700 !important;
+    color: hsl(var(--foreground)) !important;
+}
+
+.contrast-high a:hover {
+    text-decoration-thickness: 3px !important;
+    background: hsl(var(--foreground)) !important;
+    color: hsl(var(--background)) !important;
+    padding: 2px 4px;
+}
+
+/* Layout borders - Very clear separators */
+.contrast-high .sidebar {
+    border-right: 4px solid hsl(var(--foreground)) !important;
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.contrast-high .header {
+    border-bottom: 4px solid hsl(var(--foreground)) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.contrast-high .sidebar-overlay {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Tables - Maximum clarity */
+.contrast-high table {
+    border: 3px solid hsl(var(--foreground)) !important;
+    border-collapse: collapse !important;
+}
+
+.contrast-high th {
+    border: 2px solid hsl(var(--foreground)) !important;
+    background: hsl(var(--foreground)) !important;
+    color: hsl(var(--background)) !important;
+    font-weight: 700 !important;
+    padding: 1rem !important;
+}
+
+.contrast-high td {
+    border: 2px solid hsl(var(--foreground)) !important;
+    padding: 0.875rem !important;
+    font-weight: 500 !important;
+}
+
+.contrast-high tr:nth-child(even) {
+    background: hsl(0 0% 97%) !important;
+}
+
+.contrast-high tr:hover {
+    background: hsl(0 0% 90%) !important;
+    border: 2px solid hsl(var(--foreground)) !important;
+}
+
+/* Section dividers */
+.contrast-high .section-header {
+    border-bottom: 3px solid hsl(var(--foreground)) !important;
+    padding-bottom: 1rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Icons - Ensure visibility */
+.contrast-high i {
+    color: hsl(var(--foreground)) !important;
+}
+
+.contrast-high .nav-link.active i,
+.contrast-high .btn:hover i {
+    color: hsl(var(--background)) !important;
+}
+
+/* Remove ALL gradients, shadows, and subtle effects */
+.contrast-high .health-card,
+.contrast-high .stat-card,
+.contrast-high .db-section,
+.contrast-high .card {
+    background: hsl(var(--background)) !important;
+    background-image: none !important;
+}
+
+/* Stat values - Maximum contrast */
+.contrast-high .stat-value,
+.contrast-high .health-value {
+    color: hsl(var(--foreground)) !important;
+    font-weight: 700 !important;
+    font-size: 2rem !important;
+}
+
+/* Select dropdowns - High visibility */
+.contrast-high select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: 12px !important;
+    padding-right: 2.5rem !important;
+}
+
+/* Badges and status indicators */
+.contrast-high .badge,
+.contrast-high .status-badge {
+    border: 2px solid hsl(var(--foreground)) !important;
+    font-weight: 700 !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+/* Modal dialogs */
+.contrast-high .modal-content {
+    border: 4px solid hsl(var(--foreground)) !important;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6) !important;
+}
+
+.contrast-high .modal-header {
+    border-bottom: 3px solid hsl(var(--foreground)) !important;
+}
+
+.contrast-high .modal-footer {
+    border-top: 3px solid hsl(var(--foreground)) !important;
+}
+
+/* Tooltips */
+.contrast-high [title]:hover::after {
+    border: 2px solid hsl(var(--foreground)) !important;
+    background: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+}
+
+/* Scrollbars - High contrast */
+.contrast-high ::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+
+.contrast-high ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+    border: 2px solid hsl(var(--foreground));
+}
+
+.contrast-high ::-webkit-scrollbar-thumb {
+    background: hsl(var(--foreground));
+    border: 2px solid hsl(var(--background));
+}
+
+.contrast-high ::-webkit-scrollbar-thumb:hover {
+    background: hsl(0 0% 20%);
+}
+
+/* Loading states */
+.contrast-high .loading-cell,
+.contrast-high .loading-message {
+    font-weight: 600 !important;
+    color: hsl(var(--foreground)) !important;
+}
+
+/* ==================== LOW CONTRAST MODE ==================== */
+.contrast-low {
+    /* Softer, muted color palette */
+    --background: 210 20% 98%;         /* Very light blue-gray */
+    --foreground: 220 9% 46%;          /* Muted dark gray */
+
+    --card: 0 0% 100%;                 /* White */
+    --card-foreground: 220 9% 46%;     /* Muted dark gray */
+
+    --primary: 221 40% 60%;            /* Soft blue */
+    --primary-foreground: 0 0% 100%;   /* White */
+
+    --secondary: 210 30% 90%;          /* Light gray-blue */
+    --secondary-foreground: 220 9% 46%;/* Muted dark gray */
+
+    --muted: 210 30% 94%;              /* Very light gray */
+    --muted-foreground: 220 9% 55%;    /* Light gray text */
+
+    --accent: 210 40% 70%;             /* Soft blue */
+    --accent-foreground: 220 13% 30%;  /* Dark text */
+
+    --border: 214 32% 91%;             /* Light border */
+    --input: 214 32% 91%;              /* Light input border */
+
+    --sidebar-background: 0 0% 100%;   /* White */
+    --sidebar-foreground: 220 9% 46%; /* Muted text */
+    --sidebar-border: 214 32% 91%;     /* Light border */
+    --sidebar-accent: 210 30% 94%;     /* Light accent */
+    --sidebar-accent-foreground: 220 9% 46%;
+    --sidebar-primary: 221 40% 60%;    /* Soft blue */
+
+    --ring: 221 40% 60%;               /* Soft blue */
+}
+
+/* Low contrast specific overrides */
+.contrast-low body {
+    font-weight: 400;
+}
+
+.contrast-low .stat-card,
+.contrast-low .health-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.contrast-low .btn {
+    border-color: hsl(var(--border));
+    opacity: 0.9;
+}
+
+.contrast-low .nav-link.active {
+    background: hsl(var(--sidebar-accent));
+}
+
+/* Softer shadows */
+.contrast-low .db-section,
+.contrast-low .card {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* ==================== CUSTOM CONTRAST MODE ==================== */
+.contrast-custom {
+    /* Uses CSS variables that can be set via JavaScript */
+    --background: var(--custom-background, 0 0% 100%);
+    --foreground: var(--custom-foreground, 0 0% 0%);
+    --accent: var(--custom-accent, 221 83% 53%);
+    --border: var(--custom-border, 214 32% 91%);
+}
+
+/* Default custom values */
+:root {
+    --custom-background: 0 0% 100%;
+    --custom-foreground: 0 0% 0%;
+    --custom-accent: 221 83% 53%;
+    --custom-border: 214 32% 91%;
+}
+
+/* ==================== ACCESSIBILITY ENHANCEMENTS ==================== */
+
+/* Enhanced focus for high contrast */
+.enhanced-focus *:focus {
+    outline: 3px solid hsl(var(--primary));
+    outline-offset: 3px;
+}
+
+/* Skip to main content link for accessibility */
+.skip-to-main {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 10000;
+    border-radius: 0 0 4px 0;
+}
+
+.skip-to-main:focus {
+    top: 0;
+}
+
+/* ==================== CONTRAST MODE TRANSITIONS ==================== */
+
+/* Smooth transitions between contrast modes */
+:root {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar,
+.header,
+.main-content,
+.stat-card,
+.health-card,
+.btn,
+.nav-link {
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* ==================== PRINT STYLES FOR HIGH CONTRAST ==================== */
+
+@media print {
+    .contrast-high {
+        /* Ensure high contrast in print */
+        --background: 0 0% 100%;
+        --foreground: 0 0% 0%;
+    }
+
+    .contrast-high * {
+        color: black !important;
+        background: white !important;
+    }
+
+    .contrast-high .nav-link.active {
+        background: black !important;
+        color: white !important;
+    }
+}
+
+/* ==================== CONTRAST MODE INDICATORS ==================== */
+
+/* Visual indicator for current contrast mode */
+.contrast-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 8px 12px;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.contrast-indicator.show {
+    opacity: 1;
+}
+
+/* ==================== RESPONSIVE CONTRAST ADJUSTMENTS ==================== */
+
+@media (max-width: 768px) {
+    /* Enhanced touch targets in high contrast mode */
+    .contrast-high .btn,
+    .contrast-high .nav-link {
+        min-height: 48px;
+        min-width: 48px;
+    }
+
+    .contrast-high .nav-link {
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* ==================== DARK MODE CONTRAST VARIATIONS ==================== */
+
+/* High contrast dark mode */
+@media (prefers-color-scheme: dark) {
+    .contrast-high {
+        --background: 0 0% 0%;             /* Pure black */
+        --foreground: 0 0% 100%;           /* Pure white */
+
+        --card: 0 0% 0%;                   /* Pure black */
+        --card-foreground: 0 0% 100%;      /* Pure white */
+
+        --border: 0 0% 100%;               /* White borders */
+    }
+
+    .contrast-high .sidebar {
+        background: hsl(var(--background));
+        border-right-color: hsl(var(--foreground)) !important;
+    }
+}
+
+/* ==================== CONTRAST PREFERENCE MEDIA QUERY ==================== */
+
+/* Respect user's OS-level high contrast preference */
+@media (prefers-contrast: high) {
+    :root:not([class*="contrast-"]) {
+        /* Apply high contrast automatically if user prefers it */
+        --background: 0 0% 100%;
+        --foreground: 0 0% 0%;
+        --border: 0 0% 0%;
+    }
+}
+
+@media (prefers-contrast: low) {
+    :root:not([class*="contrast-"]) {
+        /* Apply low contrast automatically if user prefers it */
+        --background: 210 20% 98%;
+        --foreground: 220 9% 46%;
+        --border: 214 32% 91%;
+    }
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+
+/* Force high contrast on specific elements */
+.force-high-contrast {
+    background: hsl(0 0% 100%) !important;
+    color: hsl(0 0% 0%) !important;
+    border: 2px solid hsl(0 0% 0%) !important;
+}
+
+/* Force low contrast on specific elements */
+.force-low-contrast {
+    opacity: 0.7;
+    filter: saturate(0.7);
+}
+
+/* ==================== STATUS COLORS WITH CONTRAST ADJUSTMENTS ==================== */
+
+.contrast-high .status-excellent,
+.contrast-high .status-healthy,
+.contrast-high .healthy {
+    background: #006600 !important;
+    color: white !important;
+    border: 3px solid #000000 !important;
+    font-weight: 700 !important;
+    padding: 0.5rem 1rem !important;
+}
+
+.contrast-high .status-warning,
+.contrast-high .warning {
+    background: #CC8800 !important;
+    color: black !important;
+    border: 3px solid #000000 !important;
+    font-weight: 700 !important;
+    padding: 0.5rem 1rem !important;
+    text-shadow: 1px 1px 0 white;
+}
+
+.contrast-high .status-critical,
+.contrast-high .status-error,
+.contrast-high .critical {
+    background: #990000 !important;
+    color: white !important;
+    border: 3px solid #000000 !important;
+    font-weight: 700 !important;
+    padding: 0.5rem 1rem !important;
+}
+
+.contrast-high .status-badge {
+    border: 3px solid hsl(var(--foreground)) !important;
+    font-weight: 700 !important;
+    padding: 0.5rem 1rem !important;
+}
+
+/* Stat icons with high contrast */
+.contrast-high .stat-icon,
+.contrast-high .health-icon {
+    border: 3px solid hsl(var(--foreground)) !important;
+    background: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+}
+
+.contrast-high .stat-icon.blue,
+.contrast-high .stat-icon.green,
+.contrast-high .stat-icon.purple,
+.contrast-high .stat-icon.orange {
+    background: hsl(var(--foreground)) !important;
+    color: hsl(var(--background)) !important;
+}
+
+/* Alert boxes */
+.contrast-high .alert {
+    border: 3px solid hsl(var(--foreground)) !important;
+    background: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    font-weight: 600 !important;
+    padding: 1rem !important;
+}
+
+.contrast-high .alert-success {
+    border-color: #006600 !important;
+    background: #E6F7E6 !important;
+}
+
+.contrast-high .alert-warning {
+    border-color: #CC8800 !important;
+    background: #FFF7E6 !important;
+}
+
+.contrast-high .alert-error {
+    border-color: #990000 !important;
+    background: #FFE6E6 !important;
+}
+
+/* ==================== ANIMATION ADJUSTMENTS ==================== */
+
+/* Respect reduced motion preference in all contrast modes */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

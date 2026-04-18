@@ -1,0 +1,3014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLLM Platform - Educational AI Research Platform</title>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#3b82f6">
+
+    <link rel="stylesheet" href="styles.css?v=2.0">
+    <link rel="stylesheet" href="dashboard-enhanced.css">
+    <link rel="stylesheet" href="contrast.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="charts.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <h1>EduLLM Platform</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="contrast-selector">
+                        <select id="contrastSelect" title="Contrast Mode">
+                            <option value="normal">Normal</option>
+                            <option value="high">High Contrast</option>
+                            <option value="low">Low Contrast</option>
+                        </select>
+                    </div>
+                    <div class="language-selector">
+                        <select id="languageSelect">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="bilingual">Bilingual</option>
+                        </select>
+                    </div>
+                    <div class="user-profile">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-item">
+                        <button class="nav-link active" data-section="dashboard">
+                            <i class="fas fa-home"></i>
+                            <span data-i18n="nav.dashboard">Dashboard</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">
+                        <span data-i18n="nav.features">Features</span>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="rag">
+                            <i class="fas fa-comments"></i>
+                            <span data-i18n="nav.ragChat">RAG Chat</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="chunking">
+                            <i class="fas fa-layer-group"></i>
+                            <span data-i18n="nav.smartChunking">Smart Chunking</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="knowledge">
+                            <i class="fas fa-project-diagram"></i>
+                            <span data-i18n="nav.knowledgeGraph">Knowledge Graph</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">
+                        <span data-i18n="nav.researchTools">Research Tools</span>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="analytics">
+                            <i class="fas fa-chart-line"></i>
+                            <span data-i18n="nav.analytics">Analytics</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="comparisons">
+                            <i class="fas fa-balance-scale"></i>
+                            <span data-i18n="nav.comparisons">Comparisons</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="abtesting">
+                            <i class="fas fa-vial"></i>
+                            <span data-i18n="nav.abTesting">A/B Testing</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="progression">
+                            <i class="fas fa-chart-area"></i>
+                            <span data-i18n="nav.progression">Learning Progression</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="gaps">
+                            <i class="fas fa-puzzle-piece"></i>
+                            <span data-i18n="nav.gaps">Curriculum Gaps</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="crosssubject">
+                            <i class="fas fa-network-wired"></i>
+                            <span data-i18n="nav.crossSubject">Cross-Subject Analytics</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">
+                        <span data-i18n="nav.management">Management</span>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="upload">
+                            <i class="fas fa-upload"></i>
+                            <span data-i18n="nav.dataUpload">Data Upload</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <a href="database-management.html" class="nav-link">
+                            <i class="fas fa-database"></i>
+                            <span data-i18n="nav.database">Database</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="experiments">
+                            <i class="fas fa-flask"></i>
+                            <span data-i18n="nav.experiments">Experiments</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-section="settings">
+                            <i class="fas fa-cog"></i>
+                            <span data-i18n="nav.settings">Settings</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <div class="section-header-left">
+                        <h2><i class="fas fa-chart-line"></i> <span data-i18n="dashboard.title">Interactive Dashboard</span></h2>
+                        <p data-i18n="dashboard.subtitle">Real-time metrics, analytics, and insights for your EduLLM platform</p>
+                    </div>
+                    <div class="section-header-right">
+                        <button class="btn-icon" onclick="dashboardManager.refresh()" data-i18n-title="dashboard.refresh">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="btn-icon" onclick="dashboardManager.exportData()" data-i18n-title="dashboard.export">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <select id="dashboardTimeRange" class="time-range-select">
+                            <option value="today" data-i18n="dashboard.timeRange.today">Today</option>
+                            <option value="week" data-i18n="dashboard.timeRange.week">This Week</option>
+                            <option value="month" selected data-i18n="dashboard.timeRange.month">This Month</option>
+                            <option value="all" data-i18n="dashboard.timeRange.all">All Time</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- System Health Bar -->
+                <div class="system-health-bar">
+                    <div class="health-indicator">
+                        <span class="health-label">System Health:</span>
+                        <div class="health-status" id="systemHealthStatus">
+                            <span class="status-badge status-excellent">
+                                <i class="fas fa-check-circle"></i> Excellent
+                            </span>
+                            <div class="health-details">
+                                <span id="healthUptime">Uptime: 99.9%</span>
+                                <span id="healthErrors">Errors: 0</span>
+                                <span id="healthPerformance">Performance: Good</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="health-indicator" style="margin-left: 1.5rem;">
+                        <span class="health-label">Backend:</span>
+                        <span id="dashboardBackendStatus" style="font-size: 0.85rem; font-weight: 500;">
+                            ⚪ Checking...
+                        </span>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn-quick" onclick="window.eduLLM.switchSection('rag')">
+                            <i class="fas fa-comments"></i> Quick Chat
+                        </button>
+                        <button class="btn-quick" onclick="window.eduLLM.switchSection('upload')">
+                            <i class="fas fa-upload"></i> Upload PDF
+                        </button>
+                        <button class="btn-quick" onclick="window.eduLLM.switchSection('comparisons')">
+                            <i class="fas fa-flask"></i> Run Experiment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Start Guide (shown on first visit) -->
+                <div id="dashboard-quick-start" class="quick-start-guide" style="display: none;">
+                    <div class="guide-content">
+                        <h3><i class="fas fa-rocket"></i> Quick Start</h3>
+                        <p>Get started with EduLLM Platform in 3 simple steps:</p>
+                        <div class="guide-steps">
+                            <div class="guide-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Upload NCERT Data</h4>
+                                    <p>Upload NCERT PDF textbooks to populate the platform</p>
+                                    <button class="btn-primary" onclick="window.eduLLM.switchSection('upload')">
+                                        <i class="fas fa-upload"></i> Go to Upload
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Start Chatting</h4>
+                                    <p>Ask questions about the curriculum using RAG chat</p>
+                                    <button class="btn-primary" onclick="window.eduLLM.switchSection('rag')">
+                                        <i class="fas fa-comments"></i> Start Chat
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Explore Features</h4>
+                                    <p>Explore chunking, knowledge graphs, and more</p>
+                                    <button class="btn-primary" onclick="window.eduLLM.switchSection('chunking')">
+                                        <i class="fas fa-layer-group"></i> View Chunks
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card stat-card-documents clickable" onclick="dashboardManager.showDocumentsDetails()">
+                        <div class="stat-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="documentsIndexed">12,847</h3>
+                            <p>Documents Indexed</p>
+                            <div class="stat-trend">
+                                <span class="stat-change positive" id="documentsChange">+234 this week</span>
+                                <div class="mini-spark" id="documentsSparkline"></div>
+                            </div>
+                            <div class="documents-mini-grid">
+                                <div class="mini-stat">
+                                    <span class="mini-label">Chunks</span>
+                                    <span class="mini-value" id="miniChunks">45.2K</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-label">Vectors</span>
+                                    <span class="mini-value" id="miniVectors">45.2K</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-label">Size</span>
+                                    <span class="mini-value" id="miniSize">23MB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-hover-info">
+                            <i class="fas fa-info-circle"></i> Click for full analytics
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-queries clickable" onclick="dashboardManager.showQueriesDetails()">
+                        <div class="stat-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="queriesProcessed">3,421</h3>
+                            <p>Queries Processed</p>
+                            <div class="stat-trend">
+                                <span class="stat-change positive" id="queriesChange">+89 today</span>
+                                <div class="mini-spark" id="queriesSparkline"></div>
+                            </div>
+                            <div class="queries-mini-grid">
+                                <div class="mini-stat">
+                                    <span class="mini-label">Today</span>
+                                    <span class="mini-value" id="miniToday">89</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-label">Week</span>
+                                    <span class="mini-value" id="miniWeek">523</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-label">Avg/Day</span>
+                                    <span class="mini-value" id="miniAvgDay">75</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-hover-info">
+                            <i class="fas fa-info-circle"></i> Click for full analytics
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-accuracy clickable" onclick="dashboardManager.showAccuracyDetails()">
+                        <div class="stat-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="accuracyRate">94.7%</h3>
+                            <p>Accuracy Rate</p>
+                            <div class="stat-trend">
+                                <span class="stat-change positive" id="accuracyChange">+2.1% improvement</span>
+                                <div class="mini-spark" id="accuracySparkline"></div>
+                            </div>
+                            <div class="accuracy-mini-grid">
+                                <div class="mini-stat">
+                                    <span class="mini-label">Precision</span>
+                                    <span class="mini-value" id="miniPrecision">96.2%</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-label">Recall</span>
+                                    <span class="mini-value" id="miniRecall">93.8%</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-label">F1</span>
+                                    <span class="mini-value" id="miniF1">95.0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-hover-info">
+                            <i class="fas fa-info-circle"></i> Click for full analytics
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-performance clickable" onclick="dashboardManager.showPerformanceDetails()">
+                        <div class="stat-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="avgResponseTime">1.2s</h3>
+                            <p>Avg Response Time</p>
+                            <div class="stat-trend">
+                                <span class="stat-change neutral" id="responseTimeChange">+0.1s from last week</span>
+                                <div class="mini-spark" id="responseTimeSparkline"></div>
+                            </div>
+                            <div class="performance-mini-grid">
+                                <div class="mini-stat">
+                                    <span class="mini-label">P50</span>
+                                    <span class="mini-value" id="miniP50">1.1s</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-label">P95</span>
+                                    <span class="mini-value" id="miniP95">2.3s</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-label">P99</span>
+                                    <span class="mini-value" id="miniP99">3.1s</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-hover-info">
+                            <i class="fas fa-info-circle"></i> Click for full analytics
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Activity Section - Above the Fold -->
+                <div class="featured-activity-section">
+                    <div class="section-label">
+                        <i class="fas fa-bolt"></i> Live Activity Dashboard
+                        <span class="live-indicator">
+                            <i class="fas fa-circle"></i> Live
+                        </span>
+                    </div>
+
+                    <div class="featured-grid">
+                        <!-- Recent Queries - Prominent -->
+                        <div class="dashboard-card featured-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-comments"></i> Recent Queries</h3>
+                                <div class="card-badges">
+                                    <span class="update-badge" id="recentQueriesCount">5 new</span>
+                                    <button class="btn-text" onclick="window.eduLLM.switchSection('rag')">
+                                        View All <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="recentQueriesList" class="recent-queries-list">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+
+                        <!-- Top Queries - Prominent -->
+                        <div class="dashboard-card featured-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-fire"></i> Trending Queries</h3>
+                                <div class="card-badges">
+                                    <span class="trending-badge">
+                                        <i class="fas fa-arrow-up"></i> Trending
+                                    </span>
+                                    <span class="badge">Last 7 days</span>
+                                </div>
+                            </div>
+                            <div id="topQueriesList" class="top-queries-list">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+
+                        <!-- Activity Feed - Prominent -->
+                        <div class="dashboard-card featured-card activity-feed-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-stream"></i> Activity Stream</h3>
+                                <div class="card-badges">
+                                    <span class="activity-badge" id="activityCount">
+                                        <i class="fas fa-pulse"></i> 3 recent
+                                    </span>
+                                    <button class="btn-text" onclick="dashboardManager.clearActivities()">
+                                        Clear <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="activity-list" id="activityFeed">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <!-- Performance Over Time Chart -->
+                    <div class="dashboard-card chart-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-area"></i> Performance Over Time</h3>
+                            <div class="card-actions">
+                                <select id="performanceMetricSelect" class="metric-select">
+                                    <option value="responseTime">Response Time</option>
+                                    <option value="accuracy">Accuracy</option>
+                                    <option value="queries">Query Volume</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Subject Distribution Chart -->
+                    <div class="dashboard-card chart-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-pie"></i> Subject Distribution</h3>
+                            <div class="card-actions">
+                                <button class="btn-icon" onclick="dashboardManager.toggleChartType('subject')">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="subjectChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Information Grid -->
+                <div class="dashboard-grid">
+                    <!-- Curriculum Coverage -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-book"></i> Curriculum Coverage</h3>
+                            <span class="coverage-overall" id="overallCoverage">84%</span>
+                        </div>
+                        <div class="coverage-list" id="coverageList">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Storage & System Info -->
+                <div class="system-info-grid">
+                    <!-- Storage Usage -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-hdd"></i> Storage Usage</h3>
+                            <span id="storageUsedText">42 MB / 500 MB</span>
+                        </div>
+                        <div class="storage-visual">
+                            <div class="storage-bar">
+                                <div class="storage-fill" id="storageFill" style="width: 8.4%"></div>
+                            </div>
+                            <div class="storage-breakdown" id="storageBreakdown">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Stats -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-server"></i> System Statistics</h3>
+                            <span class="status-indicator status-online">
+                                <i class="fas fa-circle"></i> Online
+                            </span>
+                        </div>
+                        <div class="system-stats" id="systemStats">
+                            <div class="stat-row">
+                                <span class="stat-label">Database Objects:</span>
+                                <span class="stat-value" id="dbObjects">17 stores</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Total Documents:</span>
+                                <span class="stat-value" id="totalDocs">12,847</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Total Chunks:</span>
+                                <span class="stat-value" id="totalChunks">45,234</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Embeddings Generated:</span>
+                                <span class="stat-value" id="totalEmbeddings">45,234</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Graph Concepts:</span>
+                                <span class="stat-value" id="graphConcepts">342</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Active Experiments:</span>
+                                <span class="stat-value" id="activeExperiments">3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RAG Chat Section -->
+            <section id="rag" class="content-section">
+                <div class="section-header">
+                    <h2 data-i18n="ragChat.title">RAG-Enhanced Chat Interface</h2>
+                    <p data-i18n="ragChat.subtitle">Interactive chat with retrieval-augmented generation and source citations</p>
+                </div>
+                
+                <!-- Chat Tips (shown on first visit) -->
+                <div id="rag-tips" class="page-tips" style="display: none;">
+                    <div class="tips-content">
+                        <h4><i class="fas fa-lightbulb"></i> Tips for Better Results</h4>
+                        <ul>
+                            <li>Use filters to narrow down to specific subjects and grades</li>
+                            <li>Ask specific questions for more accurate responses</li>
+                            <li>Check source citations to verify information</li>
+                            <li>Try different phrasings if you don't get the desired result</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="rag-container">
+                    <!-- Chat Header with Filters -->
+                    <div class="chat-header">
+                        <div class="chat-header-left">
+                            <div class="chat-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="chat-title">
+                                <h3>AI Assistant</h3>
+                                <span class="chat-status">Online</span>
+                            </div>
+                        </div>
+                        <div class="chat-header-right">
+                            <div class="filter-quick">
+                                <select id="subjectFilter" class="filter-select">
+                                    <option value="all">All Subjects</option>
+                                    <option value="mathematics">Mathematics</option>
+                                    <option value="physics">Physics</option>
+                                    <option value="chemistry">Chemistry</option>
+                                    <option value="biology">Biology</option>
+                                    <option value="science">Science</option>
+                                    <option value="social science">Social Science</option>
+                                    <option value="english">English</option>
+                                    <option value="hindi">Hindi</option>
+                                    <option value="economics">Economics</option>
+                                    <option value="history">History</option>
+                                    <option value="geography">Geography</option>
+                                    <option value="political science">Political Science</option>
+                                    <option value="computer science">Computer Science</option>
+                                    <option value="general">General</option>
+                                </select>
+                                <select id="gradeFilter" class="filter-select">
+                                    <option value="all">All Grades</option>
+                                    <option value="1">Grade 1</option>
+                                    <option value="2">Grade 2</option>
+                                    <option value="3">Grade 3</option>
+                                    <option value="4">Grade 4</option>
+                                    <option value="5">Grade 5</option>
+                                    <option value="6">Grade 6</option>
+                                    <option value="7">Grade 7</option>
+                                    <option value="8">Grade 8</option>
+                                    <option value="9">Grade 9</option>
+                                    <option value="10">Grade 10</option>
+                                    <option value="11">Grade 11</option>
+                                    <option value="12">Grade 12</option>
+                                </select>
+                                <select id="sourceFilter" class="filter-select">
+                                    <option value="all">All Sources</option>
+                                    <option value="ncert">NCERT</option>
+                                    <option value="cbse">CBSE</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages Area -->
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message-date">Today</div>
+                        <div class="message assistant-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-bubble">
+                                <div class="message-text" id="chatWelcomeMessage">
+                                    Welcome to EduLLM! I'm your AI assistant specialized in NCERT educational content. Ask me anything about your curriculum — I'll answer using the NCERT knowledge base with relevant source citations.
+                                </div>
+                                <div class="message-time">Just now</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Typing Indicator -->
+                    <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input Area -->
+                    <div class="chat-input-area">
+                        <div class="chat-input-wrapper">
+                            <button class="chat-attach-btn" title="Attach file">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="text" id="chatInput" class="chat-input-field" placeholder="Type your question here...">
+                            <button id="sendButton" class="chat-send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Smart Chunking Section -->
+            <section id="chunking" class="content-section">
+                <div class="section-header">
+                    <h2 data-i18n="chunking.title">Smart Chunking Interface</h2>
+                    <p data-i18n="chunking.subtitle">Visualize and optimize document segmentation for better retrieval</p>
+                </div>
+                
+                <!-- Chunking Info -->
+                <div id="chunking-info" class="page-info" style="display: none;">
+                    <div class="info-content">
+                        <h4><i class="fas fa-info-circle"></i> About Smart Chunking</h4>
+                        <p>Chunking breaks documents into smaller segments for better retrieval. Adjust chunk size and overlap to optimize performance. Smaller chunks provide more precise results, while larger chunks maintain context.</p>
+                    </div>
+                </div>
+
+                <div class="chunking-container">
+                    <div class="chunking-controls">
+                        <div class="control-group">
+                            <label>Document:</label>
+                            <select id="documentSelect">
+                                <option value="ncert-physics-12">NCERT Physics Grade 12</option>
+                                <option value="ncert-math-11">NCERT Mathematics Grade 11</option>
+                                <option value="cbse-chemistry-10">CBSE Chemistry Grade 10</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Chunk Size:</label>
+                            <input type="range" id="chunkSize" min="100" max="1000" value="500">
+                            <span id="chunkSizeValue">500</span> tokens
+                        </div>
+                        <div class="control-group">
+                            <label>Overlap:</label>
+                            <input type="range" id="chunkOverlap" min="0" max="200" value="50">
+                            <span id="chunkOverlapValue">50</span> tokens
+                        </div>
+                    </div>
+
+                    <div class="chunking-visualization">
+                        <div class="chunk-stats">
+                            <div class="stat">
+                                <span class="stat-number" id="totalChunks">24</span>
+                                <span class="stat-label">Total Chunks</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number" id="avgChunkSize">487</span>
+                                <span class="stat-label">Avg Size</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number" id="semanticScore">8.7</span>
+                                <span class="stat-label">Semantic Score</span>
+                            </div>
+                        </div>
+
+                        <div class="chunks-display" id="chunksDisplay">
+                            <!-- Chunks will be dynamically generated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Knowledge Graph Section -->
+            <section id="knowledge" class="content-section">
+                <div class="section-header">
+                    <h2 data-i18n="knowledgeGraph.title">Knowledge Graph Visualization</h2>
+                    <p data-i18n="knowledgeGraph.subtitle">Explore conceptual relationships and educational pathways</p>
+                </div>
+
+                <!-- Graph Statistics Cards -->
+                <div class="graph-stats">
+                    <div class="graph-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-circle-notch"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="graph-stat-label">Total Concepts</div>
+                            <div class="graph-stat-value" id="totalConcepts">0</div>
+                        </div>
+                    </div>
+
+                    <div class="graph-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="graph-stat-label">Relationships</div>
+                            <div class="graph-stat-value" id="totalRelationships">0</div>
+                        </div>
+                    </div>
+
+                    <div class="graph-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="graph-stat-label">Avg Connections</div>
+                            <div class="graph-stat-value" id="avgConnections">0</div>
+                        </div>
+                    </div>
+
+                    <div class="graph-stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-network"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="graph-stat-label">Graph Density</div>
+                            <div class="graph-stat-value" id="graphDensity">0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full-Width Graph Container -->
+                <div class="kg-fullwidth-container">
+                    <!-- Collapsible Left Panel -->
+                    <div class="kg-sidebar-left" id="kgSidebarLeft">
+                        <div class="kg-sidebar-header">
+                            <h3><i class="fas fa-sliders-h"></i> Controls & Filters</h3>
+                            <button class="sidebar-toggle" id="toggleLeftSidebar" title="Toggle Controls">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        </div>
+
+                        <div class="kg-sidebar-content">
+                            <!-- Search -->
+                            <div class="kg-search-section">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="graphSearch" placeholder="Search concepts..." class="search-input">
+                                    <button id="clearSearch" class="clear-search" style="display: none;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div id="searchResults" class="search-results" style="display: none;"></div>
+                            </div>
+
+                            <!-- Graph Controls -->
+                            <div class="kg-controls-section">
+                                <div class="section-label">Visualization</div>
+
+                                <div class="control-group">
+                                    <label for="graphMode">Layout Mode</label>
+                                    <select id="graphMode" class="form-select">
+                                        <option value="force">Force-Directed</option>
+                                        <option value="circular">Circular</option>
+                                        <option value="hierarchy">Hierarchical</option>
+                                    </select>
+                                </div>
+
+                                <div class="control-group">
+                                    <label for="graphDepth">
+                                        Depth Level
+                                        <span class="control-value" id="depthValue">2</span>
+                                    </label>
+                                    <input type="range" id="graphDepth" min="1" max="5" value="2" class="form-range">
+                                </div>
+
+                                <div class="control-group">
+                                    <label for="zoomSpeed">
+                                        Zoom Speed
+                                        <span class="control-value" id="zoomSpeedValue">Normal</span>
+                                    </label>
+                                    <input type="range" id="zoomSpeed" min="1" max="3" value="2" class="form-range">
+                                    <div class="range-labels">
+                                        <span>Slow</span>
+                                        <span>Normal</span>
+                                        <span>Fast</span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="showLabels" checked>
+                                        <span>Show Labels</span>
+                                    </label>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="smoothZoom" checked>
+                                        <span>Smooth Zoom</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Subject Filters -->
+                            <div class="kg-filters-section">
+                                <div class="section-label">Subjects</div>
+
+                                <div class="subject-filters">
+                                    <label class="filter-checkbox">
+                                        <input type="checkbox" class="subject-filter" value="mathematics" checked>
+                                        <span class="filter-dot mathematics"></span>
+                                        <span>Mathematics</span>
+                                    </label>
+
+                                    <label class="filter-checkbox">
+                                        <input type="checkbox" class="subject-filter" value="physics" checked>
+                                        <span class="filter-dot physics"></span>
+                                        <span>Physics</span>
+                                    </label>
+
+                                    <label class="filter-checkbox">
+                                        <input type="checkbox" class="subject-filter" value="chemistry" checked>
+                                        <span class="filter-dot chemistry"></span>
+                                        <span>Chemistry</span>
+                                    </label>
+
+                                    <label class="filter-checkbox">
+                                        <input type="checkbox" class="subject-filter" value="biology" checked>
+                                        <span class="filter-dot biology"></span>
+                                        <span>Biology</span>
+                                    </label>
+
+                                    <label class="filter-checkbox">
+                                        <input type="checkbox" class="subject-filter" value="general" checked>
+                                        <span class="filter-dot general"></span>
+                                        <span>General</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Graph Legend -->
+                            <div class="kg-legend-section">
+                                <div class="section-label">Legend</div>
+
+                                <div class="legend-content">
+                                    <div class="legend-group">
+                                        <div class="legend-title">Node Size</div>
+                                        <div class="legend-items">
+                                            <div class="legend-item">
+                                                <div class="legend-node large"></div>
+                                                <span>High</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-node medium"></div>
+                                                <span>Medium</span>
+                                            </div>
+                                            <div class="legend-item">
+                                                <div class="legend-node small"></div>
+                                                <span>Low</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="kg-actions-section">
+                                <button id="rebuildGraph" class="btn-primary btn-block">
+                                    <i class="fas fa-sync-alt"></i> Rebuild Graph
+                                </button>
+                                <button id="resetPositions" class="btn-secondary btn-block">
+                                    <i class="fas fa-undo"></i> Reset Positions
+                                </button>
+                                <button id="exportGraphImage" class="btn-secondary btn-block">
+                                    <i class="fas fa-image"></i> Export as Image
+                                </button>
+                                <button id="exportGraph" class="btn-secondary btn-block">
+                                    <i class="fas fa-download"></i> Export Data
+                                </button>
+                                <button id="showShortcuts" class="btn-secondary btn-block">
+                                    <i class="fas fa-keyboard"></i> Shortcuts
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Graph Canvas - Full Width -->
+                    <div class="kg-graph-main">
+                        <!-- Top Toolbar -->
+                        <div class="kg-top-toolbar">
+                            <div class="toolbar-left">
+                                <button class="toolbar-btn-icon" id="toggleLeftSidebarBtn" title="Toggle Controls">
+                                    <i class="fas fa-bars"></i>
+                                </button>
+                                <div class="toolbar-divider"></div>
+                                <button class="toolbar-btn" id="zoomIn" title="Zoom In">
+                                    <i class="fas fa-search-plus"></i>
+                                </button>
+                                <button class="toolbar-btn" id="zoomOut" title="Zoom Out">
+                                    <i class="fas fa-search-minus"></i>
+                                </button>
+                                <button class="toolbar-btn" id="resetView" title="Reset View">
+                                    <i class="fas fa-compress-arrows-alt"></i>
+                                </button>
+                                <button class="toolbar-btn" id="fitToScreen" title="Fit to Screen">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                </button>
+                            </div>
+
+                            <div class="toolbar-center">
+                                <span class="zoom-indicator" id="zoomIndicator">100%</span>
+                            </div>
+
+                            <div class="toolbar-right">
+                                <button class="toolbar-btn" id="fullscreen" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Graph Canvas -->
+                        <div id="graphVisualization" class="kg-graph-canvas">
+                            <!-- SVG will be dynamically created here -->
+                        </div>
+
+                        <!-- Graph Loading State -->
+                        <div id="graphLoading" class="graph-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Building knowledge graph...</p>
+                        </div>
+
+                        <!-- Mini Map (optional) -->
+                        <div class="kg-minimap" id="kgMinimap" style="display: none;">
+                            <div class="minimap-content">
+                                <!-- Mini version of graph -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide-out Right Panel for Concept Details -->
+                    <div class="kg-sidebar-right" id="kgSidebarRight">
+                        <div class="kg-sidebar-header">
+                            <h3><i class="fas fa-info-circle"></i> Concept Details</h3>
+                            <button class="sidebar-close" id="closeRightSidebar" title="Close Details">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="kg-sidebar-content">
+                            <div id="conceptDetails" class="concept-details-content">
+                                <div class="empty-state">
+                                    <i class="fas fa-mouse-pointer"></i>
+                                    <p>Click on a node to view details</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Help -->
+                <div class="kg-help-banner">
+                    <div class="help-content">
+                        <i class="fas fa-lightbulb"></i>
+                        <div class="help-text">
+                            <strong>Tips:</strong> Drag nodes to reposition • Click nodes to explore • Scroll to zoom • Drag canvas to pan • Press <kbd>?</kbd> for shortcuts
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keyboard Shortcuts Modal -->
+                <div id="shortcutsModal" class="kg-modal" style="display: none;">
+                    <div class="kg-modal-overlay" id="shortcutsModalOverlay"></div>
+                    <div class="kg-modal-content">
+                        <div class="kg-modal-header">
+                            <h3><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h3>
+                            <button class="modal-close" id="closeShortcuts">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="kg-modal-body">
+                            <div class="shortcuts-grid">
+                                <div class="shortcut-group">
+                                    <h4>Navigation</h4>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys">
+                                            <kbd>+</kbd> or <kbd>=</kbd>
+                                        </div>
+                                        <div class="shortcut-desc">Zoom In</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys">
+                                            <kbd>-</kbd> or <kbd>_</kbd>
+                                        </div>
+                                        <div class="shortcut-desc">Zoom Out</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>0</kbd></div>
+                                        <div class="shortcut-desc">Reset View</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>F</kbd></div>
+                                        <div class="shortcut-desc">Fit to Screen</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>Mouse Wheel</kbd></div>
+                                        <div class="shortcut-desc">Zoom to Cursor</div>
+                                    </div>
+                                </div>
+
+                                <div class="shortcut-group">
+                                    <h4>Actions</h4>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>/</kbd></div>
+                                        <div class="shortcut-desc">Focus Search</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>Esc</kbd></div>
+                                        <div class="shortcut-desc">Close Details Panel</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>?</kbd></div>
+                                        <div class="shortcut-desc">Show This Help</div>
+                                    </div>
+                                </div>
+
+                                <div class="shortcut-group">
+                                    <h4>Mouse</h4>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>Click Node</kbd></div>
+                                        <div class="shortcut-desc">Select Node</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>Drag Node</kbd></div>
+                                        <div class="shortcut-desc">Move Node</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>Drag Canvas</kbd></div>
+                                        <div class="shortcut-desc">Pan Canvas</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>Scroll</kbd></div>
+                                        <div class="shortcut-desc">Zoom to Cursor</div>
+                                    </div>
+                                </div>
+
+                                <div class="shortcut-group">
+                                    <h4>Touch (Mobile)</h4>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>Pinch</kbd></div>
+                                        <div class="shortcut-desc">Zoom</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>Drag</kbd></div>
+                                        <div class="shortcut-desc">Pan</div>
+                                    </div>
+                                    <div class="shortcut-item">
+                                        <div class="shortcut-keys"><kbd>Tap</kbd></div>
+                                        <div class="shortcut-desc">Select Node</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Upload Section -->
+            <section id="upload" class="content-section">
+                <div class="section-header">
+                    <h2 data-i18n="upload.title">NCERT Data Upload</h2>
+                    <p data-i18n="upload.subtitle">Upload NCERT PDF textbooks to enhance the platform with real curriculum data</p>
+                </div>
+                
+                <!-- Upload Instructions -->
+                <div id="upload-instructions" class="upload-instructions" style="display: none;">
+                    <div class="instructions-content">
+                        <h4><i class="fas fa-file-pdf"></i> Upload Instructions</h4>
+                        <ol>
+                            <li>Ensure your PDF filename contains "NCERT" for validation</li>
+                            <li>File size should be under 50MB</li>
+                            <li>Supported format: PDF only</li>
+                            <li>After upload, click "Integrate Data" to add to platform</li>
+                            <li>You can download official NCERT textbooks using the links below</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="upload-container">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Drop NCERT PDF files here or click to browse</h3>
+                        <p>Supported formats: PDF | Maximum size: 50MB per file</p>
+                        <input type="file" id="fileInput" multiple accept=".pdf" style="display: none;">
+                        <button class="btn-primary" id="browseBtn">
+                            <i class="fas fa-folder-open"></i> Browse Files
+                        </button>
+                    </div>
+
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <h3>Processing Files...</h3>
+                        <div class="progress-list" id="progressList"></div>
+                    </div>
+
+                    <div class="upload-results" id="uploadResults" style="display: none;">
+                        <h3>Processing Results</h3>
+                        <div class="results-summary" id="resultsSummary"></div>
+                        <div class="results-details" id="resultsDetails"></div>
+                        <div class="results-actions">
+                            <button class="btn-primary" id="integrateDataBtn">
+                                <i class="fas fa-check"></i> Integrate Data into Platform
+                            </button>
+                            <button class="btn-secondary" id="downloadReportBtn">
+                                <i class="fas fa-download"></i> Download Processing Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="data-status" id="dataStatus">
+                        <h3>Current Data Status</h3>
+                        <div class="status-cards">
+                            <div class="status-card">
+                                <div class="status-icon">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div class="status-content">
+                                    <h4 id="processedFilesCount">0</h4>
+                                    <p>Files Processed</p>
+                                </div>
+                            </div>
+                            <div class="status-card">
+                                <div class="status-icon">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                <div class="status-content">
+                                    <h4 id="totalChaptersCount">0</h4>
+                                    <p>Chapters Extracted</p>
+                                </div>
+                            </div>
+                            <div class="status-card">
+                                <div class="status-icon">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <div class="status-content">
+                                    <h4 id="totalWordsCount">0</h4>
+                                    <p>Words Processed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload History Section -->
+                    <div class="upload-history-section">
+                        <div class="history-header">
+                            <h3><i class="fas fa-history"></i> Upload History</h3>
+                            <button class="btn-secondary" id="clearHistoryBtn">
+                                <i class="fas fa-trash"></i> Clear History
+                            </button>
+                        </div>
+
+                        <div class="history-table-container">
+                            <table class="history-table" id="uploadHistoryTable">
+                                <thead>
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th>Subject</th>
+                                        <th>Grade</th>
+                                        <th>Chapters</th>
+                                        <th>Words</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <tr class="empty-history">
+                                        <td colspan="8">
+                                            <div class="empty-state">
+                                                <i class="fas fa-inbox"></i>
+                                                <p>No upload history yet</p>
+                                                <small>Upload your first NCERT PDF to get started</small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="download-section">
+                        <h3>Download Official NCERT Textbooks</h3>
+                        <p>Get the latest NCERT textbooks directly from official sources</p>
+                        <div class="download-grid">
+                            <div class="download-card" data-subject="mathematics">
+                                <h4>Mathematics</h4>
+                                <div class="download-links">
+                                    <a href="#" class="download-link" data-grade="9">Class 9</a>
+                                    <a href="#" class="download-link" data-grade="10">Class 10</a>
+                                    <a href="#" class="download-link" data-grade="11">Class 11</a>
+                                    <a href="#" class="download-link" data-grade="12">Class 12</a>
+                                </div>
+                            </div>
+                            <div class="download-card" data-subject="physics">
+                                <h4>Physics</h4>
+                                <div class="download-links">
+                                    <a href="#" class="download-link" data-grade="11">Class 11</a>
+                                    <a href="#" class="download-link" data-grade="12">Class 12</a>
+                                </div>
+                            </div>
+                            <div class="download-card" data-subject="chemistry">
+                                <h4>Chemistry</h4>
+                                <div class="download-links">
+                                    <a href="#" class="download-link" data-grade="11">Class 11</a>
+                                    <a href="#" class="download-link" data-grade="12">Class 12</a>
+                                </div>
+                            </div>
+                            <div class="download-card" data-subject="biology">
+                                <h4>Biology</h4>
+                                <div class="download-links">
+                                    <a href="#" class="download-link" data-grade="11">Class 11</a>
+                                    <a href="#" class="download-link" data-grade="12">Class 12</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experiments Section -->
+            <section id="experiments" class="content-section">
+                <div class="section-header">
+                    <h2 data-i18n="experiments.title">Research Experiments</h2>
+                    <p data-i18n="experiments.subtitle">Track and compare RAG system experiments for your research</p>
+                </div>
+
+                <div class="experiments-container">
+                    <!-- Experiment Controls -->
+                    <div class="experiment-controls glass-card">
+                        <h3>Experiment Management</h3>
+
+                        <div class="control-group">
+                            <button class="btn-primary" id="createExperimentBtn">
+                                <i class="fas fa-plus"></i> New Experiment
+                            </button>
+                            <button class="btn-secondary" id="startRunBtn" disabled>
+                                <i class="fas fa-play"></i> Start Run
+                            </button>
+                            <button class="btn-secondary" id="endRunBtn" disabled>
+                                <i class="fas fa-stop"></i> End Run
+                            </button>
+                        </div>
+
+                        <div class="control-group">
+                            <button class="btn-secondary" id="compareRunsBtn">
+                                <i class="fas fa-exchange-alt"></i> Compare Runs
+                            </button>
+                            <button class="btn-secondary" id="exportExperimentsBtn">
+                                <i class="fas fa-download"></i> Export Data
+                            </button>
+                            <button class="btn-secondary" id="importExperimentsBtn">
+                                <i class="fas fa-upload"></i> Import Data
+                            </button>
+                            <button class="btn-secondary" id="indexNCERTBtn">
+                                <i class="fas fa-database"></i> Index NCERT Data
+                            </button>
+                            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                        </div>
+
+                        <!-- Experiment Stats -->
+                        <div class="experiment-stats">
+                            <h4>Statistics</h4>
+                            <div class="stat-row">
+                                <span>Total Experiments:</span>
+                                <strong id="totalExperiments">0</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span>Total Runs:</span>
+                                <strong id="totalRuns">0</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span>Active Run:</span>
+                                <strong id="activeRun">None</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span>Vector Store:</span>
+                                <strong id="vectorStoreCount">0 vectors</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Experiments List -->
+                    <div class="experiments-list glass-card">
+                        <h3>Experiments</h3>
+                        <div id="experimentsListContainer">
+                            <p style="color: hsl(var(--muted-foreground)); text-align: center; padding: 2rem;">
+                                No experiments yet. Create one to get started!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Experiment Details -->
+                    <div class="experiment-details glass-card" id="experimentDetails" style="display: none;">
+                        <h3>Experiment Details</h3>
+                        <div id="experimentDetailsContent"></div>
+                    </div>
+                </div>
+
+                <!-- Create Experiment Modal (simplified inline) -->
+                <div id="createExperimentModal" style="display: none;">
+                    <div class="modal-content glass-card">
+                        <h3>Create New Experiment</h3>
+                        <div class="form-group">
+                            <label>Experiment Name:</label>
+                            <input type="text" id="experimentName" placeholder="e.g., RAG Parameter Optimization">
+                        </div>
+                        <div class="form-group">
+                            <label>Description:</label>
+                            <textarea id="experimentDescription" rows="3" placeholder="Describe your experiment..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Tags (comma-separated):</label>
+                            <input type="text" id="experimentTags" placeholder="rag, optimization, ncert">
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-primary" id="confirmCreateExperiment">Create</button>
+                            <button class="btn-secondary" id="cancelCreateExperiment">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compare Runs Modal -->
+                <div id="compareRunsModal" class="experiment-modal" style="display: none;">
+                    <div class="modal-overlay" id="compareModalOverlay"></div>
+                    <div class="modal-content-large glass-card">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-exchange-alt"></i> Compare Experiment Runs</h3>
+                            <button class="modal-close-btn" id="closeCompareModal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <!-- Run Selection -->
+                            <div class="comparison-section">
+                                <h4>Select Runs to Compare</h4>
+                                <div id="runSelectionList" class="run-selection-list">
+                                    <!-- Dynamic run checkboxes will be added here -->
+                                </div>
+                                <button class="btn-primary" id="performComparison" disabled>
+                                    <i class="fas fa-chart-bar"></i> Compare Selected Runs
+                                </button>
+                            </div>
+
+                            <!-- Comparison Results -->
+                            <div id="comparisonResults" class="comparison-results" style="display: none;">
+                                <!-- Parameters Comparison -->
+                                <div class="comparison-table-section">
+                                    <h4>Parameters Comparison</h4>
+                                    <div id="parametersComparisonTable"></div>
+                                </div>
+
+                                <!-- Metrics Comparison -->
+                                <div class="comparison-table-section">
+                                    <h4>Metrics Comparison</h4>
+                                    <div id="metricsComparisonTable"></div>
+                                </div>
+
+                                <!-- Metrics Charts -->
+                                <div class="comparison-charts-section">
+                                    <h4>Metrics Visualization</h4>
+                                    <div id="comparisonCharts" class="charts-grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="section-header">
+                    <h2 data-i18n="settings.title">Platform Settings</h2>
+                    <p data-i18n="settings.subtitle">Configure localization, privacy, and research parameters</p>
+                </div>
+
+                <div class="settings-container">
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <h3><i class="fas fa-robot"></i> LLM API Configuration</h3>
+
+                            <!-- Provider Selection -->
+                            <div class="setting-item">
+                                <label>LLM Provider:</label>
+                                <select id="llmProvider" class="form-input">
+                                    <option value="openai">OpenAI (GPT-4, GPT-3.5)</option>
+                                    <option value="anthropic">Anthropic (Claude 3)</option>
+                                    <option value="gemini">Google (Gemini Pro)</option>
+                                </select>
+                                <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                    Select your preferred LLM provider
+                                </small>
+                            </div>
+
+                            <!-- Backend API Configuration -->
+                            <div class="setting-item" style="background: hsl(var(--muted)/0.3); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                                <label style="font-weight: 600;">🖥️ Backend API (Local Server)</label>
+                                <small style="display:block; margin-bottom: 0.5rem; color: hsl(var(--muted-foreground));">
+                                    Connects to your local Express backend for RAG + Ollama. Required for AI-powered chat.
+                                </small>
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <input type="password" id="backendApiKey" class="form-input"
+                                        placeholder="Paste your backend API key..."
+                                        autocomplete="off" style="flex: 1;">
+                                    <button class="btn-icon" onclick="togglePasswordVisibility('backendApiKey')" title="Show/Hide">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <button id="testBackendConnection" class="btn btn-sm btn-outline">
+                                        Test Connection
+                                    </button>
+                                    <span id="backendStatus" style="font-size: 0.85rem; color: hsl(var(--muted-foreground));">
+                                        ⚪ Not checked
+                                    </span>
+                                </div>
+                                <small style="display:block; margin-top: 0.5rem; color: hsl(var(--muted-foreground));">
+                                    Backend URL: <code>http://localhost:3000/api/v1</code>
+                                </small>
+                            </div>
+
+                            <!-- OpenAI Configuration -->
+                            <div id="openaiConfig" class="provider-config">
+                                <div class="setting-item">
+                                    <label>OpenAI API Key:</label>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <input type="password" id="openaiApiKey" class="form-input" placeholder="sk-..." autocomplete="off" style="flex: 1;">
+                                        <button class="btn-icon" onclick="togglePasswordVisibility('openaiApiKey')" title="Show/Hide">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                        Get your key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>
+                                    </small>
+                                </div>
+                                <div class="setting-item">
+                                    <label>Model:</label>
+                                    <select id="openaiModel" class="form-input">
+                                        <option value="gpt-4o">GPT-4o (Latest)</option>
+                                        <option value="gpt-4o-mini" selected>GPT-4o Mini (Fastest, Cheapest)</option>
+                                        <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                                        <option value="gpt-4">GPT-4</option>
+                                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Faster)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Anthropic Configuration -->
+                            <div id="anthropicConfig" class="provider-config" style="display: none;">
+                                <div class="setting-item">
+                                    <label>Anthropic API Key:</label>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <input type="password" id="anthropicApiKey" class="form-input" placeholder="sk-ant-..." autocomplete="off" style="flex: 1;">
+                                        <button class="btn-icon" onclick="togglePasswordVisibility('anthropicApiKey')" title="Show/Hide">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                        Get your key from <a href="https://console.anthropic.com/account/keys" target="_blank">Anthropic Console</a>
+                                    </small>
+                                </div>
+                                <div class="setting-item">
+                                    <label>Model:</label>
+                                    <select id="anthropicModel" class="form-input">
+                                        <option value="claude-3-opus-20240229">Claude 3 Opus (Most Capable)</option>
+                                        <option value="claude-3-sonnet-20240229" selected>Claude 3 Sonnet (Balanced)</option>
+                                        <option value="claude-3-haiku-20240307">Claude 3 Haiku (Fastest)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Gemini Configuration -->
+                            <div id="geminiConfig" class="provider-config" style="display: none;">
+                                <div class="setting-item">
+                                    <label>Google Gemini API Key:</label>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <input type="password" id="geminiApiKey" class="form-input" placeholder="AIza..." autocomplete="off" style="flex: 1;">
+                                        <button class="btn-icon" onclick="togglePasswordVisibility('geminiApiKey')" title="Show/Hide">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                        Get your key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a>
+                                    </small>
+                                </div>
+                                <div class="setting-item">
+                                    <label>Model:</label>
+                                    <select id="geminiModel" class="form-input">
+                                        <option value="gemini-pro" selected>Gemini Pro</option>
+                                        <option value="gemini-pro-vision">Gemini Pro Vision</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Common Settings -->
+                            <div class="setting-item">
+                                <label>Temperature:</label>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <input type="range" id="llmTemperature" min="0" max="2" step="0.1" value="0.7" style="flex: 1;">
+                                    <span id="llmTemperatureValue" style="font-weight: 600; min-width: 2rem;">0.7</span>
+                                </div>
+                                <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                    Higher = more creative, Lower = more focused
+                                </small>
+                            </div>
+
+                            <div class="setting-item">
+                                <label>Max Tokens:</label>
+                                <input type="number" id="llmMaxTokens" class="form-input" min="100" max="4000" value="1000">
+                                <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                    Maximum response length (100-4000)
+                                </small>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="setting-item" style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                                <button class="btn-primary" id="saveLLMConfig">
+                                    <i class="fas fa-save"></i> Save Configuration
+                                </button>
+                                <button class="btn-secondary" id="testLLMConnection">
+                                    <i class="fas fa-plug"></i> Test Connection
+                                </button>
+                            </div>
+
+                            <div id="llmConnectionStatus" style="margin-top: 0.75rem; font-size: 0.875rem;"></div>
+
+                            <!-- Statistics -->
+                            <div class="setting-item" id="llmStats">
+                                <h4 style="margin: 1.5rem 0 0.75rem 0; font-size: 1rem;">Usage Statistics</h4>
+                                <div style="background: hsl(var(--muted)); padding: 1rem; border-radius: var(--radius);">
+                                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                                        <div>
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Total Requests</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 1.25rem; font-weight: 700;" id="llmRequestCount">0</p>
+                                        </div>
+                                        <div>
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Total Tokens</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 1.25rem; font-weight: 700;" id="llmTotalTokens">0</p>
+                                        </div>
+                                        <div>
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Estimated Cost</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 1.25rem; font-weight: 700; color: #10b981;">$<span id="llmEstCost">0.00</span></p>
+                                        </div>
+                                        <div>
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Current Provider</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 1.25rem; font-weight: 700;" id="llmCurrentProvider">None</p>
+                                        </div>
+                                    </div>
+                                    <button class="btn-sm btn-secondary" id="resetLLMStats" style="margin-top: 0.75rem;">
+                                        <i class="fas fa-redo"></i> Reset Statistics
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Local Models Configuration (No API costs!) -->
+                        <div class="settings-card">
+                            <h3><i class="fas fa-microchip"></i> Local AI Models <span style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; margin-left: 0.5rem;">FREE</span></h3>
+
+                            <div style="background: hsl(var(--primary) / 0.1); padding: 1rem; border-radius: var(--radius); margin-bottom: 1.5rem; border-left: 3px solid hsl(var(--primary));">
+                                <h4 style="margin: 0 0 0.5rem 0; color: hsl(var(--primary)); font-size: 0.95rem;">
+                                    <i class="fas fa-bolt"></i> Run AI models locally
+                                </h4>
+                                <p style="margin: 0; font-size: 0.875rem; color: hsl(var(--muted-foreground));">
+                                    No API costs, complete privacy, works offline. Choose between Ollama (best quality) or browser-based models (no installation).
+                                </p>
+                            </div>
+
+                            <!-- Provider Selection -->
+                            <div class="setting-item">
+                                <label>Local Model Provider:</label>
+                                <select id="localModelProvider" class="form-input">
+                                    <option value="ollama">Ollama (Recommended - Best Quality)</option>
+                                    <option value="transformers">Transformers.js (Browser-based)</option>
+                                </select>
+                                <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                    Ollama runs on your machine, Transformers.js runs in browser
+                                </small>
+                            </div>
+
+                            <!-- Ollama Configuration -->
+                            <div id="ollamaConfig" class="provider-config">
+                                <div class="setting-item">
+                                    <label>Ollama Status:</label>
+                                    <div id="ollamaStatus" style="padding: 0.75rem; background: hsl(var(--muted)); border-radius: var(--radius); font-size: 0.875rem;">
+                                        <i class="fas fa-spinner fa-spin"></i> Checking...
+                                    </div>
+                                </div>
+
+                                <div class="setting-item">
+                                    <label>Generation Model:</label>
+                                    <select id="ollamaGenerationModel" class="form-input">
+                                        <option value="llama3.2:latest">Llama 3.2 (2GB, Fast)</option>
+                                        <option value="llama3:latest">Llama 3 (4.7GB, Better)</option>
+                                        <option value="mistral:7b">Mistral 7B (4.1GB, Good)</option>
+                                        <option value="phi3:3.8b">Phi 3 (2.3GB, Fast)</option>
+                                    </select>
+                                    <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                        Smaller models are faster but less capable
+                                    </small>
+                                </div>
+
+                                <div class="setting-item">
+                                    <label>Embedding Model:</label>
+                                    <input type="text" id="ollamaEmbeddingModel" class="form-input" value="nomic-embed-text" readonly>
+                                    <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                        274MB, high quality embeddings
+                                    </small>
+                                </div>
+
+                                <div class="setting-item">
+                                    <div style="background: hsl(var(--muted)); padding: 1rem; border-radius: var(--radius);">
+                                        <p style="margin: 0 0 0.5rem 0; font-size: 0.875rem; font-weight: 600;">Need to install Ollama?</p>
+                                        <p style="margin: 0; font-size: 0.875rem; color: hsl(var(--muted-foreground));">
+                                            1. Download from <a href="https://ollama.com" target="_blank">ollama.com</a><br>
+                                            2. Open terminal and run: <code style="background: hsl(var(--background)); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">ollama pull llama3.2</code><br>
+                                            3. Run: <code style="background: hsl(var(--background)); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">ollama pull nomic-embed-text</code>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Transformers.js Configuration -->
+                            <div id="transformersConfig" class="provider-config" style="display: none;">
+                                <div class="setting-item">
+                                    <label>Transformers.js Status:</label>
+                                    <div id="transformersStatus" style="padding: 0.75rem; background: hsl(var(--muted)); border-radius: var(--radius); font-size: 0.875rem;">
+                                        <i class="fas fa-spinner fa-spin"></i> Checking...
+                                    </div>
+                                </div>
+
+                                <div class="setting-item">
+                                    <div style="background: #fef3c7; padding: 1rem; border-radius: var(--radius); border-left: 3px solid #f59e0b;">
+                                        <p style="margin: 0; font-size: 0.875rem; color: #92400e;">
+                                            <i class="fas fa-info-circle"></i> <strong>Note:</strong> Browser models are smaller and less capable than Ollama models. First use will download ~380MB of model files.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="setting-item">
+                                    <label>Model Loading Status:</label>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                                        <div style="padding: 0.75rem; background: hsl(var(--muted)); border-radius: var(--radius);">
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Embeddings</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-weight: 600;" id="transformersEmbedderStatus">Not Loaded</p>
+                                        </div>
+                                        <div style="padding: 0.75rem; background: hsl(var(--muted)); border-radius: var(--radius);">
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Generation</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-weight: 600;" id="transformersGeneratorStatus">Not Loaded</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Common Settings -->
+                            <div class="setting-item">
+                                <label>Temperature:</label>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <input type="range" id="localModelTemperature" min="0" max="2" step="0.1" value="0.7" style="flex: 1;">
+                                    <span id="localModelTemperatureValue" style="font-weight: 600; min-width: 2rem;">0.7</span>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="setting-item" style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                                <button class="btn-primary" id="saveLocalModelConfig">
+                                    <i class="fas fa-save"></i> Save Configuration
+                                </button>
+                                <button class="btn-secondary" id="testLocalModel">
+                                    <i class="fas fa-vial"></i> Test Local Model
+                                </button>
+                            </div>
+
+                            <div id="localModelTestStatus" style="margin-top: 0.75rem; font-size: 0.875rem;"></div>
+
+                            <!-- Statistics -->
+                            <div class="setting-item" id="localModelStats">
+                                <h4 style="margin: 1.5rem 0 0.75rem 0; font-size: 1rem;">Usage Statistics</h4>
+                                <div style="background: hsl(var(--muted)); padding: 1rem; border-radius: var(--radius);">
+                                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                                        <div>
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Total Requests</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 1.25rem; font-weight: 700;" id="localModelRequests">0</p>
+                                        </div>
+                                        <div>
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Active Provider</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 1.25rem; font-weight: 700;" id="localModelActiveProvider">None</p>
+                                        </div>
+                                        <div>
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Cache Hits</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 1.25rem; font-weight: 700; color: #10b981;" id="localModelCacheHits">0</p>
+                                        </div>
+                                        <div>
+                                            <p style="margin: 0; font-size: 0.75rem; color: hsl(var(--muted-foreground));">Cost</p>
+                                            <p style="margin: 0.25rem 0 0 0; font-size: 1.25rem; font-weight: 700; color: #10b981;">$0.00</p>
+                                        </div>
+                                    </div>
+                                    <button class="btn-sm btn-secondary" id="resetLocalModelStats" style="margin-top: 0.75rem;">
+                                        <i class="fas fa-redo"></i> Reset Statistics
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3><i class="fas fa-database"></i> Vector Database Configuration</h3>
+
+                            <div class="setting-item">
+                                <label>Vector Storage Backend:</label>
+                                <select id="vectorBackend" class="form-input" disabled>
+                                    <option value="inmemory">In-Memory (Default)</option>
+                                    <option value="chromadb">ChromaDB (Recommended)</option>
+                                </select>
+                                <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                    Current backend is managed automatically based on availability
+                                </small>
+                            </div>
+
+                            <div id="vectorStatus" class="setting-item">
+                                <h4 style="margin: 1rem 0 0.75rem 0; font-size: 0.95rem;">Current Status</h4>
+                                <div style="background: hsl(var(--muted)); padding: 1rem; border-radius: var(--radius);">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.875rem;">
+                                        <div>
+                                            <span style="color: hsl(var(--muted-foreground));">Active Backend:</span>
+                                            <strong id="vectorActiveBackend" style="display: block; margin-top: 0.25rem;">Loading...</strong>
+                                        </div>
+                                        <div>
+                                            <span style="color: hsl(var(--muted-foreground));">Collections:</span>
+                                            <strong id="vectorCollectionCount" style="display: block; margin-top: 0.25rem;">0</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="setting-item" style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                                <button class="btn-primary" id="openChromaDBSetup">
+                                    <i class="fas fa-cog"></i> ChromaDB Setup
+                                </button>
+                                <button class="btn-secondary" id="refreshVectorStatus">
+                                    <i class="fas fa-sync"></i> Refresh Status
+                                </button>
+                            </div>
+
+                            <div style="background: #eff6ff; border-left: 4px solid var(--primary-color); padding: 1rem; margin-top: 1rem; border-radius: 4px;">
+                                <p style="margin: 0; font-size: 0.875rem;">
+                                    <strong>💡 Tip:</strong> ChromaDB provides persistent vector storage, better performance for large datasets,
+                                    and advanced search capabilities. Click "ChromaDB Setup" to configure.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Educational Localization</h3>
+                            <div class="setting-item">
+                                <label>Primary Curriculum:</label>
+                                <select id="primaryCurriculum">
+                                    <option value="ncert">NCERT</option>
+                                    <option value="cbse">CBSE</option>
+                                    <option value="icse">ICSE</option>
+                                    <option value="state-board">State Board</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Institution Type:</label>
+                                <select id="institutionType">
+                                    <option value="school">School</option>
+                                    <option value="college">College</option>
+                                    <option value="university">University</option>
+                                    <option value="coaching">Coaching Center</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Regional Focus:</label>
+                                <select id="regionalFocus">
+                                    <option value="national">National</option>
+                                    <option value="state">State-specific</option>
+                                    <option value="local">Local Context</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Privacy & Data Control</h3>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="dataRetention" checked>
+                                    Institution-controlled data retention
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="anonymizeQueries" checked>
+                                    Anonymize user queries
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="localProcessing">
+                                    Prefer local processing
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label>Data Storage Location:</label>
+                                <select id="dataLocation">
+                                    <option value="local">Local Institution</option>
+                                    <option value="regional">Regional Server</option>
+                                    <option value="cloud">Secure Cloud</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Research Parameters</h3>
+                            <div class="setting-item">
+                                <label>Response Temperature:</label>
+                                <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7">
+                                <span id="temperatureValue">0.7</span>
+                            </div>
+                            <div class="setting-item">
+                                <label>Context Window:</label>
+                                <input type="range" id="contextWindow" min="1000" max="8000" step="500" value="4000">
+                                <span id="contextWindowValue">4000</span> tokens
+                            </div>
+                            <div class="setting-item">
+                                <label>Source Citation Limit:</label>
+                                <input type="number" id="citationLimit" min="1" max="10" value="3">
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="enableFeedback" checked>
+                                    Enable user feedback collection
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Appearance & Theme</h3>
+                            <div class="setting-item">
+                                <label>Theme Mode:</label>
+                                <select id="themeMode">
+                                    <option value="light">Light Mode</option>
+                                    <option value="dark">Dark Mode</option>
+                                    <option value="auto">Auto (System)</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Accent Color:</label>
+                                <div class="color-picker-grid">
+                                    <label class="color-option">
+                                        <input type="radio" name="accentColor" value="blue" checked>
+                                        <span class="color-swatch" style="background: #3b82f6;"></span>
+                                        <span class="color-label">Blue</span>
+                                    </label>
+                                    <label class="color-option">
+                                        <input type="radio" name="accentColor" value="green">
+                                        <span class="color-swatch" style="background: #10b981;"></span>
+                                        <span class="color-label">Green</span>
+                                    </label>
+                                    <label class="color-option">
+                                        <input type="radio" name="accentColor" value="purple">
+                                        <span class="color-swatch" style="background: #8b5cf6;"></span>
+                                        <span class="color-label">Purple</span>
+                                    </label>
+                                    <label class="color-option">
+                                        <input type="radio" name="accentColor" value="orange">
+                                        <span class="color-swatch" style="background: #f59e0b;"></span>
+                                        <span class="color-label">Orange</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <label>Font Size:</label>
+                                <select id="fontSize">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="reducedMotion">
+                                    Reduce animations
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Advanced Settings</h3>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="developerMode">
+                                    Enable developer mode
+                                </label>
+                                <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                    Shows console logs and debug information
+                                </small>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="experimentalFeatures">
+                                    Enable experimental features
+                                </label>
+                                <small style="color: hsl(var(--muted-foreground)); display: block; margin-top: 0.25rem;">
+                                    Try new features before they're officially released
+                                </small>
+                            </div>
+                            <div class="setting-item">
+                                <label>Auto-save Interval:</label>
+                                <select id="autoSaveInterval">
+                                    <option value="0">Disabled</option>
+                                    <option value="30">30 seconds</option>
+                                    <option value="60" selected>1 minute</option>
+                                    <option value="300">5 minutes</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <button class="btn-secondary" id="clearAllData" style="width: 100%;">
+                                    <i class="fas fa-trash-alt"></i> Clear All Data
+                                </button>
+                                <small style="color: hsl(var(--destructive)); display: block; margin-top: 0.25rem;">
+                                    ⚠️ This will permanently delete all platform data
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="btn-primary" id="saveSettings">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                        <button class="btn-secondary" id="exportSettings">
+                            <i class="fas fa-download"></i> Export Configuration
+                        </button>
+                        <button class="btn-secondary" id="importSettings">
+                            <i class="fas fa-upload"></i> Import Configuration
+                        </button>
+                        <button class="btn-secondary" id="resetSettings">
+                            <i class="fas fa-undo"></i> Reset to Defaults
+                        </button>
+                        <input type="file" id="settingsFileInput" accept=".json" style="display: none;">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Dashboard Section -->
+            <section id="analytics" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> <span data-i18n="analytics.title">Analytics Dashboard</span></h2>
+                    <p data-i18n="analytics.subtitle">Comprehensive research analytics and insights</p>
+                </div>
+
+                <div class="analytics-container">
+                    <!-- Metric Cards -->
+                    <div class="metric-cards">
+                        <div class="metric-card glass-card">
+                            <div class="metric-icon"><i class="fas fa-flask"></i></div>
+                            <div class="metric-info">
+                                <h3 id="totalExperiments">0</h3>
+                                <p>Total Experiments</p>
+                            </div>
+                        </div>
+                        <div class="metric-card glass-card">
+                            <div class="metric-icon"><i class="fas fa-bullseye"></i></div>
+                            <div class="metric-info">
+                                <h3 id="avgPrecision">0.00</h3>
+                                <p>Avg Precision</p>
+                            </div>
+                        </div>
+                        <div class="metric-card glass-card">
+                            <div class="metric-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <div class="metric-info">
+                                <h3 id="avgResponseTime">0ms</h3>
+                                <p>Avg Response Time</p>
+                            </div>
+                        </div>
+                        <div class="metric-card glass-card">
+                            <div class="metric-icon"><i class="fas fa-play-circle"></i></div>
+                            <div class="metric-info">
+                                <h3 id="totalRuns">0</h3>
+                                <p>Total Runs</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="analytics-controls glass-card">
+                        <h3>Report Generation</h3>
+                        <div class="control-group">
+                            <button class="btn-primary" id="generateReportBtn">
+                                <i class="fas fa-file-alt"></i> Generate Report
+                            </button>
+                            <button class="btn-secondary" id="exportReportBtn">
+                                <i class="fas fa-download"></i> Export (Markdown)
+                            </button>
+                            <button class="btn-secondary" id="refreshAnalyticsBtn">
+                                <i class="fas fa-sync"></i> Refresh Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Reports List -->
+                    <div class="reports-section glass-card">
+                        <h3>Generated Reports</h3>
+                        <div id="reportsListContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-file-alt"></i>
+                                <p>No reports generated yet. Click "Generate Report" to create one.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Insights Panel -->
+                    <div class="insights-panel glass-card">
+                        <h3>Key Insights</h3>
+                        <div id="insightsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-lightbulb"></i>
+                                <p>Generate a report to see insights</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visualizations -->
+                    <div class="analytics-charts glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="margin: 0;"><i class="fas fa-chart-bar"></i> Analytics Visualizations</h3>
+                            <button class="btn-secondary" id="exportAnalyticsChartsBtn" style="margin: 0;">
+                                <i class="fas fa-download"></i> Export Charts
+                            </button>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <canvas id="experimentsOverTimeChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="precisionRecallChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="responseTimeDistributionChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="experimentStatusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Baseline Comparisons Section -->
+            <section id="comparisons" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-balance-scale"></i> <span data-i18n="comparisons.title">Baseline Comparisons</span></h2>
+                    <p data-i18n="comparisons.subtitle">Compare different RAG approaches systematically</p>
+                </div>
+
+                <div class="comparisons-container">
+                    <!-- Comparison Controls -->
+                    <div class="comparison-controls glass-card">
+                        <h3>Create Comparison</h3>
+                        <div class="control-group">
+                            <button class="btn-primary" id="createComparisonBtn">
+                                <i class="fas fa-plus"></i> New Comparison
+                            </button>
+                            <button class="btn-secondary" id="createBaselineBtn">
+                                <i class="fas fa-bookmark"></i> Create Baseline
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active Comparisons -->
+                    <div class="comparisons-list glass-card">
+                        <h3>Comparisons</h3>
+                        <div id="comparisonsListContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-balance-scale"></i>
+                                <p>No comparisons yet. Create one to compare experiments.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Results -->
+                    <div class="comparison-results glass-card">
+                        <h3>Results</h3>
+                        <div id="comparisonResultsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>Select a comparison to view results</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- A/B Testing Section -->
+            <section id="abtesting" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-vial"></i> <span data-i18n="abTesting.title">A/B Testing</span></h2>
+                    <p data-i18n="abTesting.subtitle">Run controlled experiments to optimize RAG performance</p>
+                </div>
+
+                <div class="abtesting-container">
+                    <!-- Test Controls -->
+                    <div class="test-controls glass-card">
+                        <h3>Test Management</h3>
+                        <div class="control-group">
+                            <button class="btn-primary" id="createABTestBtn">
+                                <i class="fas fa-plus"></i> Create A/B Test
+                            </button>
+                            <button class="btn-secondary" id="viewRunningTestsBtn">
+                                <i class="fas fa-play"></i> Running Tests
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tests List -->
+                    <div class="tests-list glass-card">
+                        <h3>A/B Tests</h3>
+                        <div class="test-filters">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="draft">Draft</button>
+                            <button class="filter-btn" data-filter="running">Running</button>
+                            <button class="filter-btn" data-filter="completed">Completed</button>
+                        </div>
+                        <div id="abTestsListContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-vial"></i>
+                                <p>No A/B tests created. Start by creating your first test.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Test Results -->
+                    <div class="test-results glass-card">
+                        <h3>Test Results</h3>
+                        <div id="testResultsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-chart-line"></i>
+                                <p>Select a test to view results</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Winner Announcement -->
+                    <div class="winner-panel glass-card" id="winnerPanel" style="display: none;">
+                        <div class="winner-content">
+                            <i class="fas fa-trophy winner-icon"></i>
+                            <h3>Test Winner</h3>
+                            <div id="winnerDetails"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Progression Tracking Section -->
+            <section id="progression" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-area"></i> <span data-i18n="progression.title">Progression Tracking</span></h2>
+                    <p data-i18n="progression.subtitle">Track learning progression and concept mastery over time</p>
+                </div>
+
+                <div class="progression-container">
+                    <!-- Overview Cards -->
+                    <div class="metric-cards">
+                        <div class="metric-card glass-card">
+                            <div class="metric-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <div class="metric-info">
+                                <h3 id="currentLevel">Beginner</h3>
+                                <p>Current Level</p>
+                            </div>
+                        </div>
+                        <div class="metric-card glass-card">
+                            <div class="metric-icon"><i class="fas fa-trophy"></i></div>
+                            <div class="metric-info">
+                                <h3 id="masteredConcepts">0</h3>
+                                <p>Concepts Mastered</p>
+                            </div>
+                        </div>
+                        <div class="metric-card glass-card">
+                            <div class="metric-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="metric-info">
+                                <h3 id="learningVelocity">0.0</h3>
+                                <p>Learning Velocity</p>
+                            </div>
+                        </div>
+                        <div class="metric-card glass-card">
+                            <div class="metric-icon"><i class="fas fa-brain"></i></div>
+                            <div class="metric-info">
+                                <h3 id="retentionRate">0%</h3>
+                                <p>Retention Rate</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="progression-controls glass-card">
+                        <h3>Progression Analysis</h3>
+                        <div class="control-group">
+                            <button class="btn-primary" id="viewProgressionBtn">
+                                <i class="fas fa-chart-area"></i> View Detailed Progression
+                            </button>
+                            <button class="btn-secondary" id="exportProgressionBtn">
+                                <i class="fas fa-download"></i> Export Data
+                            </button>
+                            <button class="btn-secondary" id="refreshProgressionBtn">
+                                <i class="fas fa-sync"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Visualizations -->
+                    <div class="progression-charts glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="margin: 0;"><i class="fas fa-chart-line"></i> Progress Visualizations</h3>
+                            <button class="btn-secondary" id="exportProgressionChartsBtn" style="margin: 0;">
+                                <i class="fas fa-download"></i> Export Charts
+                            </button>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <canvas id="masteryOverTimeChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="learningVelocityChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="masteryDistributionChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="successBySubjectChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mastery Overview -->
+                    <div class="mastery-overview glass-card">
+                        <h3>Concept Mastery Status</h3>
+                        <div id="masteryOverviewContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-graduation-cap"></i>
+                                <p>Start learning to track your progression</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Learning Path -->
+                    <div class="learning-path glass-card">
+                        <h3>Recent Learning Path</h3>
+                        <div id="learningPathContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-route"></i>
+                                <p>Your learning journey will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="recommendations-panel glass-card">
+                        <h3>Personalized Recommendations</h3>
+                        <div id="progressionRecommendationsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-lightbulb"></i>
+                                <p>Recommendations will be generated based on your progress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Curriculum Gaps Section -->
+            <section id="gaps" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-puzzle-piece"></i> <span data-i18n="gaps.title">Curriculum Gap Analysis</span></h2>
+                    <p data-i18n="gaps.subtitle">Identify missing concepts and knowledge gaps in your learning</p>
+                </div>
+
+                <div class="gaps-container">
+                    <!-- Analysis Controls -->
+                    <div class="gap-controls glass-card">
+                        <h3>Gap Analysis Settings</h3>
+                        <div class="control-group">
+                            <div class="form-group">
+                                <label for="targetGrade">Target Grade</label>
+                                <select id="targetGrade" class="form-input">
+                                    <option value="9">Grade 9</option>
+                                    <option value="10" selected>Grade 10</option>
+                                    <option value="11">Grade 11</option>
+                                    <option value="12">Grade 12</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="targetSubject">Target Subject</label>
+                                <select id="targetSubject" class="form-input">
+                                    <option value="all">All Subjects</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="Science">Science</option>
+                                    <option value="Physics">Physics</option>
+                                    <option value="Chemistry">Chemistry</option>
+                                    <option value="Biology">Biology</option>
+                                </select>
+                            </div>
+                            <button class="btn-primary" id="analyzeGapsBtn">
+                                <i class="fas fa-search"></i> Analyze Gaps
+                            </button>
+                            <button class="btn-secondary" id="exportGapReportBtn">
+                                <i class="fas fa-download"></i> Export Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Visualizations -->
+                    <div class="gap-charts glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="margin: 0;"><i class="fas fa-chart-bar"></i> Gap Analysis Visualizations</h3>
+                            <button class="btn-secondary" id="exportGapChartsBtn" style="margin: 0;">
+                                <i class="fas fa-download"></i> Export Charts
+                            </button>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <canvas id="coverageChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="gapSeverityChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="gapsBySubjectChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="gapsByDifficultyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coverage Metrics -->
+                    <div class="coverage-metrics glass-card">
+                        <h3>Coverage Overview</h3>
+                        <div id="coverageMetricsContainer">
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <span class="metric-label">Total Concepts:</span>
+                                    <span class="metric-value" id="totalConcepts">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Covered:</span>
+                                    <span class="metric-value" id="coveredConcepts">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Mastered:</span>
+                                    <span class="metric-value" id="masteredConceptsGap">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Coverage:</span>
+                                    <span class="metric-value" id="coveragePercentage">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Identified Gaps -->
+                    <div class="identified-gaps glass-card">
+                        <h3>Identified Gaps</h3>
+                        <div class="gap-filters">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="critical">Critical</button>
+                            <button class="filter-btn" data-filter="not_covered">Not Covered</button>
+                            <button class="filter-btn" data-filter="not_mastered">Not Mastered</button>
+                        </div>
+                        <div id="identifiedGapsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-puzzle-piece"></i>
+                                <p>Click "Analyze Gaps" to identify knowledge gaps</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Learning Path Recommendations -->
+                    <div class="gap-recommendations glass-card">
+                        <h3>Recommended Learning Path</h3>
+                        <div id="gapRecommendationsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-route"></i>
+                                <p>Analysis will generate personalized learning path recommendations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cross-Subject Analytics Section -->
+            <section id="crosssubject" class="content-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-network-wired"></i> <span data-i18n="crosssubject.title">Cross-Subject Analytics</span></h2>
+                    <p data-i18n="crosssubject.subtitle">Analyze learning patterns and connections across subjects</p>
+                </div>
+
+                <div class="crosssubject-container">
+                    <!-- Analysis Controls -->
+                    <div class="crosssubject-controls glass-card">
+                        <h3>Cross-Subject Analysis</h3>
+                        <div class="control-group">
+                            <button class="btn-primary" id="analyzeCrossSubjectBtn">
+                                <i class="fas fa-chart-network"></i> Analyze Cross-Subject Performance
+                            </button>
+                            <button class="btn-secondary" id="exportCrossSubjectBtn">
+                                <i class="fas fa-download"></i> Export Analysis
+                            </button>
+                            <button class="btn-secondary" id="refreshCrossSubjectBtn">
+                                <i class="fas fa-sync"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Visualizations -->
+                    <div class="cross-subject-charts glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="margin: 0;"><i class="fas fa-project-diagram"></i> Cross-Subject Visualizations</h3>
+                            <button class="btn-secondary" id="exportCrossSubjectChartsBtn" style="margin: 0;">
+                                <i class="fas fa-download"></i> Export Charts
+                            </button>
+                        </div>
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <canvas id="subjectRadarChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="subjectComparisonChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="correlationsChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="transferOpportunitiesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subject Performance Comparison -->
+                    <div class="subject-performance glass-card">
+                        <h3>Subject Performance Comparison</h3>
+                        <div id="subjectPerformanceContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>Subject-wise performance will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Patterns -->
+                    <div class="performance-patterns glass-card">
+                        <h3>Performance Patterns</h3>
+                        <div id="performancePatternsContainer">
+                            <div class="pattern-grid">
+                                <div class="pattern-card">
+                                    <h4>Strengths</h4>
+                                    <div id="strengthsList">
+                                        <p class="text-muted">No data available</p>
+                                    </div>
+                                </div>
+                                <div class="pattern-card">
+                                    <h4>Areas for Improvement</h4>
+                                    <div id="weaknessesList">
+                                        <p class="text-muted">No data available</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subject Correlations -->
+                    <div class="subject-correlations glass-card">
+                        <h3>Subject Correlations</h3>
+                        <div id="subjectCorrelationsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-link"></i>
+                                <p>Correlations between subject performances will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interdisciplinary Insights -->
+                    <div class="interdisciplinary-insights glass-card">
+                        <h3>Interdisciplinary Connections</h3>
+                        <div id="interdisciplinaryInsightsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-project-diagram"></i>
+                                <p>Interdisciplinary learning opportunities will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transfer Learning Opportunities -->
+                    <div class="transfer-opportunities glass-card">
+                        <h3>Transfer Learning Opportunities</h3>
+                        <div id="transferOpportunitiesContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-exchange-alt"></i>
+                                <p>Opportunities to leverage strengths in other subjects will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Dialogs for Phase 2 Features -->
+
+    <!-- Create Comparison Modal -->
+    <div id="createComparisonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-balance-scale"></i> Create New Comparison</h2>
+                <button class="modal-close" onclick="closeModal('createComparisonModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createComparisonForm">
+                    <div class="form-group">
+                        <label for="comparisonName">Comparison Name *</label>
+                        <input type="text" id="comparisonName" class="form-input" placeholder="e.g., Chunking Strategy Comparison" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comparisonDescription">Description</label>
+                        <textarea id="comparisonDescription" class="form-input" rows="3" placeholder="Describe what you're comparing..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Experiments to Compare (minimum 2) *</label>
+                        <div id="experimentSelectList" class="checkbox-list">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Metrics to Compare</label>
+                        <div class="checkbox-grid">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="metrics" value="precision" checked> Precision
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="metrics" value="recall" checked> Recall
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="metrics" value="f1_score" checked> F1 Score
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="metrics" value="response_time"> Response Time
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="metrics" value="relevance_score"> Relevance
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="metrics" value="coherence_score"> Coherence
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="includeStatisticalTests" checked>
+                            Include statistical significance tests
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confidenceLevel">Confidence Level</label>
+                        <select id="confidenceLevel" class="form-input">
+                            <option value="0.90">90%</option>
+                            <option value="0.95" selected>95%</option>
+                            <option value="0.99">99%</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('createComparisonModal')">Cancel</button>
+                <button class="btn-primary" onclick="submitCreateComparison()">
+                    <i class="fas fa-check"></i> Create Comparison
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Baseline Modal -->
+    <div id="createBaselineModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-bookmark"></i> Create New Baseline</h2>
+                <button class="modal-close" onclick="closeModal('createBaselineModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createBaselineForm">
+                    <div class="form-group">
+                        <label for="baselineName">Baseline Name *</label>
+                        <input type="text" id="baselineName" class="form-input" placeholder="e.g., Default Configuration" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="baselineDescription">Description *</label>
+                        <textarea id="baselineDescription" class="form-input" rows="3" placeholder="Describe this baseline configuration..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <h4>Configuration Parameters</h4>
+                        <div class="config-params">
+                            <div class="param-row">
+                                <label for="chunkSize">Chunk Size</label>
+                                <input type="number" id="chunkSize" class="form-input" value="512" min="128" max="2048" step="128">
+                            </div>
+                            <div class="param-row">
+                                <label for="chunkOverlap">Chunk Overlap</label>
+                                <input type="number" id="chunkOverlap" class="form-input" value="50" min="0" max="200" step="10">
+                            </div>
+                            <div class="param-row">
+                                <label for="topK">Top K Results</label>
+                                <input type="number" id="topK" class="form-input" value="5" min="1" max="20">
+                            </div>
+                            <div class="param-row">
+                                <label for="temperature">Temperature</label>
+                                <input type="number" id="temperature" class="form-input" value="0.7" min="0" max="2" step="0.1">
+                            </div>
+                            <div class="param-row">
+                                <label for="embeddingModel">Embedding Model</label>
+                                <input type="text" id="embeddingModel" class="form-input" value="simulated-embedding" placeholder="e.g., text-embedding-3-small">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additionalConfig">Additional Config (JSON)</label>
+                        <textarea id="additionalConfig" class="form-input code-input" rows="4" placeholder='{"custom_param": "value"}'></textarea>
+                        <small class="form-help">Optional: Add custom parameters in JSON format</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('createBaselineModal')">Cancel</button>
+                <button class="btn-primary" onclick="submitCreateBaseline()">
+                    <i class="fas fa-check"></i> Create Baseline
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create A/B Test Modal -->
+    <div id="createABTestModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-vial"></i> Create New A/B Test</h2>
+                <button class="modal-close" onclick="closeModal('createABTestModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createABTestForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="testName">Test Name *</label>
+                            <input type="text" id="testName" class="form-input" placeholder="e.g., Chunk Size Optimization" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testType">Test Type *</label>
+                            <select id="testType" class="form-input" required>
+                                <option value="retrieval_strategy">Retrieval Strategy</option>
+                                <option value="chunking_method" selected>Chunking Method</option>
+                                <option value="embedding_model">Embedding Model</option>
+                                <option value="generation_prompt">Generation Prompt</option>
+                                <option value="ranking_algorithm">Ranking Algorithm</option>
+                                <option value="context_size">Context Size</option>
+                                <option value="temperature">Temperature</option>
+                                <option value="top_k">Top K</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="testDescription">Description</label>
+                        <textarea id="testDescription" class="form-input" rows="2" placeholder="What are you testing and why?"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="primaryMetric">Primary Metric *</label>
+                            <select id="primaryMetric" class="form-input" required>
+                                <option value="f1_score" selected>F1 Score</option>
+                                <option value="precision">Precision</option>
+                                <option value="recall">Recall</option>
+                                <option value="response_time">Response Time</option>
+                                <option value="relevance_score">Relevance Score</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assignmentStrategy">Assignment Strategy</label>
+                            <select id="assignmentStrategy" class="form-input">
+                                <option value="random" selected>Random</option>
+                                <option value="roundRobin">Round Robin</option>
+                                <option value="weighted">Weighted</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="minimumSampleSize">Minimum Sample Size</label>
+                            <input type="number" id="minimumSampleSize" class="form-input" value="30" min="10" max="1000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testConfidenceLevel">Confidence Level</label>
+                            <select id="testConfidenceLevel" class="form-input">
+                                <option value="0.90">90%</option>
+                                <option value="0.95" selected>95%</option>
+                                <option value="0.99">99%</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h4>Secondary Metrics</h4>
+                        <div class="checkbox-grid">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="secondaryMetrics" value="precision" checked> Precision
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="secondaryMetrics" value="recall" checked> Recall
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="secondaryMetrics" value="response_time" checked> Response Time
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="secondaryMetrics" value="relevance_score"> Relevance
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="testTags">Tags (comma-separated)</label>
+                        <input type="text" id="testTags" class="form-input" placeholder="e.g., chunking, optimization, phase-1">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('createABTestModal')">Cancel</button>
+                <button class="btn-primary" onclick="submitCreateABTest()">
+                    <i class="fas fa-check"></i> Create Test (Draft)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Running Tests Modal -->
+    <div id="runningTestsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-play"></i> Running A/B Tests</h2>
+                <button class="modal-close" onclick="closeModal('runningTestsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="runningTestsList" class="running-tests-container">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('runningTestsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Comparison Details Modal -->
+    <div id="comparisonDetailsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-chart-bar"></i> Comparison Details</h2>
+                <button class="modal-close" onclick="closeModal('comparisonDetailsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="comparisonDetailsContent">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="exportComparison()">
+                    <i class="fas fa-download"></i> Export Results
+                </button>
+                <button class="btn-secondary" onclick="closeModal('comparisonDetailsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third-party Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.6/dist/jstat.min.js"></script>
+
+    <!-- Transformers.js for browser-based AI models -->
+    <script type="module">
+        import * as transformers from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.0";
+        window.transformers = transformers;
+        console.log('✅ Transformers.js loaded');
+    </script>
+
+    <!-- Configuration (must load first) -->
+    <script src="config.js"></script>
+
+    <!-- PhD Research: Reproducibility Foundation (load early) -->
+    <script src="seeded-random.js"></script>
+    <script src="config-manager.js"></script>
+
+    <!-- Monitoring & Logging -->
+    <script src="error-logger.js"></script>
+    <script src="analytics.js"></script>
+    <script src="performance-monitor.js"></script>
+
+    <!-- Core Modules -->
+    <script src="database.js"></script>
+    <script src="database-v3.js"></script>
+    <script src="database-init.js"></script>
+    <script src="sample-data-init.js"></script>
+    <script src="llm-service.js"></script>
+    <script src="llm-service-enhanced.js"></script>
+    <script src="vector-store.js"></script>
+    <script src="vector-store-enhanced.js"></script>
+    <script src="rag-orchestrator.js"></script>
+
+    <!-- Local Model Services (No API costs) -->
+    <script src="local-ollama-service.js"></script>
+    <script src="local-transformers-service.js"></script>
+    <script src="local-model-manager.js"></script>
+    <script src="local-model-settings.js"></script>
+    <script src="experiment-tracker.js"></script>
+    <script src="data-collector.js"></script>
+    <script src="data-processor.js"></script>
+    <script src="data-validator.js"></script>
+    <script src="pdf-processor.js"></script>
+
+    <!-- Research Infrastructure Modules (Phase 2) -->
+    <script src="baseline-comparator.js"></script>
+    <script src="statistical-analyzer.js"></script>
+    <script src="power-analysis.js"></script>
+    <script src="nlp-metrics.js"></script>
+    <script src="ragas-evaluator.js"></script>
+    <script src="audit-trail.js"></script>
+    <script src="dataset-versioner.js"></script>
+    <script src="latex-export.js"></script>
+    <script src="analytics-dashboard.js"></script>
+    <script src="enhanced-pdf-processor.js"></script>
+    <script src="ab-testing-framework.js"></script>
+    <script src="progression-tracker.js"></script>
+    <script src="curriculum-gap-analyzer.js"></script>
+    <script src="cross-subject-analyzer.js"></script>
+    <script src="research-features-manager.js"></script>
+    <script src="research-experiment-runner.js"></script>
+    <script src="chromadb-client.js"></script>
+    <script src="vector-service-manager.js"></script>
+    <script src="chromadb-setup-assistant.js"></script>
+    <script src="chart-visualization-manager.js"></script>
+    <script src="progression-visualizations.js"></script>
+    <script src="gap-cross-subject-visualizations.js"></script>
+    <script src="experiment-visualizations.js"></script>
+
+    <!-- API Integration -->
+    <script src="api-client.js?v=2"></script>
+    <script src="integration-config.js"></script>
+    <script src="integration-test-suite.js"></script>
+    <script src="test-data-generator.js"></script>
+    <script src="demo-workflow.js"></script>
+    <script src="openai-config.js"></script>
+
+    <!-- Dashboard Module -->
+    <script src="dashboard-manager.js"></script>
+
+    <!-- RAG Chat Module -->
+    <!-- Language Management -->
+    <script src="translations.js?v=2.1"></script>
+    <script src="language-manager.js?v=2.1"></script>
+
+    <!-- Contrast Management -->
+    <script src="contrast-manager.js"></script>
+
+    <!-- Mobile Enhancements -->
+    <script src="mobile-enhancements.js"></script>
+
+    <script src="rag-chat-manager.js"></script>
+
+    <!-- Chunking Module -->
+    <script src="chunking-manager.js"></script>
+
+    <!-- Knowledge Graph Module -->
+    <script src="knowledge-graph-manager.js"></script>
+
+    <!-- System Modules -->
+    <script src="flow-manager.js"></script>
+    <script src="test-suite.js"></script>
+    <script src="script.js?v=3.0"></script>
+
+    <!-- Test Scripts (Load only when needed) -->
+    <!-- Uncomment to run tests:
+    <script src="test-all-features.js"></script>
+    <script src="test-database-enhanced.js"></script>
+    -->
+
+    <!-- Sample Data Loader -->
+    <script src="load-sample-data.js"></script>
+
+    <!-- Research Sample Data -->
+    <script src="research-sample-data.js"></script>
+
+    <!-- PhD Research Module Initialization -->
+    <script>
+    (async function initResearchModules() {
+        try {
+            // Initialize modules that need async setup
+            if (window.configManager) await window.configManager.initialize();
+            if (window.auditTrail) await window.auditTrail.initialize();
+            if (window.datasetVersioner) await window.datasetVersioner.initialize();
+            console.log('✅ PhD Research modules initialized');
+            console.log('   - jStat:', typeof jStat !== 'undefined' ? 'v' + jStat.version : 'NOT LOADED');
+            console.log('   - SeededRandom:', typeof SeededRandom !== 'undefined' ? 'loaded' : 'missing');
+            console.log('   - NLP Metrics:', window.nlpMetrics ? 'loaded' : 'missing');
+            console.log('   - RAGAS Evaluator:', window.ragasEvaluator ? 'loaded' : 'missing');
+            console.log('   - Power Analysis:', window.powerAnalysis ? 'loaded' : 'missing');
+            console.log('   - LaTeX Exporter:', window.latexExporter ? 'loaded' : 'missing');
+            console.log('   - Audit Trail:', window.auditTrail ? 'loaded' : 'missing');
+            console.log('   - Dataset Versioner:', window.datasetVersioner ? 'loaded' : 'missing');
+            console.log('   - Research Runner:', window.researchRunner ? 'loaded' : 'missing');
+        } catch (error) {
+            console.error('Research module initialization error:', error);
+        }
+    })();
+    </script>
+</body>
+</html>
+<style>
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+</style>

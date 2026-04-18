@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Mobile Features Test - EduLLM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: max(20px, env(safe-area-inset-top)) 20px 20px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+
+        .device-info {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-card h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .badge.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge.auto {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            touch-action: manipulation;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .swipe-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .swipe-indicator {
+            font-size: 3em;
+            animation: swipeHint 2s infinite;
+        }
+
+        @keyframes swipeHint {
+            0%, 100% { transform: translateX(-20px); opacity: 0.5; }
+            50% { transform: translateX(20px); opacity: 1; }
+        }
+
+        .pull-demo {
+            background: #f8f9fa;
+            padding: 60px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px dashed #667eea;
+        }
+
+        .pull-indicator {
+            font-size: 2em;
+            animation: pullHint 2s infinite;
+        }
+
+        @keyframes pullHint {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(20px); opacity: 1; }
+        }
+
+        .test-result {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .test-result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .test-result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .gesture-zone {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 60px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .gesture-feedback {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 10px;
+            min-height: 40px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #333;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card .label {
+            font-size: 0.75em;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Toast styles */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* PWA Install prompt */
+        .install-prompt {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .install-prompt.show {
+            display: block;
+        }
+
+        .install-prompt button {
+            background: white;
+            color: #667eea;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 Mobile Features Test</h1>
+            <p>Touch, Swipe, and Mobile Optimization</p>
+            <div class="device-info" id="deviceInfo">
+                Loading device info...
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Device Detection -->
+            <div class="feature-card">
+                <h2>
+                    <span>📱</span> Device Detection
+                    <span class="badge" id="mobileStatusBadge">Checking...</span>
+                </h2>
+                <p>Automatically detects if you're on a mobile device and enables touch optimizations.</p>
+                <div id="detectionResults"></div>
+                <button onclick="testDeviceDetection()">Test Detection</button>
+            </div>
+
+            <!-- Swipe Gestures -->
+            <div class="feature-card">
+                <h2>
+                    <span>👆</span> Swipe Gestures
+                    <span class="badge auto">Auto-Active</span>
+                </h2>
+                <p>Swipe from the left edge to open navigation, right to close.</p>
+                <div class="swipe-demo">
+                    <div class="swipe-indicator">👉</div>
+                    <p>Try swiping from the left edge!</p>
+                </div>
+                <div id="swipeResults"></div>
+            </div>
+
+            <!-- Touch Feedback -->
+            <div class="feature-card">
+                <h2>
+                    <span>✨</span> Touch Feedback
+                    <span class="badge auto">Auto-Active</span>
+                </h2>
+                <p>Visual feedback on touch interactions.</p>
+                <div class="gesture-zone" id="touchZone">
+                    <p>👆 Touch anywhere in this area</p>
+                    <div class="gesture-feedback" id="touchFeedback"></div>
+                </div>
+            </div>
+
+            <!-- Pull to Refresh -->
+            <div class="feature-card">
+                <h2>
+                    <span>🔄</span> Pull to Refresh
+                    <span class="badge auto">Auto-Active</span>
+                </h2>
+                <p>Pull down from the top to refresh the page.</p>
+                <div class="pull-demo">
+                    <div class="pull-indicator">⬇️</div>
+                    <p>Pull down to refresh</p>
+                </div>
+                <div id="pullResults"></div>
+            </div>
+
+            <!-- Toast Notifications -->
+            <div class="feature-card">
+                <h2>
+                    <span>💬</span> Toast Notifications
+                    <span class="badge active">Ready</span>
+                </h2>
+                <p>Show temporary messages at the bottom of the screen.</p>
+                <div id="toastResults"></div>
+                <button onclick="testToast()">Show Toast</button>
+                <button onclick="testToastLong()">Show Long Toast</button>
+            </div>
+
+            <!-- PWA Support -->
+            <div class="feature-card">
+                <h2>
+                    <span>📲</span> PWA Support
+                    <span class="badge active">Available</span>
+                </h2>
+                <p>Install as a Progressive Web App for offline access and home screen icon.</p>
+                <div class="install-prompt" id="installPrompt">
+                    <p>📲 Install EduLLM as an app!</p>
+                    <button onclick="installPWA()">Install Now</button>
+                </div>
+                <div id="pwaResults"></div>
+                <button onclick="testPWA()">Check PWA Status</button>
+            </div>
+
+            <!-- Orientation -->
+            <div class="feature-card">
+                <h2>
+                    <span>🔄</span> Orientation Handling
+                    <span class="badge auto">Auto-Active</span>
+                </h2>
+                <p>Automatically adapts to portrait/landscape changes.</p>
+                <div id="orientationResults"></div>
+                <button onclick="testOrientation()">Check Orientation</button>
+            </div>
+
+            <!-- Performance -->
+            <h2 class="section-title">Performance Stats</h2>
+            <div class="stats-grid" id="performanceStats">
+                <div class="stat-card">
+                    <div class="label">Screen Width</div>
+                    <div class="value" id="screenWidth">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Screen Height</div>
+                    <div class="value" id="screenHeight">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Pixel Ratio</div>
+                    <div class="value" id="pixelRatio">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Touch Support</div>
+                    <div class="value" id="touchSupport">-</div>
+                </div>
+            </div>
+
+            <button onclick="refreshStats()" style="margin-top: 20px;">🔄 Refresh All Stats</button>
+        </div>
+    </div>
+
+    <!-- Load Mobile Enhancements -->
+    <script src="mobile-enhancements.js"></script>
+
+    <script>
+        // Test Functions
+        function addResult(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+
+        function clearResults(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) container.innerHTML = '';
+        }
+
+        // Device Detection Test
+        function testDeviceDetection() {
+            clearResults('detectionResults');
+
+            const isMobile = mobileEnhancements.detectMobile();
+            const isTouch = 'ontouchstart' in window;
+            const deviceInfo = mobileEnhancements.getDeviceInfo();
+
+            if (isMobile) {
+                addResult('detectionResults', '✅ Mobile device detected', 'success');
+                document.getElementById('mobileStatusBadge').textContent = 'Mobile';
+                document.getElementById('mobileStatusBadge').className = 'badge active';
+            } else {
+                addResult('detectionResults', '⚠️ Desktop device detected', 'info');
+                document.getElementById('mobileStatusBadge').textContent = 'Desktop';
+                document.getElementById('mobileStatusBadge').className = 'badge inactive';
+            }
+
+            addResult('detectionResults', `Touch Support: ${isTouch ? 'Yes' : 'No'}`, 'info');
+            addResult('detectionResults', `OS: ${deviceInfo.os}`, 'info');
+            addResult('detectionResults', `Browser: ${deviceInfo.browser}`, 'info');
+            addResult('detectionResults', `Screen: ${deviceInfo.screenWidth}x${deviceInfo.screenHeight}`, 'info');
+        }
+
+        // Toast Test
+        function testToast() {
+            mobileEnhancements.showToast('Hello from Mobile Enhancements! 👋', 2000);
+            addResult('toastResults', '✅ Toast displayed for 2 seconds', 'success');
+        }
+
+        function testToastLong() {
+            mobileEnhancements.showToast('This is a longer message that demonstrates toast notifications on mobile devices.', 4000);
+            addResult('toastResults', '✅ Long toast displayed for 4 seconds', 'success');
+        }
+
+        // PWA Test
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.add('show');
+        });
+
+        function testPWA() {
+            clearResults('pwaResults');
+
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                addResult('pwaResults', '✅ Running as installed PWA', 'success');
+            } else {
+                addResult('pwaResults', '⚠️ Running in browser mode', 'info');
+            }
+
+            if (deferredPrompt) {
+                addResult('pwaResults', '✅ PWA install available', 'success');
+            } else {
+                addResult('pwaResults', '⚠️ PWA already installed or not available', 'info');
+            }
+
+            mobileEnhancements.setupPWA();
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        addResult('pwaResults', '✅ PWA installation accepted', 'success');
+                    } else {
+                        addResult('pwaResults', '❌ PWA installation declined', 'error');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installPrompt').classList.remove('show');
+                });
+            }
+        }
+
+        // Orientation Test
+        function testOrientation() {
+            clearResults('orientationResults');
+
+            const orientation = window.screen.orientation?.type ||
+                              (window.innerWidth > window.innerHeight ? 'landscape' : 'portrait');
+
+            addResult('orientationResults', `📱 Current: ${orientation}`, 'info');
+            addResult('orientationResults', `Screen: ${window.innerWidth}x${window.innerHeight}px`, 'info');
+
+            window.addEventListener('orientationchange', () => {
+                addResult('orientationResults', '🔄 Orientation changed!', 'success');
+            }, { once: true });
+        }
+
+        // Touch Zone
+        const touchZone = document.getElementById('touchZone');
+        const touchFeedback = document.getElementById('touchFeedback');
+
+        touchZone.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            touchFeedback.textContent = `Touch at (${Math.round(touch.clientX)}, ${Math.round(touch.clientY)})`;
+        });
+
+        touchZone.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            touchFeedback.textContent = `Moving at (${Math.round(touch.clientX)}, ${Math.round(touch.clientY)})`;
+        });
+
+        touchZone.addEventListener('touchend', () => {
+            setTimeout(() => {
+                touchFeedback.textContent = 'Touch ended ✨';
+            }, 100);
+        });
+
+        // Refresh Stats
+        function refreshStats() {
+            const deviceInfo = mobileEnhancements.getDeviceInfo();
+
+            document.getElementById('screenWidth').textContent = deviceInfo.screenWidth + 'px';
+            document.getElementById('screenHeight').textContent = deviceInfo.screenHeight + 'px';
+            document.getElementById('pixelRatio').textContent = deviceInfo.pixelRatio + 'x';
+            document.getElementById('touchSupport').textContent = 'ontouchstart' in window ? 'Yes' : 'No';
+
+            // Update device info in header
+            document.getElementById('deviceInfo').innerHTML = `
+                📱 ${deviceInfo.os} | 🌐 ${deviceInfo.browser} | 📐 ${deviceInfo.screenWidth}x${deviceInfo.screenHeight}
+            `;
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            refreshStats();
+            testDeviceDetection();
+
+            // Show swipe hint on mobile
+            if (mobileEnhancements.detectMobile()) {
+                mobileEnhancements.showToast('👈 Swipe from left edge to test gestures!', 4000);
+            }
+        });
+
+        // Log device info
+        mobileEnhancements.logDeviceInfo();
+    </script>
+</body>
+</html>
