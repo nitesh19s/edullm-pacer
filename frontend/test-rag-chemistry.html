@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test RAG Chat - Chemistry Grade 10</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .container { max-width: 900px; margin: 0 auto; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 30px; box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); }
+        h1 { color: #fff; border-bottom: 3px solid #fff; padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { color: #fff; margin-top: 30px; background: rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 8px; }
+        .step { background: rgba(255,255,255,0.15); padding: 20px; margin: 15px 0; border-radius: 10px; border-left: 5px solid #4ade80; }
+        .step-number { font-size: 24px; font-weight: bold; color: #4ade80; display: inline-block; margin-right: 10px; }
+        .code { background: rgba(0,0,0,0.3); padding: 10px 15px; border-radius: 5px; font-family: 'Courier New', monospace; margin: 10px 0; display: block; }
+        .query-example { background: rgba(76, 175, 80, 0.2); padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #4caf50; }
+        .query-example strong { color: #4ade80; }
+        .important { background: rgba(255, 193, 7, 0.2); padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 15px 0; }
+        .success { background: rgba(76, 175, 80, 0.2); padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50; margin: 15px 0; }
+        button { background: #4ade80; color: #000; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 10px 5px; font-size: 16px; transition: all 0.3s; }
+        button:hover { background: #22c55e; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(74, 222, 128, 0.4); }
+        ul { line-height: 1.8; }
+        li { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 RAG Chat Testing Guide - Chemistry Grade 10</h1>
+
+        <div class="important">
+            <strong>📋 Prerequisites:</strong>
+            <ul>
+                <li>✅ NCERT Chemistry Grade 10 PDF uploaded</li>
+                <li>✅ Data integrated (clicked "Integrate Data" button)</li>
+                <li>✅ Ollama running with llama3.2 and nomic-embed-text models</li>
+                <li>✅ Local models initialized in Settings</li>
+            </ul>
+        </div>
+
+        <h2>📖 Step-by-Step Testing Instructions</h2>
+
+        <div class="step">
+            <span class="step-number">1️⃣</span>
+            <strong>Open the Main Platform</strong>
+            <p>Navigate to <code class="code">index.html</code> in your browser</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2️⃣</span>
+            <strong>Initialize Local Models (if not done)</strong>
+            <ul>
+                <li>Go to Settings section (⚙️)</li>
+                <li>Scroll to "Local AI Models"</li>
+                <li>Click "Test Connection"</li>
+                <li>Verify: ✅ Ollama is running</li>
+                <li>Verify: ✅ Models available: llama3.2, nomic-embed-text</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3️⃣</span>
+            <strong>Go to RAG Chat Section</strong>
+            <ul>
+                <li>Click on "RAG Chat" in the navigation (💬)</li>
+                <li>You should see the chat interface with filters at the top</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4️⃣</span>
+            <strong>Set Filters for Chemistry Grade 10</strong>
+            <p>In the chat header, set the following filters:</p>
+            <ul>
+                <li><strong>Subject Filter:</strong> Select <code class="code" style="display: inline; padding: 3px 8px;">Chemistry</code></li>
+                <li><strong>Grade Filter:</strong> Select <code class="code" style="display: inline; padding: 3px 8px;">Grade 10</code></li>
+                <li><strong>Source Filter:</strong> Select <code class="code" style="display: inline; padding: 3px 8px;">NCERT</code> (or leave as "All Sources")</li>
+            </ul>
+            <div class="success" style="margin-top: 15px;">
+                <strong>✅ Result:</strong> Now all RAG queries will ONLY search in Chemistry Grade 10 content!
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">5️⃣</span>
+            <strong>Test with Chemistry Questions</strong>
+            <p>Try these sample queries in the chat input:</p>
+
+            <div class="query-example">
+                <strong>Query 1:</strong> "What are chemical reactions?"
+                <br><small>Expected: Should retrieve content about chemical reactions from Chemistry Grade 10</small>
+            </div>
+
+            <div class="query-example">
+                <strong>Query 2:</strong> "Explain the periodic table"
+                <br><small>Expected: Should retrieve content about periodic table organization</small>
+            </div>
+
+            <div class="query-example">
+                <strong>Query 3:</strong> "What are acids and bases?"
+                <br><small>Expected: Should retrieve content about acids, bases, and pH</small>
+            </div>
+
+            <div class="query-example">
+                <strong>Query 4:</strong> "Explain carbon compounds"
+                <br><small>Expected: Should retrieve content about organic chemistry and carbon</small>
+            </div>
+
+            <div class="query-example">
+                <strong>Query 5:</strong> "What is corrosion?"
+                <br><small>Expected: Should retrieve content about corrosion and rusting</small>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">6️⃣</span>
+            <strong>Verify the Response</strong>
+            <p>When you send a query, check:</p>
+            <ul>
+                <li>✅ Response appears after 3-10 seconds (local processing time)</li>
+                <li>✅ Response contains relevant Chemistry content</li>
+                <li>✅ Source citations show "Chemistry" and "Grade 10"</li>
+                <li>✅ Console shows: "Filtered by subject 'chemistry': X results"</li>
+                <li>✅ Console shows: "Filtered by grade '10': X results"</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-number">7️⃣</span>
+            <strong>Check Browser Console</strong>
+            <p>Open Developer Console (F12) and look for:</p>
+            <code class="code">
+🔍 RAG Query Started: [your question]<br>
+✨ Query cleaned: [cleaned query]<br>
+📦 Retrieved X chunks<br>
+📚 Filtered by subject "chemistry": X results<br>
+🎓 Filtered by grade "10": X results<br>
+🤖 Using local model for RAG response<br>
+✅ RAG Query Complete (Xms)
+            </code>
+        </div>
+
+        <h2>🧪 Advanced Testing</h2>
+
+        <div class="step">
+            <strong>Test Filter Switching</strong>
+            <ol>
+                <li>Ask a Chemistry Grade 10 question with filters set</li>
+                <li>Change Subject to "Physics" (keep Grade 10)</li>
+                <li>Ask the same question again</li>
+                <li>Verify: Response now comes from Physics instead of Chemistry!</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <strong>Test Without Filters</strong>
+            <ol>
+                <li>Set all filters to "All"</li>
+                <li>Ask: "What is energy?"</li>
+                <li>Verify: Results may come from multiple subjects (Physics, Chemistry, Science)</li>
+            </ol>
+        </div>
+
+        <h2>🔍 Troubleshooting</h2>
+
+        <div class="important">
+            <strong>❌ Problem: "No relevant information found"</strong>
+            <br><br>
+            <strong>Solutions:</strong>
+            <ul>
+                <li>Check if Chemistry Grade 10 PDF was uploaded and integrated</li>
+                <li>Go to Upload History → verify Chemistry Grade 10 entry exists</li>
+                <li>Check console for indexing confirmation</li>
+                <li>Try re-integrating data (Data Upload → Integrate Data)</li>
+            </ul>
+        </div>
+
+        <div class="important">
+            <strong>❌ Problem: Getting results from wrong subject/grade</strong>
+            <br><br>
+            <strong>Solutions:</strong>
+            <ul>
+                <li>Double-check filter dropdowns are set correctly</li>
+                <li>Refresh the page and re-apply filters</li>
+                <li>Check console logs for "Filtered by..." messages</li>
+            </ul>
+        </div>
+
+        <div class="important">
+            <strong>❌ Problem: "Local models not initialized"</strong>
+            <br><br>
+            <strong>Solutions:</strong>
+            <ul>
+                <li>Go to Settings → Local AI Models</li>
+                <li>Click "Test Connection"</li>
+                <li>If Ollama not running: <code class="code" style="display: inline; padding: 3px 8px;">brew services start ollama</code></li>
+                <li>Refresh page after starting Ollama</li>
+            </ul>
+        </div>
+
+        <h2>📊 Expected Performance</h2>
+
+        <div class="success">
+            <strong>⏱️ Response Times (Local Processing):</strong>
+            <ul>
+                <li>Embedding Generation: 0.5-2 seconds</li>
+                <li>Vector Search: 0.1-0.5 seconds</li>
+                <li>LLM Response Generation: 2-8 seconds</li>
+                <li><strong>Total: 3-10 seconds per query</strong></li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <strong>💰 Cost:</strong>
+            <ul>
+                <li><strong>$0.00</strong> - Completely FREE! (Running locally)</li>
+                <li>No API calls to OpenAI, Anthropic, or any paid service</li>
+                <li>All processing happens on your machine</li>
+            </ul>
+        </div>
+
+        <h2>🎯 Sample Test Script</h2>
+
+        <div class="code" style="white-space: pre-wrap;">
+1. Open index.html
+2. Go to Settings → Test local models (should be ✅)
+3. Go to RAG Chat section
+4. Set filters:
+   - Subject: Chemistry
+   - Grade: Grade 10
+   - Source: NCERT
+5. Ask: "What are acids?"
+6. Wait 5-10 seconds
+7. Verify response talks about acids from Chemistry
+8. Check sources show "Chemistry - Grade 10"
+9. Ask: "Explain chemical bonding"
+10. Verify response is Chemistry-specific
+        </div>
+
+        <div class="success" style="margin-top: 30px; padding: 20px;">
+            <h3 style="margin-top: 0;">✅ Success Criteria</h3>
+            <p>Your RAG chat is working correctly if:</p>
+            <ul>
+                <li>✅ Questions get answered with Chemistry Grade 10 content</li>
+                <li>✅ Answers are contextually relevant to your question</li>
+                <li>✅ Source citations show correct subject and grade</li>
+                <li>✅ Changing filters changes which content is retrieved</li>
+                <li>✅ Console shows filter messages during search</li>
+                <li>✅ No errors in browser console</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="window.open('index.html', '_blank')">🚀 Open Main Platform</button>
+            <button onclick="window.open('check-rag-status.html', '_blank')">🔍 Check RAG Status</button>
+        </div>
+    </div>
+</body>
+</html>

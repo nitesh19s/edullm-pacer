@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG System Integration Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .test-result {
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .test-result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .test-result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .test-result.warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-card .label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-size: 0.85em;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s linear infinite;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .button-group {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 RAG System Integration Test</h1>
+            <p>Complete End-to-End Testing of Enhanced LLM + Vector Store + RAG Orchestrator</p>
+        </div>
+
+        <div class="content">
+            <!-- Module Loading Test -->
+            <div class="test-section">
+                <h2>1️⃣ Module Loading Test</h2>
+                <div id="moduleLoadingResults"></div>
+                <div class="button-group">
+                    <button onclick="runModuleLoadingTest()">Run Module Test</button>
+                </div>
+            </div>
+
+            <!-- LLM Service Test -->
+            <div class="test-section">
+                <h2>2️⃣ Enhanced LLM Service Test</h2>
+                <div id="llmServiceResults"></div>
+                <div class="button-group">
+                    <button onclick="runLLMServiceTest()">Test LLM Service</button>
+                    <button onclick="testEmbeddingGeneration()">Test Embeddings</button>
+                </div>
+            </div>
+
+            <!-- Vector Store Test -->
+            <div class="test-section">
+                <h2>3️⃣ Vector Store Test</h2>
+                <div id="vectorStoreResults"></div>
+                <div class="button-group">
+                    <button onclick="runVectorStoreTest()">Test Vector Store</button>
+                    <button onclick="testVectorSearch()">Test Semantic Search</button>
+                </div>
+            </div>
+
+            <!-- RAG Orchestrator Test -->
+            <div class="test-section">
+                <h2>4️⃣ RAG Orchestrator Test</h2>
+                <div id="ragOrchestratorResults"></div>
+                <div class="button-group">
+                    <button onclick="runRAGOrchestratorTest()">Test RAG Pipeline</button>
+                    <button onclick="testDocumentAddition()">Test Document Addition</button>
+                </div>
+            </div>
+
+            <!-- Full Integration Test -->
+            <div class="test-section">
+                <h2>5️⃣ Full Integration Test</h2>
+                <div id="integrationResults"></div>
+                <div class="button-group">
+                    <button onclick="runFullIntegrationTest()" style="font-size: 1.1em; padding: 15px 30px;">
+                        🚀 Run Complete Integration Test
+                    </button>
+                    <button onclick="clearAllResults()">Clear Results</button>
+                </div>
+            </div>
+
+            <!-- System Statistics -->
+            <div class="test-section">
+                <h2>📊 System Statistics</h2>
+                <div id="systemStats"></div>
+                <div class="button-group">
+                    <button onclick="refreshSystemStats()">Refresh Statistics</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include all required modules -->
+    <script src="llm-service-enhanced.js"></script>
+    <script src="vector-store-enhanced.js"></script>
+    <script src="rag-orchestrator.js"></script>
+
+    <script>
+        // Utility functions
+        function addResult(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+
+        function clearResults(containerId) {
+            document.getElementById(containerId).innerHTML = '';
+        }
+
+        function clearAllResults() {
+            ['moduleLoadingResults', 'llmServiceResults', 'vectorStoreResults',
+             'ragOrchestratorResults', 'integrationResults', 'systemStats'].forEach(clearResults);
+        }
+
+        // Test 1: Module Loading
+        function runModuleLoadingTest() {
+            clearResults('moduleLoadingResults');
+
+            const modules = [
+                { name: 'Enhanced LLM Service', obj: window.enhancedLLMService },
+                { name: 'Enhanced Vector Store', obj: window.enhancedVectorStore },
+                { name: 'RAG Orchestrator', obj: window.ragOrchestrator }
+            ];
+
+            modules.forEach(module => {
+                if (module.obj) {
+                    addResult('moduleLoadingResults',
+                        `✅ ${module.name} loaded successfully`, 'success');
+                } else {
+                    addResult('moduleLoadingResults',
+                        `❌ ${module.name} not found`, 'error');
+                }
+            });
+
+            // Check backward compatibility
+            if (window.llmService === window.enhancedLLMService) {
+                addResult('moduleLoadingResults',
+                    '✅ Backward compatibility alias (llmService) working', 'success');
+            }
+
+            if (window.vectorStore === window.enhancedVectorStore) {
+                addResult('moduleLoadingResults',
+                    '✅ Backward compatibility alias (vectorStore) working', 'success');
+            }
+        }
+
+        // Test 2: LLM Service
+        async function runLLMServiceTest() {
+            clearResults('llmServiceResults');
+
+            try {
+                const llmService = window.enhancedLLMService;
+
+                if (!llmService) {
+                    throw new Error('Enhanced LLM Service not available');
+                }
+
+                addResult('llmServiceResults',
+                    '🔍 Checking LLM Service configuration...', 'info');
+
+                // Check providers
+                const providers = llmService.getProviders();
+                addResult('llmServiceResults',
+                    `✅ Found ${providers.length} providers: ${providers.join(', ')}`, 'success');
+
+                // Check current provider
+                const currentProvider = llmService.getCurrentProvider();
+                addResult('llmServiceResults',
+                    `📍 Current provider: ${currentProvider}`, 'info');
+
+                // Check if configured
+                const isConfigured = llmService.isProviderConfigured(currentProvider);
+                if (isConfigured) {
+                    addResult('llmServiceResults',
+                        `✅ ${currentProvider} is configured`, 'success');
+                } else {
+                    addResult('llmServiceResults',
+                        `⚠️ ${currentProvider} not configured - API key needed`, 'warning');
+                }
+
+                // Get available models
+                const models = llmService.getModels(currentProvider);
+                addResult('llmServiceResults',
+                    `📋 Available models: ${models.map(m => m.name).join(', ')}`, 'info');
+
+                // Get statistics
+                const stats = llmService.getStatistics();
+                addResult('llmServiceResults',
+                    `📊 Stats: ${stats.totalRequests} requests, ${stats.totalTokens} tokens`, 'info');
+
+            } catch (error) {
+                addResult('llmServiceResults',
+                    `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testEmbeddingGeneration() {
+            clearResults('llmServiceResults');
+
+            try {
+                const llmService = window.enhancedLLMService;
+
+                if (!llmService.isProviderConfigured('openai')) {
+                    addResult('llmServiceResults',
+                        '⚠️ OpenAI not configured. Please configure in main app settings.', 'warning');
+                    return;
+                }
+
+                addResult('llmServiceResults',
+                    '🔄 Generating test embeddings... <span class="loading"></span>', 'info');
+
+                const testTexts = [
+                    'Photosynthesis is the process by which plants make food',
+                    'The Pythagorean theorem relates to right triangles'
+                ];
+
+                const result = await llmService.generateEmbeddings(testTexts);
+
+                addResult('llmServiceResults',
+                    `✅ Generated ${result.embeddings.length} embeddings`, 'success');
+                addResult('llmServiceResults',
+                    `📏 Dimension: ${result.dimensions}`, 'info');
+                addResult('llmServiceResults',
+                    `⚡ Tokens used: ${result.usage.total_tokens}`, 'info');
+
+            } catch (error) {
+                addResult('llmServiceResults',
+                    `❌ Embedding generation failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 3: Vector Store
+        async function runVectorStoreTest() {
+            clearResults('vectorStoreResults');
+
+            try {
+                const vectorStore = window.enhancedVectorStore;
+
+                if (!vectorStore) {
+                    throw new Error('Enhanced Vector Store not available');
+                }
+
+                await vectorStore.initialize();
+                addResult('vectorStoreResults',
+                    '✅ Vector Store initialized', 'success');
+
+                const stats = vectorStore.getStatistics();
+                addResult('vectorStoreResults',
+                    `📊 Total vectors: ${stats.totalVectors}`, 'info');
+                addResult('vectorStoreResults',
+                    `📚 Total documents: ${stats.totalDocuments}`, 'info');
+                addResult('vectorStoreResults',
+                    `📏 Dimension: ${stats.dimension}`, 'info');
+                addResult('vectorStoreResults',
+                    `💾 Memory usage: ${stats.memoryUsageMB} MB`, 'info');
+
+                // Show collections
+                const collections = stats.collections;
+                if (Object.keys(collections).length > 0) {
+                    const collectionList = Object.entries(collections)
+                        .map(([name, count]) => `${name}: ${count} vectors`)
+                        .join(', ');
+                    addResult('vectorStoreResults',
+                        `📂 Collections: ${collectionList}`, 'info');
+                }
+
+            } catch (error) {
+                addResult('vectorStoreResults',
+                    `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testVectorSearch() {
+            clearResults('vectorStoreResults');
+
+            try {
+                const vectorStore = window.enhancedVectorStore;
+                const llmService = window.enhancedLLMService;
+
+                if (!llmService.isProviderConfigured('openai')) {
+                    addResult('vectorStoreResults',
+                        '⚠️ OpenAI not configured. Configure it to test semantic search.', 'warning');
+                    return;
+                }
+
+                if (vectorStore.vectors.size === 0) {
+                    addResult('vectorStoreResults',
+                        '⚠️ No vectors in store. Add documents first.', 'warning');
+                    return;
+                }
+
+                addResult('vectorStoreResults',
+                    '🔍 Performing semantic search... <span class="loading"></span>', 'info');
+
+                const results = await vectorStore.search('What is photosynthesis?', {
+                    topK: 3,
+                    minScore: 0.0
+                });
+
+                addResult('vectorStoreResults',
+                    `✅ Found ${results.length} results`, 'success');
+
+                results.forEach((result, i) => {
+                    addResult('vectorStoreResults',
+                        `${i + 1}. Score: ${result.score.toFixed(4)} - "${result.content.substring(0, 80)}..."`,
+                        'info');
+                });
+
+            } catch (error) {
+                addResult('vectorStoreResults',
+                    `❌ Search failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 4: RAG Orchestrator
+        async function runRAGOrchestratorTest() {
+            clearResults('ragOrchestratorResults');
+
+            try {
+                const rag = window.ragOrchestrator;
+
+                if (!rag) {
+                    throw new Error('RAG Orchestrator not available');
+                }
+
+                await rag.initialize();
+                addResult('ragOrchestratorResults',
+                    '✅ RAG Orchestrator initialized', 'success');
+
+                const stats = rag.getStatistics();
+                addResult('ragOrchestratorResults',
+                    `📊 Total queries: ${stats.totalQueries}`, 'info');
+                addResult('ragOrchestratorResults',
+                    `📚 Total documents: ${stats.totalDocuments}`, 'info');
+                addResult('ragOrchestratorResults',
+                    `⏱️ Avg retrieval time: ${stats.avgRetrievalTime.toFixed(2)}ms`, 'info');
+                addResult('ragOrchestratorResults',
+                    `⏱️ Avg generation time: ${stats.avgGenerationTime.toFixed(2)}ms`, 'info');
+
+                // Show config
+                const config = stats.config;
+                addResult('ragOrchestratorResults',
+                    `⚙️ Top-K: ${config.retrievalTopK}, Min Score: ${config.retrievalMinScore}`, 'info');
+
+            } catch (error) {
+                addResult('ragOrchestratorResults',
+                    `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDocumentAddition() {
+            clearResults('ragOrchestratorResults');
+
+            try {
+                const rag = window.ragOrchestrator;
+                const llmService = window.enhancedLLMService;
+
+                if (!llmService.isProviderConfigured('openai')) {
+                    addResult('ragOrchestratorResults',
+                        '⚠️ OpenAI not configured. Configure it to add documents.', 'warning');
+                    return;
+                }
+
+                addResult('ragOrchestratorResults',
+                    '📄 Adding test document... <span class="loading"></span>', 'info');
+
+                const testDocument = `
+                    Photosynthesis is the process by which green plants and some other organisms
+                    use sunlight to synthesize foods from carbon dioxide and water. Photosynthesis
+                    in plants generally involves the green pigment chlorophyll and generates oxygen
+                    as a byproduct. This process is essential for life on Earth as it produces oxygen
+                    and serves as the primary energy source for most living organisms.
+                `;
+
+                const result = await rag.addDocument(testDocument, {
+                    title: 'Photosynthesis Basics',
+                    subject: 'Science',
+                    grade: 8,
+                    collection: 'test-documents'
+                });
+
+                addResult('ragOrchestratorResults',
+                    `✅ Document added: ${result.chunkCount} chunks created`, 'success');
+                addResult('ragOrchestratorResults',
+                    `📝 Document ID: ${result.documentId}`, 'info');
+
+            } catch (error) {
+                addResult('ragOrchestratorResults',
+                    `❌ Failed to add document: ${error.message}`, 'error');
+            }
+        }
+
+        // Test 5: Full Integration
+        async function runFullIntegrationTest() {
+            clearResults('integrationResults');
+
+            try {
+                addResult('integrationResults',
+                    '🚀 Starting full integration test...', 'info');
+
+                // Step 1: Initialize all modules
+                addResult('integrationResults',
+                    '1️⃣ Initializing modules... <span class="loading"></span>', 'info');
+
+                await window.enhancedVectorStore.initialize();
+                await window.ragOrchestrator.initialize();
+
+                addResult('integrationResults',
+                    '✅ All modules initialized', 'success');
+
+                // Step 2: Check configuration
+                addResult('integrationResults',
+                    '2️⃣ Checking configuration...', 'info');
+
+                const llmService = window.enhancedLLMService;
+                const isConfigured = llmService.isProviderConfigured(llmService.getCurrentProvider());
+
+                if (!isConfigured) {
+                    addResult('integrationResults',
+                        '⚠️ LLM not configured. Full pipeline test requires API key.', 'warning');
+                    addResult('integrationResults',
+                        '💡 Tip: Configure OpenAI API key in the main application settings.', 'info');
+                    return;
+                }
+
+                addResult('integrationResults',
+                    '✅ LLM configured and ready', 'success');
+
+                // Step 3: Add test document
+                addResult('integrationResults',
+                    '3️⃣ Adding test document... <span class="loading"></span>', 'info');
+
+                const testDoc = `
+                    The water cycle, also known as the hydrologic cycle, describes the continuous
+                    movement of water on, above, and below the surface of the Earth. Water evaporates
+                    from water bodies, condenses into clouds, and falls back to Earth as precipitation.
+                    This cycle is powered by the sun's energy and is essential for sustaining life.
+                `;
+
+                const docResult = await window.ragOrchestrator.addDocument(testDoc, {
+                    title: 'Water Cycle',
+                    subject: 'Science',
+                    grade: 6
+                });
+
+                addResult('integrationResults',
+                    `✅ Document added: ${docResult.chunkCount} chunks`, 'success');
+
+                // Step 4: Perform RAG query
+                addResult('integrationResults',
+                    '4️⃣ Performing RAG query... <span class="loading"></span>', 'info');
+
+                const queryResult = await window.ragOrchestrator.generateAnswer(
+                    'What is the water cycle?',
+                    { subject: 'Science', grade: 6 }
+                );
+
+                addResult('integrationResults',
+                    '✅ RAG query successful!', 'success');
+
+                addResult('integrationResults',
+                    `<strong>Answer:</strong><br>${queryResult.answer}`, 'info');
+
+                addResult('integrationResults',
+                    `📊 Metrics: ${queryResult.metadata.chunksUsed} chunks, ` +
+                    `${queryResult.metadata.totalTime}ms total, ` +
+                    `Confidence: ${queryResult.confidence}`, 'info');
+
+                if (queryResult.sources.length > 0) {
+                    addResult('integrationResults',
+                        `📚 Sources: ${queryResult.sources.length} chunks used`, 'success');
+                }
+
+                addResult('integrationResults',
+                    '🎉 Full integration test PASSED!', 'success');
+
+            } catch (error) {
+                addResult('integrationResults',
+                    `❌ Integration test failed: ${error.message}`, 'error');
+                console.error('Integration test error:', error);
+            }
+        }
+
+        // System Statistics
+        function refreshSystemStats() {
+            clearResults('systemStats');
+
+            try {
+                const llmStats = window.enhancedLLMService?.getStatistics() || {};
+                const vectorStats = window.enhancedVectorStore?.getStatistics() || {};
+                const ragStats = window.ragOrchestrator?.getStatistics() || {};
+
+                const statsHTML = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="label">LLM Requests</div>
+                            <div class="value">${llmStats.totalRequests || 0}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Tokens Used</div>
+                            <div class="value">${llmStats.totalTokens || 0}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Total Vectors</div>
+                            <div class="value">${vectorStats.totalVectors || 0}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Documents</div>
+                            <div class="value">${vectorStats.totalDocuments || 0}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">RAG Queries</div>
+                            <div class="value">${ragStats.totalQueries || 0}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Memory (MB)</div>
+                            <div class="value">${vectorStats.memoryUsageMB || 0}</div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('systemStats').innerHTML = statsHTML;
+
+            } catch (error) {
+                addResult('systemStats',
+                    `❌ Failed to get statistics: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-run module loading test on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                runModuleLoadingTest();
+                refreshSystemStats();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check RAG Status</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #0a0a0a; color: #00ff00; }
+        h1 { color: #00ff00; border-bottom: 2px solid #00ff00; padding-bottom: 10px; }
+        h2 { color: #00cc00; margin-top: 30px; }
+        pre { background: #000; padding: 15px; border-radius: 5px; white-space: pre-wrap; border-left: 3px solid #00ff00; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #002200; border: 1px solid #00ff00; }
+        .warning { background: #332200; border: 1px solid #ffaa00; color: #ffaa00; }
+        .error { background: #220000; border: 1px solid #ff0000; color: #ff0000; }
+        button { background: #00ff00; color: #000; padding: 12px 24px; border: none; cursor: pointer; margin: 10px 5px; border-radius: 5px; font-weight: bold; }
+        button:hover { background: #00cc00; }
+        .section { margin: 20px 0; padding: 15px; background: #1a1a1a; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 RAG System Status Checker</h1>
+
+    <button onclick="checkAll()">🔄 Run All Checks</button>
+    <button onclick="location.reload()">♻️ Refresh Page</button>
+
+    <div class="section">
+        <h2>1️⃣ Local Model Status</h2>
+        <div id="localModelStatus"></div>
+    </div>
+
+    <div class="section">
+        <h2>2️⃣ Uploaded Data Status</h2>
+        <div id="dataStatus"></div>
+    </div>
+
+    <div class="section">
+        <h2>3️⃣ Vector Store Status</h2>
+        <div id="vectorStatus"></div>
+    </div>
+
+    <div class="section">
+        <h2>4️⃣ RAG Components Status</h2>
+        <div id="ragStatus"></div>
+    </div>
+
+    <div class="section">
+        <h2>5️⃣ Recommendations</h2>
+        <div id="recommendations"></div>
+    </div>
+
+    <script>
+        function log(elementId, msg, type = 'info') {
+            const el = document.getElementById(elementId);
+            const statusClass = type === 'success' ? 'success' : type === 'warning' ? 'warning' : type === 'error' ? 'error' : '';
+            el.innerHTML += `<div class="status ${statusClass}">${msg}</div>`;
+            console.log(msg);
+        }
+
+        async function checkAll() {
+            document.getElementById('localModelStatus').innerHTML = '';
+            document.getElementById('dataStatus').innerHTML = '';
+            document.getElementById('vectorStatus').innerHTML = '';
+            document.getElementById('ragStatus').innerHTML = '';
+            document.getElementById('recommendations').innerHTML = '';
+
+            await checkLocalModels();
+            await checkUploadedData();
+            await checkVectorStore();
+            await checkRAGComponents();
+            provideRecommendations();
+        }
+
+        async function checkLocalModels() {
+            log('localModelStatus', '🔍 Checking local models...');
+
+            // Check if Ollama is reachable
+            try {
+                const response = await fetch('http://localhost:11434/api/tags');
+                if (response.ok) {
+                    const data = await response.json();
+                    log('localModelStatus', `✅ Ollama is running (${data.models.length} models available)`, 'success');
+
+                    const hasLlama = data.models.some(m => m.name.includes('llama3.2'));
+                    const hasEmbed = data.models.some(m => m.name.includes('nomic-embed'));
+
+                    if (hasLlama && hasEmbed) {
+                        log('localModelStatus', '✅ Required models found: llama3.2 + nomic-embed-text', 'success');
+                    } else {
+                        log('localModelStatus', '⚠️ Missing required models', 'warning');
+                        if (!hasLlama) log('localModelStatus', '  ❌ llama3.2 not found', 'warning');
+                        if (!hasEmbed) log('localModelStatus', '  ❌ nomic-embed-text not found', 'warning');
+                    }
+                } else {
+                    log('localModelStatus', '❌ Ollama API returned error', 'error');
+                }
+            } catch (error) {
+                log('localModelStatus', '❌ Ollama not running or not accessible', 'error');
+                log('localModelStatus', `   Error: ${error.message}`, 'error');
+            }
+
+            // Check window objects
+            const localManager = window.localModelManager;
+            if (localManager) {
+                log('localModelStatus', '✅ localModelManager loaded', 'success');
+                if (localManager.initialized) {
+                    log('localModelStatus', '✅ localModelManager initialized', 'success');
+                    log('localModelStatus', `   Provider: ${localManager.activeProvider}`, 'success');
+                } else {
+                    log('localModelStatus', '⚠️ localModelManager not initialized', 'warning');
+                }
+            } else {
+                log('localModelStatus', '❌ localModelManager not found in window', 'error');
+            }
+        }
+
+        async function checkUploadedData() {
+            log('dataStatus', '🔍 Checking uploaded data...');
+
+            // Check upload history
+            const historyStr = localStorage.getItem('upload_history');
+            if (historyStr) {
+                const history = JSON.parse(historyStr);
+                const successfulUploads = history.filter(h => h.status === 'success');
+                log('dataStatus', `📁 Upload history: ${successfulUploads.length} successful uploads`, 'success');
+
+                if (successfulUploads.length > 0) {
+                    successfulUploads.forEach((h, i) => {
+                        log('dataStatus', `   ${i + 1}. ${h.fileName} (${h.subject}, Grade ${h.grade}, ${h.chapters} chapters, ${h.words} words)`);
+                    });
+                }
+            } else {
+                log('dataStatus', '❌ No upload history found', 'error');
+            }
+
+            // Check dataProcessor
+            if (window.eduLLM && window.eduLLM.dataProcessor) {
+                const processor = window.eduLLM.dataProcessor;
+                if (processor.processedData) {
+                    const grades = Object.keys(processor.processedData);
+                    log('dataStatus', `✅ dataProcessor has data for ${grades.length} grades`, 'success');
+                    log('dataStatus', `   Grades: ${grades.join(', ')}`);
+                } else {
+                    log('dataStatus', '⚠️ dataProcessor exists but no processedData', 'warning');
+                }
+            } else {
+                log('dataStatus', '❌ dataProcessor not found', 'error');
+            }
+
+            // Check database
+            if (window.eduLLM && window.eduLLM.database) {
+                try {
+                    const curriculumData = await window.eduLLM.database.getCurriculumData();
+                    if (curriculumData && Object.keys(curriculumData).length > 0) {
+                        log('dataStatus', `✅ Database contains curriculum data (${Object.keys(curriculumData).length} grades)`, 'success');
+                    } else {
+                        log('dataStatus', '⚠️ Database has no curriculum data', 'warning');
+                    }
+                } catch (error) {
+                    log('dataStatus', `❌ Error checking database: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function checkVectorStore() {
+            log('vectorStatus', '🔍 Checking vector store...');
+
+            // Check for vector store instances
+            const stores = [];
+            if (window.vectorStore) stores.push('vectorStore');
+            if (window.enhancedVectorStore) stores.push('enhancedVectorStore');
+
+            if (stores.length > 0) {
+                log('vectorStatus', `✅ Found: ${stores.join(', ')}`, 'success');
+
+                // Check vectorStore details
+                if (window.vectorStore) {
+                    const vs = window.vectorStore;
+                    const count = vs.items ? vs.items.length : (vs.vectors ? vs.vectors.size : 0);
+                    log('vectorStatus', `   vectorStore: ${count} vectors indexed`);
+
+                    if (count === 0) {
+                        log('vectorStatus', '⚠️ Vector store is empty - data needs to be indexed', 'warning');
+                    } else {
+                        log('vectorStatus', '✅ Vector store has indexed data', 'success');
+                    }
+                }
+
+                if (window.enhancedVectorStore) {
+                    const evs = window.enhancedVectorStore;
+                    const vcount = evs.vectors ? evs.vectors.size : 0;
+                    const dcount = evs.documents ? evs.documents.size : 0;
+                    log('vectorStatus', `   enhancedVectorStore: ${vcount} vectors, ${dcount} documents`);
+                }
+            } else {
+                log('vectorStatus', '❌ No vector store found', 'error');
+            }
+        }
+
+        async function checkRAGComponents() {
+            log('ragStatus', '🔍 Checking RAG components...');
+
+            // Check RAG orchestrator
+            if (window.ragOrchestrator) {
+                log('ragStatus', '✅ ragOrchestrator loaded', 'success');
+                if (window.ragOrchestrator.isInitialized) {
+                    log('ragStatus', '✅ ragOrchestrator initialized', 'success');
+                } else {
+                    log('ragStatus', '⚠️ ragOrchestrator not initialized', 'warning');
+                }
+            } else {
+                log('ragStatus', '⚠️ ragOrchestrator not found', 'warning');
+            }
+
+            // Check RAG chat manager
+            if (window.ragChatManager) {
+                log('ragStatus', '✅ ragChatManager loaded', 'success');
+                if (window.ragChatManager.initialized) {
+                    log('ragStatus', '✅ ragChatManager initialized', 'success');
+
+                    // Test data availability check
+                    const hasData = window.ragChatManager.checkDataAvailability();
+                    if (hasData) {
+                        log('ragStatus', '✅ RAG can find data for queries', 'success');
+                    } else {
+                        log('ragStatus', '❌ RAG cannot find data - indexing required', 'error');
+                    }
+                } else {
+                    log('ragStatus', '⚠️ ragChatManager not initialized', 'warning');
+                }
+            } else {
+                log('ragStatus', '❌ ragChatManager not found', 'error');
+            }
+
+            // Check for ragSystem (alternative implementation)
+            if (window.ragSystem) {
+                log('ragStatus', '✅ ragSystem loaded', 'success');
+                if (window.ragSystem.data) {
+                    log('ragStatus', `   ragSystem has ${window.ragSystem.data.length} data items`);
+                }
+            }
+        }
+
+        function provideRecommendations() {
+            log('recommendations', '💡 Analyzing configuration...');
+
+            const hasOllama = window.localModelManager && window.localModelManager.initialized;
+            const hasData = localStorage.getItem('upload_history') !== null;
+            const hasVectorStore = window.vectorStore !== undefined;
+            const hasRAGChat = window.ragChatManager !== undefined;
+
+            if (!hasOllama) {
+                log('recommendations', '1. Initialize local models in Settings → Local AI Models', 'warning');
+            }
+
+            if (!hasData) {
+                log('recommendations', '2. Upload NCERT PDFs from Data Upload page', 'warning');
+            }
+
+            if (hasData && !hasVectorStore) {
+                log('recommendations', '3. Vector store needs initialization', 'warning');
+            }
+
+            const history = localStorage.getItem('upload_history');
+            if (history) {
+                const uploads = JSON.parse(history);
+                const successful = uploads.filter(h => h.status === 'success');
+                if (successful.length > 0) {
+                    const vectorStore = window.vectorStore;
+                    const itemCount = vectorStore && vectorStore.items ? vectorStore.items.length : 0;
+
+                    if (itemCount === 0) {
+                        log('recommendations', '⚠️ CRITICAL: You have uploaded PDFs but they are NOT indexed for RAG!', 'error');
+                        log('recommendations', '   Action needed: Index the data for RAG search', 'error');
+                        log('recommendations', '   Option 1: Create an indexing function that loads data into vector store', 'warning');
+                        log('recommendations', '   Option 2: Use an existing "Index NCERT Data" button if available', 'warning');
+                    } else {
+                        log('recommendations', '✅ Data is uploaded and indexed - RAG should work!', 'success');
+                    }
+                }
+            }
+
+            if (hasOllama && hasData && hasVectorStore && hasRAGChat) {
+                log('recommendations', '✅ All components present - Ready to test RAG chat!', 'success');
+            }
+        }
+
+        // Auto-run checks on load
+        window.addEventListener('load', () => {
+            setTimeout(checkAll, 500);
+        });
+    </script>
+</body>
+</html>

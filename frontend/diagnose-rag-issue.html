@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RAG Issue Diagnostic</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        h1 {
+            color: #fff;
+            border-bottom: 3px solid #f59e0b;
+            padding-bottom: 15px;
+        }
+        .section {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .success { border-left: 5px solid #10b981; }
+        .error { border-left: 5px solid #ef4444; }
+        .warning { border-left: 5px solid #f59e0b; }
+        .info { border-left: 5px solid #3b82f6; }
+
+        button {
+            background: #f59e0b;
+            color: #000;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+        button.danger {
+            background: #ef4444;
+            color: white;
+        }
+        button.danger:hover {
+            background: #dc2626;
+        }
+
+        pre {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .log {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 150px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .log-entry {
+            padding: 5px;
+            margin: 3px 0;
+        }
+        .log-success { color: #10b981; }
+        .log-error { color: #ef4444; }
+        .log-warning { color: #f59e0b; }
+        .log-info { color: #60a5fa; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        th {
+            background: rgba(245, 158, 11, 0.3);
+            font-weight: bold;
+        }
+        tr:hover {
+            background: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 Complete RAG Diagnostic Tool</h1>
+
+        <div class="section error">
+            <h2>❌ Current Issues</h2>
+            <ol>
+                <li><strong>Error:</strong> "Key already exists in the object store"</li>
+                <li><strong>Issue:</strong> RAG chat says "couldn't find specific information"</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>🔍 Diagnostic Tests</h2>
+            <button onclick="runFullDiagnostic()">Run Full Diagnostic</button>
+            <button onclick="checkUploadHistory()">Check Uploads</button>
+            <button onclick="checkVectorStore()">Check Vector Store</button>
+            <button onclick="testDataIntegrity()">Test Data Integrity</button>
+            <button class="danger" onclick="clearAllAndReset()">Clear All & Reset</button>
+        </div>
+
+        <div class="section">
+            <h2>📊 Diagnostic Results</h2>
+            <div id="log" class="log">
+                <div class="log-entry log-info">Click "Run Full Diagnostic" to begin...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Recommended Fixes</h2>
+            <div id="recommendations" class="log">
+                <div class="log-entry log-info">Waiting for diagnostic results...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let issues = [];
+
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = message;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(`[${type.toUpperCase()}]`, message);
+        }
+
+        function recommend(message, type = 'warning') {
+            const recEl = document.getElementById('recommendations');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = message;
+            recEl.appendChild(entry);
+        }
+
+        function clearRecommendations() {
+            document.getElementById('recommendations').innerHTML = '';
+        }
+
+        async function runFullDiagnostic() {
+            document.getElementById('log').innerHTML = '';
+            clearRecommendations();
+            issues = [];
+
+            log('🚀 Starting full diagnostic...', 'info');
+            log('', 'info');
+
+            await checkUploadHistory();
+            log('', 'info');
+            await checkVectorStore();
+            log('', 'info');
+            await checkLocalStorage();
+            log('', 'info');
+            await testDataIntegrity();
+            log('', 'info');
+            await checkRAGSystem();
+            log('', 'info');
+
+            generateRecommendations();
+        }
+
+        async function checkUploadHistory() {
+            log('📁 Step 1: Checking Upload History...', 'info');
+
+            try {
+                const historyStr = localStorage.getItem('upload_history');
+
+                if (!historyStr) {
+                    log('❌ No upload history found!', 'error');
+                    issues.push('NO_UPLOAD_HISTORY');
+                    return;
+                }
+
+                const history = JSON.parse(historyStr);
+                const successful = history.filter(h => h.status === 'success');
+
+                log(`✅ Found ${successful.length} successful uploads`, 'success');
+
+                if (successful.length === 0) {
+                    log('❌ No successful uploads!', 'error');
+                    issues.push('NO_SUCCESSFUL_UPLOADS');
+                    return;
+                }
+
+                // Check for Chemistry Grade 10
+                const chemGrade10 = successful.find(h =>
+                    h.subject && h.subject.toLowerCase().includes('chem') &&
+                    String(h.grade) === '10'
+                );
+
+                if (chemGrade10) {
+                    log('✅ Chemistry Grade 10 found in uploads:', 'success');
+                    log(`   File: ${chemGrade10.fileName}`, 'info');
+                    log(`   Subject: ${chemGrade10.subject}`, 'info');
+                    log(`   Grade: ${chemGrade10.grade}`, 'info');
+                    log(`   Chapters: ${chemGrade10.chapters}`, 'info');
+                    log(`   Words: ${chemGrade10.words}`, 'info');
+                } else {
+                    log('⚠️ Chemistry Grade 10 NOT found in uploads', 'warning');
+                    log('   Available uploads:', 'info');
+                    successful.forEach((h, i) => {
+                        log(`   ${i + 1}. ${h.fileName} - ${h.subject} Grade ${h.grade}`, 'info');
+                    });
+                    issues.push('NO_CHEMISTRY_10');
+                }
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+                issues.push('UPLOAD_HISTORY_ERROR');
+            }
+        }
+
+        async function checkVectorStore() {
+            log('🔍 Step 2: Checking Vector Store...', 'info');
+
+            try {
+                if (!window.vectorStore) {
+                    log('❌ window.vectorStore not found!', 'error');
+                    log('💡 This means you need to open index.html first', 'warning');
+                    issues.push('NO_VECTOR_STORE');
+                    return;
+                }
+
+                const items = window.vectorStore.items || [];
+                log(`✅ Vector store loaded: ${items.length} items`, items.length > 0 ? 'success' : 'warning');
+
+                if (items.length === 0) {
+                    log('❌ Vector store is EMPTY!', 'error');
+                    log('💡 Data needs to be indexed for RAG', 'warning');
+                    issues.push('EMPTY_VECTOR_STORE');
+                    return;
+                }
+
+                // Analyze metadata
+                const withMetadata = items.filter(i => i.metadata);
+                const withSubject = items.filter(i => i.metadata && i.metadata.subject);
+                const withGrade = items.filter(i => i.metadata && i.metadata.grade);
+
+                log(`   Items with metadata: ${withMetadata.length}/${items.length}`, 'info');
+                log(`   Items with subject: ${withSubject.length}/${items.length}`, 'info');
+                log(`   Items with grade: ${withGrade.length}/${items.length}`, 'info');
+
+                if (withSubject.length === 0) {
+                    log('❌ NO items have subject metadata!', 'error');
+                    issues.push('NO_SUBJECT_METADATA');
+                }
+
+                // Find Chemistry Grade 10
+                const chemItems = items.filter(i => {
+                    const meta = i.metadata || {};
+                    return meta.subject && meta.subject.toLowerCase().includes('chem') &&
+                           String(meta.grade) === '10';
+                });
+
+                log(`   Chemistry Grade 10 chunks: ${chemItems.length}`, chemItems.length > 0 ? 'success' : 'error');
+
+                if (chemItems.length === 0) {
+                    log('❌ NO Chemistry Grade 10 content in vector store!', 'error');
+                    issues.push('NO_CHEM10_IN_VECTOR');
+
+                    // Show what IS in the vector store
+                    const subjects = [...new Set(items.map(i => i.metadata?.subject).filter(Boolean))];
+                    const grades = [...new Set(items.map(i => i.metadata?.grade).filter(Boolean))];
+
+                    log('   Available subjects:', 'info');
+                    subjects.forEach(s => log(`      - ${s}`, 'info'));
+                    log('   Available grades:', 'info');
+                    grades.forEach(g => log(`      - ${g}`, 'info'));
+                } else {
+                    log('✅ Chemistry Grade 10 is indexed!', 'success');
+                    const sampleChapters = chemItems.slice(0, 3).map(i => i.metadata?.chapter).filter(Boolean);
+                    log(`   Sample chapters: ${sampleChapters.join(', ')}`, 'info');
+                }
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+                issues.push('VECTOR_STORE_ERROR');
+            }
+        }
+
+        async function checkLocalStorage() {
+            log('💾 Step 3: Checking localStorage...', 'info');
+
+            try {
+                // Check all relevant keys
+                const keys = [
+                    'rag_chat_history',
+                    'query_history',
+                    'upload_history',
+                    'local_embedding_cache'
+                ];
+
+                keys.forEach(key => {
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        try {
+                            const parsed = JSON.parse(value);
+                            const size = value.length;
+                            const count = Array.isArray(parsed) ? parsed.length : 'N/A';
+                            log(`   ${key}: ${count} items (${(size / 1024).toFixed(2)} KB)`, 'info');
+                        } catch (e) {
+                            log(`   ${key}: Corrupted!`, 'error');
+                            issues.push(`CORRUPTED_${key.toUpperCase()}`);
+                        }
+                    } else {
+                        log(`   ${key}: Empty`, 'info');
+                    }
+                });
+
+                // Check total localStorage usage
+                let total = 0;
+                for (let key in localStorage) {
+                    if (localStorage.hasOwnProperty(key)) {
+                        total += localStorage.getItem(key).length;
+                    }
+                }
+                log(`   Total localStorage: ${(total / 1024).toFixed(2)} KB`, 'info');
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDataIntegrity() {
+            log('🧪 Step 4: Testing Data Integrity...', 'info');
+
+            try {
+                // Test if we can create unique IDs
+                const testIds = [];
+                for (let i = 0; i < 10; i++) {
+                    const id = `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                    testIds.push(id);
+                    await new Promise(resolve => setTimeout(resolve, 1)); // 1ms delay
+                }
+
+                const uniqueIds = new Set(testIds);
+                if (uniqueIds.size === testIds.length) {
+                    log('✅ ID generation working correctly (all unique)', 'success');
+                } else {
+                    log('❌ ID generation has duplicates!', 'error');
+                    issues.push('DUPLICATE_IDS');
+                }
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkRAGSystem() {
+            log('🤖 Step 5: Checking RAG System...', 'info');
+
+            try {
+                if (!window.ragChatManager) {
+                    log('❌ window.ragChatManager not found!', 'error');
+                    log('💡 Go to RAG Chat section to initialize it', 'warning');
+                    issues.push('NO_RAG_MANAGER');
+                    return;
+                }
+
+                log('✅ RAG Chat Manager loaded', 'success');
+
+                // Check if initialized
+                if (window.ragChatManager.initialized) {
+                    log('✅ RAG Chat Manager initialized', 'success');
+                } else {
+                    log('⚠️ RAG Chat Manager not initialized', 'warning');
+                }
+
+                // Check filters
+                const filters = window.ragChatManager.currentFilters;
+                log(`   Current filters:`, 'info');
+                log(`      Subject: ${filters.subject}`, 'info');
+                log(`      Grade: ${filters.grade}`, 'info');
+                log(`      Source: ${filters.source}`, 'info');
+
+                // Check data availability
+                const hasData = window.ragChatManager.checkDataAvailability();
+                log(`   Data available: ${hasData ? '✅ Yes' : '❌ No'}`, hasData ? 'success' : 'error');
+
+                if (!hasData) {
+                    issues.push('NO_DATA_AVAILABLE');
+                }
+
+                // Try test query
+                if (hasData) {
+                    log('   Testing query retrieval...', 'info');
+                    try {
+                        const results = await window.ragChatManager.retrieveContext('test query');
+                        log(`   ✅ Retrieved ${results.length} results`, 'success');
+
+                        if (results.length > 0) {
+                            log(`   Sample result:`, 'info');
+                            log(`      Subject: ${results[0].metadata?.subject}`, 'info');
+                            log(`      Grade: ${results[0].metadata?.grade}`, 'info');
+                        }
+                    } catch (error) {
+                        log(`   ❌ Query failed: ${error.message}`, 'error');
+                        issues.push('QUERY_FAILED');
+                    }
+                }
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function generateRecommendations() {
+            log('', 'info');
+            log('✅ Diagnostic complete!', 'success');
+            log(`Found ${issues.length} issues`, issues.length > 0 ? 'warning' : 'success');
+
+            clearRecommendations();
+
+            if (issues.length === 0) {
+                recommend('✅ No issues found! System should be working.', 'success');
+                recommend('💡 If you still have problems:', 'info');
+                recommend('   1. Hard refresh the page (Cmd+Shift+R)', 'info');
+                recommend('   2. Clear chat history', 'info');
+                recommend('   3. Try asking a different question', 'info');
+                return;
+            }
+
+            recommend('🔧 RECOMMENDED FIXES:', 'warning');
+            recommend('', 'info');
+
+            if (issues.includes('NO_UPLOAD_HISTORY') || issues.includes('NO_SUCCESSFUL_UPLOADS')) {
+                recommend('❌ CRITICAL: No uploaded documents found', 'error');
+                recommend('   ACTION: Upload your Chemistry Grade 10 PDF', 'warning');
+                recommend('   1. Go to Data Upload section', 'info');
+                recommend('   2. Select your PDF file', 'info');
+                recommend('   3. Click "Integrate Data"', 'info');
+                recommend('', 'info');
+            }
+
+            if (issues.includes('EMPTY_VECTOR_STORE')) {
+                recommend('❌ CRITICAL: Vector store is empty', 'error');
+                recommend('   ACTION: Re-integrate your data', 'warning');
+                recommend('   1. Go to Data Upload section', 'info');
+                recommend('   2. Click "Integrate Data" button', 'info');
+                recommend('   3. Wait for indexing to complete', 'info');
+                recommend('', 'info');
+            }
+
+            if (issues.includes('NO_CHEM10_IN_VECTOR')) {
+                recommend('❌ Chemistry Grade 10 not indexed', 'error');
+                recommend('   ACTION: Check upload and re-integrate', 'warning');
+                recommend('   1. Verify Chemistry Grade 10 is uploaded', 'info');
+                recommend('   2. Re-integrate data', 'info');
+                recommend('   3. Check console for indexing messages', 'info');
+                recommend('', 'info');
+            }
+
+            if (issues.includes('NO_SUBJECT_METADATA') || issues.includes('NO_DATA_AVAILABLE')) {
+                recommend('❌ Data missing metadata', 'error');
+                recommend('   ACTION: Clear and re-upload', 'warning');
+                recommend('   1. Click "Clear All & Reset" below', 'info');
+                recommend('   2. Re-upload your PDFs', 'info');
+                recommend('   3. Integrate data', 'info');
+                recommend('', 'info');
+            }
+
+            if (issues.some(i => i.includes('CORRUPTED'))) {
+                recommend('❌ Corrupted localStorage data', 'error');
+                recommend('   ACTION: Clear localStorage', 'warning');
+                recommend('   1. Click "Clear All & Reset" below', 'info');
+                recommend('   2. Refresh page', 'info');
+                recommend('', 'info');
+            }
+
+            if (issues.includes('NO_VECTOR_STORE') || issues.includes('NO_RAG_MANAGER')) {
+                recommend('⚠️ RAG system not loaded', 'warning');
+                recommend('   ACTION: Open main platform first', 'warning');
+                recommend('   1. Close this diagnostic page', 'info');
+                recommend('   2. Open index.html', 'info');
+                recommend('   3. Go to RAG Chat section', 'info');
+                recommend('   4. Come back here and run diagnostic again', 'info');
+            }
+        }
+
+        async function clearAllAndReset() {
+            if (!confirm('⚠️ This will clear ALL data including:\n- Upload history\n- Chat history\n- Query history\n- Vector store cache\n\nYou will need to re-upload PDFs.\n\nContinue?')) {
+                return;
+            }
+
+            log('🔄 Clearing all data...', 'warning');
+
+            try {
+                // Clear localStorage
+                const keys = [
+                    'rag_chat_history',
+                    'query_history',
+                    'upload_history',
+                    'local_embedding_cache'
+                ];
+
+                keys.forEach(key => {
+                    localStorage.removeItem(key);
+                    log(`✅ Cleared ${key}`, 'success');
+                });
+
+                // Delete IndexedDB
+                const dbName = 'eduLLM_DB';
+                const deleteRequest = indexedDB.deleteDatabase(dbName);
+
+                deleteRequest.onsuccess = function() {
+                    log('✅ IndexedDB cleared', 'success');
+                    log('', 'info');
+                    log('🎯 Next steps:', 'info');
+                    log('   1. Refresh main platform page', 'info');
+                    log('   2. Upload your PDFs again', 'info');
+                    log('   3. Click "Integrate Data"', 'info');
+                    log('   4. Test RAG chat', 'info');
+                };
+
+                deleteRequest.onerror = function() {
+                    log('❌ Failed to clear IndexedDB', 'error');
+                };
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-run diagnostic on load if window.vectorStore is available
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (window.vectorStore || window.ragChatManager) {
+                    log('✅ Platform detected, running auto-diagnostic...', 'info');
+                    log('', 'info');
+                    setTimeout(runFullDiagnostic, 1000);
+                } else {
+                    log('💡 Open index.html first, then come back here', 'warning');
+                    log('   Or click "Run Full Diagnostic" to check localStorage only', 'info');
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

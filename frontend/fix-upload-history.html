@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fix Upload History</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #00ff00; }
+        h1 { color: #00ff00; }
+        pre { background: #000; padding: 20px; border-radius: 5px; white-space: pre-wrap; }
+        button { background: #00ff00; color: #000; padding: 10px 20px; border: none; cursor: pointer; margin: 10px; }
+        button:hover { background: #00cc00; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Fix Upload History - Extract Subject & Grade</h1>
+
+    <h3>Current Upload History:</h3>
+    <pre id="before"></pre>
+
+    <button onclick="fixHistory()">Fix Upload History</button>
+    <button onclick="location.reload()">Refresh</button>
+
+    <h3>Log:</h3>
+    <pre id="log"></pre>
+
+    <script>
+        function log(msg) {
+            const logEl = document.getElementById('log');
+            logEl.textContent += msg + '\n';
+            console.log(msg);
+        }
+
+        // Display current history
+        const historyStr = localStorage.getItem('upload_history');
+        document.getElementById('before').textContent = historyStr ?
+            JSON.stringify(JSON.parse(historyStr), null, 2) :
+            'No upload history found';
+
+        function extractMetadataFromFilename(fileName) {
+            const nameLower = fileName.toLowerCase();
+
+            // Subject detection
+            const subjects = {
+                'Mathematics': ['math', 'mathematics', 'maths'],
+                'Physics': ['physics', 'phy'],
+                'Chemistry': ['chemistry', 'chem'],
+                'Biology': ['biology', 'bio'],
+                'Science': ['science'],
+                'Social Science': ['social', 'sst', 'social science'],
+                'English': ['english', 'eng'],
+                'Hindi': ['hindi'],
+                'Economics': ['economics', 'eco'],
+                'History': ['history'],
+                'Geography': ['geography', 'geo'],
+                'Political Science': ['political', 'civics', 'politics'],
+                'Computer Science': ['computer', 'cs']
+            };
+
+            let subject = null;
+            for (const [subjectName, keywords] of Object.entries(subjects)) {
+                if (keywords.some(keyword => nameLower.includes(keyword))) {
+                    subject = subjectName;
+                    break;
+                }
+            }
+
+            // Grade detection
+            const gradeMatch = fileName.match(/(?:class|grade)[-_\s]*(\d+)/i) ||
+                              fileName.match(/(\d+)(?:th|st|nd|rd)?[-_\s]*(?:class|grade)/i) ||
+                              fileName.match(/\b(\d{1,2})\b/);
+            const grade = gradeMatch ? parseInt(gradeMatch[1]) : null;
+
+            return {
+                subject: subject || 'General',
+                grade: (grade && grade >= 1 && grade <= 12) ? grade : 10
+            };
+        }
+
+        function fixHistory() {
+            log('🔧 Starting fix...\n');
+
+            const historyStr = localStorage.getItem('upload_history');
+            if (!historyStr) {
+                log('❌ No upload history found');
+                return;
+            }
+
+            let history = JSON.parse(historyStr);
+            log('Found ' + history.length + ' entries\n');
+
+            let fixed = 0;
+            history.forEach((entry, index) => {
+                log('Entry ' + (index + 1) + ': ' + entry.fileName);
+                log('  Before: subject=' + entry.subject + ', grade=' + entry.grade);
+
+                // Extract metadata from filename
+                const metadata = extractMetadataFromFilename(entry.fileName);
+
+                // Update if currently N/A or empty
+                if (!entry.subject || entry.subject === 'N/A' || entry.subject === '') {
+                    entry.subject = metadata.subject;
+                }
+                if (!entry.grade || entry.grade === 'N/A' || entry.grade === '') {
+                    entry.grade = metadata.grade;
+                }
+
+                log('  After:  subject=' + entry.subject + ', grade=' + entry.grade);
+                log('');
+                fixed++;
+            });
+
+            // Save back to localStorage
+            localStorage.setItem('upload_history', JSON.stringify(history));
+
+            log('✅ Fixed ' + fixed + ' entries');
+            log('📊 Updated upload history saved');
+            log('💡 Refresh the main app to see changes');
+
+            // Update display
+            document.getElementById('before').textContent = JSON.stringify(history, null, 2);
+        }
+    </script>
+</body>
+</html>

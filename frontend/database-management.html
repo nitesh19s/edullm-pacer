@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Management - EduLLM Platform</title>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#3b82f6">
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard-enhanced.css">
+    <link rel="stylesheet" href="database-management.css">
+    <link rel="stylesheet" href="contrast.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <h1>EduLLM Platform</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="contrast-selector">
+                        <select id="contrastSelect" title="Contrast Mode">
+                            <option value="normal">Normal</option>
+                            <option value="high">High Contrast</option>
+                            <option value="low">Low Contrast</option>
+                        </select>
+                    </div>
+                    <div class="language-selector">
+                        <select id="languageSelect">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="bilingual">Bilingual</option>
+                        </select>
+                    </div>
+                    <div class="user-profile">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span data-i18n="nav.dashboard">Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">
+                        <span data-i18n="nav.features">Features</span>
+                    </div>
+                    <div class="nav-item">
+                        <a href="index.html#rag" class="nav-link">
+                            <i class="fas fa-comments"></i>
+                            <span data-i18n="nav.ragChat">RAG Chat</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="index.html#chunking" class="nav-link">
+                            <i class="fas fa-layer-group"></i>
+                            <span data-i18n="nav.smartChunking">Smart Chunking</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="index.html#knowledge" class="nav-link">
+                            <i class="fas fa-project-diagram"></i>
+                            <span data-i18n="nav.knowledgeGraph">Knowledge Graph</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">
+                        <span data-i18n="nav.researchTools">Research Tools</span>
+                    </div>
+                    <div class="nav-item">
+                        <a href="index.html#analytics" class="nav-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span data-i18n="nav.analytics">Analytics</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="index.html#comparisons" class="nav-link">
+                            <i class="fas fa-balance-scale"></i>
+                            <span data-i18n="nav.comparisons">Comparisons</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="index.html#abtesting" class="nav-link">
+                            <i class="fas fa-vial"></i>
+                            <span data-i18n="nav.abTesting">A/B Testing</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">
+                        <span data-i18n="nav.management">Management</span>
+                    </div>
+                    <div class="nav-item">
+                        <a href="index.html#upload" class="nav-link">
+                            <i class="fas fa-upload"></i>
+                            <span data-i18n="nav.dataUpload">Data Upload</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="database-management.html" class="nav-link active">
+                            <i class="fas fa-database"></i>
+                            <span data-i18n="nav.database">Database</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="index.html#experiments" class="nav-link">
+                            <i class="fas fa-flask"></i>
+                            <span data-i18n="nav.experiments">Experiments</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="index.html#settings" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span data-i18n="nav.settings">Settings</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h2><i class="fas fa-database"></i> <span data-i18n="dbManagement.title">Database Management</span></h2>
+                    <p class="page-subtitle" data-i18n="dbManagement.subtitle">Manage backups, monitor health, and control your database</p>
+                </div>
+                <!-- Health Status Card -->
+                <section class="db-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-heartbeat"></i> <span data-i18n="dbManagement.health.title">Database Health</span></h3>
+                        <button class="btn btn-secondary" onclick="dbManager.refreshHealth()">
+                            <i class="fas fa-sync-alt"></i> <span data-i18n="dbManagement.health.refresh">Refresh</span>
+                        </button>
+                    </div>
+
+                    <div class="health-cards">
+                        <div class="health-card" id="healthStatus">
+                            <div class="health-icon">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </div>
+                            <div class="health-content">
+                                <h4 data-i18n="dbManagement.health.status">Status</h4>
+                                <p class="health-value">Checking...</p>
+                                <span class="health-time">--</span>
+                            </div>
+                        </div>
+
+                        <div class="health-card" id="healthConnection">
+                            <div class="health-icon">
+                                <i class="fas fa-plug"></i>
+                            </div>
+                            <div class="health-content">
+                                <h4 data-i18n="dbManagement.health.connection">Connection</h4>
+                                <p class="health-value">--</p>
+                                <span class="health-time">Initializing...</span>
+                            </div>
+                        </div>
+
+                        <div class="health-card" id="healthStorage">
+                            <div class="health-icon">
+                                <i class="fas fa-hdd"></i>
+                            </div>
+                            <div class="health-content">
+                                <h4 data-i18n="dbManagement.health.storage">Storage</h4>
+                                <p class="health-value">-- MB</p>
+                                <span class="health-time">-- / -- MB</span>
+                            </div>
+                        </div>
+
+                        <div class="health-card" id="healthPerformance">
+                            <div class="health-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="health-content">
+                                <h4 data-i18n="dbManagement.health.performance">Performance</h4>
+                                <p class="health-value">-- ms</p>
+                                <span class="health-time" data-i18n="dbManagement.health.avgQueryTime">Avg query time</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="health-details" id="healthDetails" style="display: none;">
+                        <div class="alert" id="healthAlert"></div>
+                    </div>
+                </section>
+
+                <!-- Statistics Section -->
+                <section class="db-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-chart-bar"></i> <span data-i18n="dbManagement.statistics.title">Database Statistics</span></h3>
+                        <button class="btn btn-secondary" onclick="dbManager.refreshStats()">
+                            <i class="fas fa-sync-alt"></i> <span data-i18n="dbManagement.health.refresh">Refresh</span>
+                        </button>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 data-i18n="dbManagement.statistics.totalStores">Total Stores</h4>
+                                <p class="stat-value" id="statStores">--</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 data-i18n="dbManagement.statistics.totalRecords">Total Records</h4>
+                                <p class="stat-value" id="statRecords">--</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 data-i18n="dbManagement.statistics.cacheHitRate">Cache Hit Rate</h4>
+                                <p class="stat-value" id="statCacheRate">--%</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon orange">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 data-i18n="dbManagement.statistics.totalQueries">Total Queries</h4>
+                                <p class="stat-value" id="statQueries">--</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stores Table -->
+                    <div class="stores-table-container">
+                        <table class="stores-table">
+                            <thead>
+                                <tr>
+                                    <th>Store Name</th>
+                                    <th>Records</th>
+                                    <th>Indexes</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="storesTableBody">
+                                <tr>
+                                    <td colspan="4" class="loading-cell">
+                                        <i class="fas fa-spinner fa-spin"></i> Loading...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Backup Management -->
+                <section class="db-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-save"></i> Backup Management</h3>
+                        <button class="btn btn-primary" onclick="dbManager.createBackup()">
+                            <i class="fas fa-plus"></i> Create Backup
+                        </button>
+                    </div>
+
+                    <div class="backup-controls">
+                        <button class="btn btn-secondary" onclick="dbManager.refreshBackups()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-warning" onclick="dbManager.cleanupBackups()">
+                            <i class="fas fa-broom"></i> Cleanup Old Backups
+                        </button>
+                    </div>
+
+                    <div class="backups-list" id="backupsList">
+                        <div class="loading-message">
+                            <i class="fas fa-spinner fa-spin"></i> Loading backups...
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Export/Import Section -->
+                <section class="db-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-exchange-alt"></i> Export & Import</h3>
+                    </div>
+
+                    <div class="export-import-grid">
+                        <!-- Export -->
+                        <div class="export-card">
+                            <h4><i class="fas fa-download"></i> Export Database</h4>
+                            <p>Export entire database or specific stores to JSON file.</p>
+
+                            <div class="form-group">
+                                <label>Select Stores (leave empty for all)</label>
+                                <div class="stores-checklist" id="exportStoresList">
+                                    <div class="loading-message">Loading stores...</div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-block" onclick="dbManager.exportDatabase()">
+                                <i class="fas fa-download"></i> Export to File
+                            </button>
+                        </div>
+
+                        <!-- Import -->
+                        <div class="import-card">
+                            <h4><i class="fas fa-upload"></i> Import Database</h4>
+                            <p>Import data from previously exported JSON file.</p>
+
+                            <div class="form-group">
+                                <label>Select JSON File</label>
+                                <input type="file" id="importFileInput" accept=".json" class="file-input">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="clearBeforeImport">
+                                    Clear existing data before import
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="skipErrors" checked>
+                                    Skip errors and continue import
+                                </label>
+                            </div>
+
+                            <button class="btn btn-success btn-block" onclick="dbManager.importDatabase()">
+                                <i class="fas fa-upload"></i> Import from File
+                            </button>
+
+                            <div class="import-progress" id="importProgress" style="display: none;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="importProgressBar"></div>
+                                </div>
+                                <p class="progress-text" id="importProgressText">Importing...</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Advanced Operations -->
+                <section class="db-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-tools"></i> Advanced Operations</h3>
+                    </div>
+
+                    <div class="advanced-grid">
+                        <div class="advanced-card">
+                            <i class="fas fa-vial advanced-icon"></i>
+                            <h4>Run Benchmark</h4>
+                            <p>Test database performance with CRUD operations.</p>
+                            <button class="btn btn-secondary btn-sm" onclick="dbManager.runBenchmark()">
+                                <i class="fas fa-play"></i> Run Test
+                            </button>
+                        </div>
+
+                        <div class="advanced-card">
+                            <i class="fas fa-check-circle advanced-icon"></i>
+                            <h4>Validate Data</h4>
+                            <p>Check data integrity across all stores.</p>
+                            <button class="btn btn-secondary btn-sm" onclick="dbManager.validateData()">
+                                <i class="fas fa-check"></i> Validate
+                            </button>
+                        </div>
+
+                        <div class="advanced-card">
+                            <i class="fas fa-eraser advanced-icon"></i>
+                            <h4>Clear Cache</h4>
+                            <p>Clear in-memory cache to free up memory.</p>
+                            <button class="btn btn-secondary btn-sm" onclick="dbManager.clearCache()">
+                                <i class="fas fa-eraser"></i> Clear
+                            </button>
+                        </div>
+
+                        <div class="advanced-card">
+                            <i class="fas fa-info-circle advanced-icon"></i>
+                            <h4>Database Info</h4>
+                            <p>View detailed database information.</p>
+                            <button class="btn btn-secondary btn-sm" onclick="dbManager.showDatabaseInfo()">
+                                <i class="fas fa-info"></i> View Info
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Danger Zone -->
+                <section class="db-section danger-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                    </div>
+
+                    <div class="danger-content">
+                        <div class="danger-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Warning:</strong> These operations cannot be undone. Please ensure you have a backup before proceeding.
+                        </div>
+
+                        <div class="danger-actions">
+                            <button class="btn btn-danger" onclick="dbManager.clearAllStores()">
+                                <i class="fas fa-trash"></i> Clear All Data
+                            </button>
+                            <button class="btn btn-danger" onclick="dbManager.deleteDatabase()">
+                                <i class="fas fa-bomb"></i> Delete Database
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Results/Info -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Result</h3>
+                <button class="modal-close" onclick="dbManager.closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="dbManager.closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Language Management -->
+    <script src="translations.js"></script>
+    <script src="language-manager.js"></script>
+
+    <!-- Contrast Management -->
+    <script src="contrast-manager.js"></script>
+
+    <!-- Mobile Enhancements -->
+    <script src="mobile-enhancements.js"></script>
+
+    <script src="database-v3.js"></script>
+    <script src="database-management.js"></script>
+    <script>
+        // Sidebar toggle for mobile
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            // Toggle sidebar
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+
+            // Close sidebar when clicking overlay
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+
+            // Initialize database manager
+            dbManager.initialize();
+        });
+    </script>
+</body>
+</html>

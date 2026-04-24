@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCERT Q&A Data Entry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            grid-column: span 2;
+        }
+
+        .form-group.half {
+            grid-column: span 1;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        textarea.large {
+            min-height: 200px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .preview {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .preview.show {
+            display: block;
+        }
+
+        .preview h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .preview-section {
+            margin-bottom: 15px;
+        }
+
+        .preview-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .preview-content {
+            background: white;
+            padding: 12px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            border-left: 3px solid #667eea;
+        }
+
+        .character-count {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group, .form-group.half {
+                grid-column: span 1;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 NCERT Q&A Data Entry</h1>
+        <p class="subtitle">Phase 2: Building fine-tuning dataset for educational AI</p>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalEntries">0</div>
+                <div class="stat-label">Total Entries</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="todayEntries">0</div>
+                <div class="stat-label">Today's Entries</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="targetProgress">0%</div>
+                <div class="stat-label">Progress (Target: 300)</div>
+            </div>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <form id="qaForm">
+            <div class="form-grid">
+                <div class="form-group half">
+                    <label for="subject">Subject <span class="required">*</span></label>
+                    <select id="subject" required>
+                        <option value="">Select Subject</option>
+                        <option value="Science">Science (Physics/Chemistry/Biology)</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Social Science">Social Science</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="English">English</option>
+                        <option value="Sanskrit">Sanskrit</option>
+                    </select>
+                </div>
+
+                <div class="form-group half">
+                    <label for="grade">Grade/Class <span class="required">*</span></label>
+                    <select id="grade" required>
+                        <option value="">Select Grade</option>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
+                    </select>
+                </div>
+
+                <div class="form-group half">
+                    <label for="chapter">Chapter Name</label>
+                    <input type="text" id="chapter" placeholder="e.g., Life Processes">
+                </div>
+
+                <div class="form-group half">
+                    <label for="topic">Topic (Optional)</label>
+                    <input type="text" id="topic" placeholder="e.g., Nutrition in Plants">
+                </div>
+
+                <div class="form-group half">
+                    <label for="difficulty">Difficulty <span class="required">*</span></label>
+                    <select id="difficulty" required>
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+
+                <div class="form-group half">
+                    <label for="language">Language <span class="required">*</span></label>
+                    <select id="language" required>
+                        <option value="English" selected>English</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Bilingual">Bilingual</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="question">Question <span class="required">*</span></label>
+                    <textarea id="question" required placeholder="Enter the question exactly as it appears in NCERT textbook..." class="large"></textarea>
+                    <div class="character-count" id="questionCount">0 characters (min 10)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="answer">Answer <span class="required">*</span></label>
+                    <textarea id="answer" required placeholder="Provide a detailed, curriculum-aligned answer..." class="large"></textarea>
+                    <div class="character-count" id="answerCount">0 characters (min 20)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="instruction">Custom Instruction (Optional)</label>
+                    <input type="text" id="instruction" placeholder="Leave blank for auto-generated instruction">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">
+                    💾 Save Entry
+                </button>
+                <button type="button" class="btn btn-secondary" id="previewBtn">
+                    👁️ Preview
+                </button>
+                <button type="button" class="btn btn-secondary" id="clearBtn">
+                    🔄 Clear Form
+                </button>
+                <button type="button" class="btn btn-success" id="downloadBtn">
+                    📥 Download Dataset
+                </button>
+            </div>
+        </form>
+
+        <div id="preview" class="preview">
+            <h3>Preview</h3>
+            <div class="preview-section">
+                <div class="preview-label">Instruction:</div>
+                <div class="preview-content" id="previewInstruction"></div>
+            </div>
+            <div class="preview-section">
+                <div class="preview-label">Input (Question):</div>
+                <div class="preview-content" id="previewInput"></div>
+            </div>
+            <div class="preview-section">
+                <div class="preview-label">Output (Answer):</div>
+                <div class="preview-content" id="previewOutput"></div>
+            </div>
+            <div class="preview-section">
+                <div class="preview-label">Metadata:</div>
+                <div class="preview-content" id="previewMetadata"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dataset storage
+        let dataset = JSON.parse(localStorage.getItem('ncert_qa_dataset') || '[]');
+        let todayCount = 0;
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalEntries').textContent = dataset.length;
+            document.getElementById('todayEntries').textContent = todayCount;
+            const progress = Math.min(100, Math.round((dataset.length / 300) * 100));
+            document.getElementById('targetProgress').textContent = progress + '%';
+        }
+
+        // Character counters
+        document.getElementById('question').addEventListener('input', (e) => {
+            const count = e.target.value.length;
+            document.getElementById('questionCount').textContent = `${count} characters (min 10)`;
+        });
+
+        document.getElementById('answer').addEventListener('input', (e) => {
+            const count = e.target.value.length;
+            document.getElementById('answerCount').textContent = `${count} characters (min 20)`;
+        });
+
+        // Show alert
+        function showAlert(message, type = 'success') {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Preview functionality
+        document.getElementById('previewBtn').addEventListener('click', () => {
+            const subject = document.getElementById('subject').value;
+            const grade = document.getElementById('grade').value;
+            const question = document.getElementById('question').value;
+            const answer = document.getElementById('answer').value;
+            const chapter = document.getElementById('chapter').value;
+            const topic = document.getElementById('topic').value;
+            const difficulty = document.getElementById('difficulty').value;
+            const language = document.getElementById('language').value;
+            let instruction = document.getElementById('instruction').value;
+
+            if (!instruction) {
+                instruction = `Answer the following question based on NCERT Class ${grade} ${subject} curriculum.`;
+            }
+
+            document.getElementById('previewInstruction').textContent = instruction;
+            document.getElementById('previewInput').textContent = question;
+            document.getElementById('previewOutput').textContent = answer;
+            document.getElementById('previewMetadata').textContent = JSON.stringify({
+                subject, grade: parseInt(grade), chapter, topic, difficulty, language
+            }, null, 2);
+
+            document.getElementById('preview').classList.add('show');
+        });
+
+        // Form submission
+        document.getElementById('qaForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const question = document.getElementById('question').value.trim();
+            const answer = document.getElementById('answer').value.trim();
+
+            if (question.length < 10) {
+                showAlert('Question must be at least 10 characters', 'error');
+                return;
+            }
+
+            if (answer.length < 20) {
+                showAlert('Answer must be at least 20 characters', 'error');
+                return;
+            }
+
+            const subject = document.getElementById('subject').value;
+            const grade = parseInt(document.getElementById('grade').value);
+            const chapter = document.getElementById('chapter').value;
+            const topic = document.getElementById('topic').value;
+            const difficulty = document.getElementById('difficulty').value;
+            const language = document.getElementById('language').value;
+            let instruction = document.getElementById('instruction').value;
+
+            if (!instruction) {
+                instruction = `Answer the following question based on NCERT Class ${grade} ${subject} curriculum.`;
+            }
+
+            const entry = {
+                instruction: instruction,
+                input: question,
+                output: answer,
+                metadata: {
+                    subject: subject,
+                    grade: grade,
+                    chapter: chapter,
+                    topic: topic,
+                    language: language,
+                    difficulty: difficulty,
+                    added_at: new Date().toISOString(),
+                    id: dataset.length + 1
+                }
+            };
+
+            dataset.push(entry);
+            localStorage.setItem('ncert_qa_dataset', JSON.stringify(dataset));
+            todayCount++;
+            updateStats();
+
+            showAlert(`✅ Entry #${entry.metadata.id} saved successfully!`, 'success');
+            document.getElementById('qaForm').reset();
+            document.getElementById('preview').classList.remove('show');
+        });
+
+        // Clear form
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            document.getElementById('qaForm').reset();
+            document.getElementById('preview').classList.remove('show');
+        });
+
+        // Download dataset
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            if (dataset.length === 0) {
+                showAlert('No data to download', 'error');
+                return;
+            }
+
+            const dataStr = JSON.stringify(dataset, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'ncert_qa_dataset.json';
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showAlert(`📥 Downloaded ${dataset.length} entries`, 'success');
+        });
+
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>

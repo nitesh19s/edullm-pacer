@@ -1,0 +1,116 @@
+/**
+ * Chart Visualizations Styles
+ */
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+    margin: 20px 0;
+}
+
+.chart-container {
+    background: var(--card-background, #ffffff);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-container canvas {
+    max-width: 100%;
+    height: auto !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        padding: 15px;
+        min-height: 250px;
+    }
+}
+
+/* Chart section cards */
+.progression-charts,
+.gap-charts,
+.cross-subject-charts {
+    margin-bottom: 24px;
+}
+
+.progression-charts h3,
+.gap-charts h3,
+.cross-subject-charts h3 {
+    margin-bottom: 16px;
+    color: var(--text-primary, #1f2937);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Empty state for charts */
+.chart-container.empty {
+    color: var(--text-muted, #6b7280);
+    font-style: italic;
+}
+
+/* Chart loading state */
+.chart-container.loading {
+    position: relative;
+}
+
+.chart-container.loading::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--primary-color, #3b82f6);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Export button styling */
+.chart-export-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--primary-color);
+    transition: all 0.2s;
+}
+
+.chart-export-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Dark mode support */
+.dark-mode .chart-container {
+    background: var(--card-background-dark, #374151);
+}
+
+.dark-mode .progression-charts h3,
+.dark-mode .gap-charts h3,
+.dark-mode .cross-subject-charts h3 {
+    color: var(--text-primary-dark, #f9fafb);
+}

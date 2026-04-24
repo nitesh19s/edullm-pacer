@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Manager Features Test - EduLLM Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .status-badge.active {
+            background: #48bb78;
+            color: white;
+        }
+
+        .status-badge.inactive {
+            background: #f56565;
+            color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card h2 {
+            color: #2d3748;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card p {
+            color: #4a5568;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .button:active {
+            transform: scale(0.98);
+        }
+
+        .button.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .button.success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .button.danger {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .result-area {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #2d3748;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .result-area.show {
+            display: block;
+        }
+
+        .result-area pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .metrics-display {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .metric-item {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .activity-log {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background: #edf2f7;
+        }
+
+        .activity-icon {
+            font-size: 1.3rem;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .activity-message {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #2d3748;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: #a0aec0;
+        }
+
+        .info-box {
+            background: #bee3f8;
+            border-left: 4px solid #4299e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .info-box h3 {
+            color: #2c5282;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .info-box p {
+            color: #2a4365;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .code-snippet {
+            background: #2d3748;
+            color: #68d391;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        .console-output {
+            background: #1a202c;
+            color: #a0aec0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .console-output .log-entry {
+            margin-bottom: 5px;
+            padding: 3px 0;
+        }
+
+        .console-output .log-success {
+            color: #68d391;
+        }
+
+        .console-output .log-error {
+            color: #fc8181;
+        }
+
+        .console-output .log-info {
+            color: #63b3ed;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .auto-refresh-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #48bb78;
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-display {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard Manager Features Test</h1>
+            <p>Interactive testing suite for EduLLM Platform Dashboard Manager</p>
+            <span class="status-badge" id="dashboardStatus">Checking...</span>
+        </div>
+
+        <div class="features-grid">
+            <!-- Dashboard Status & Initialization -->
+            <div class="feature-card">
+                <h2>🎯 Dashboard Status</h2>
+                <p>Check dashboard initialization and current state.</p>
+                <button class="button" onclick="checkDashboardStatus()">Check Status</button>
+                <button class="button secondary" onclick="reinitializeDashboard()">Re-initialize Dashboard</button>
+                <div class="result-area" id="statusResult"></div>
+            </div>
+
+            <!-- Metrics Display -->
+            <div class="feature-card">
+                <h2>📈 Current Metrics</h2>
+                <p>View real-time platform metrics and statistics.</p>
+                <button class="button success" onclick="displayCurrentMetrics()">Display Metrics</button>
+                <button class="button" onclick="refreshMetrics()">Refresh Metrics</button>
+                <div class="metrics-display" id="metricsDisplay"></div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="feature-card">
+                <h2>📝 Activity Log</h2>
+                <p>Add and view activities in the dashboard log.</p>
+                <button class="button" onclick="addSampleActivity()">Add Sample Activity</button>
+                <button class="button secondary" onclick="addCustomActivity()">Add Custom Activity</button>
+                <button class="button danger" onclick="clearAllActivities()">Clear Activities</button>
+                <div class="activity-log" id="activityLog"></div>
+            </div>
+
+            <!-- Auto-Refresh Control -->
+            <div class="feature-card">
+                <h2>🔄 Auto-Refresh</h2>
+                <p>Control automatic metric refresh (updates every 5 seconds).</p>
+                <button class="button success" onclick="startAutoRefresh()">Start Auto-Refresh</button>
+                <button class="button danger" onclick="stopAutoRefresh()">Stop Auto-Refresh</button>
+                <div class="info-box">
+                    <h3>Auto-Refresh Status</h3>
+                    <p id="autoRefreshStatus">Stopped</p>
+                </div>
+            </div>
+
+            <!-- Manual Refresh -->
+            <div class="feature-card">
+                <h2>↻ Manual Refresh</h2>
+                <p>Manually refresh dashboard data and displays.</p>
+                <button class="button" onclick="manualRefresh()">Full Refresh</button>
+                <button class="button secondary" onclick="refreshMetricsOnly()">Metrics Only</button>
+                <div class="console-output" id="refreshLog"></div>
+            </div>
+
+            <!-- Export Dashboard -->
+            <div class="feature-card">
+                <h2>📄 Export Dashboard</h2>
+                <p>Export dashboard data as PDF report.</p>
+                <button class="button success" onclick="exportDashboardPDF()">Export as PDF</button>
+                <div class="info-box">
+                    <h3>Export Info</h3>
+                    <p>Generates a comprehensive PDF report with all metrics, charts, and activities.</p>
+                </div>
+                <div class="result-area" id="exportResult"></div>
+            </div>
+
+            <!-- Reset Dashboard -->
+            <div class="feature-card">
+                <h2>🗑️ Reset Dashboard</h2>
+                <p>Reset all dashboard data to initial state (requires confirmation).</p>
+                <button class="button danger" onclick="resetDashboard()">Reset Dashboard</button>
+                <div class="info-box">
+                    <h3>⚠️ Warning</h3>
+                    <p>This will clear all metrics, activities, and historical data. Action cannot be undone.</p>
+                </div>
+            </div>
+
+            <!-- Console Commands Reference -->
+            <div class="feature-card">
+                <h2>💻 Console Commands</h2>
+                <p>Quick reference for browser console testing.</p>
+                <div class="code-snippet">
+                    dashboardManager.refresh()<br>
+                    dashboardManager.refreshMetrics()<br>
+                    dashboardManager.exportData()<br>
+                    dashboardManager.reset()<br>
+                    dashboardManager.addActivity('🎯', 'Custom message')<br>
+                    dashboardManager.clearActivities()<br>
+                    dashboardManager.startAutoRefresh()<br>
+                    dashboardManager.stopAutoRefresh()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if dashboard manager is available
+        function checkDashboardStatus() {
+            const statusDiv = document.getElementById('statusResult');
+            const statusBadge = document.getElementById('dashboardStatus');
+
+            if (window.dashboardManager) {
+                const isInitialized = dashboardManager.initialized;
+                statusDiv.innerHTML = `
+                    <pre>✅ Dashboard Manager: Available
+Initialized: ${isInitialized ? 'Yes' : 'No'}
+Update Interval: ${dashboardManager.updateInterval ? 'Running' : 'Stopped'}
+Has Database: ${dashboardManager.database ? 'Yes' : 'No'}
+
+Metrics:
+- Documents Indexed: ${dashboardManager.metrics.documentsIndexed}
+- Queries Processed: ${dashboardManager.metrics.queriesProcessed}
+- Accuracy Rate: ${dashboardManager.metrics.accuracyRate}%
+- Avg Response Time: ${dashboardManager.metrics.avgResponseTime}s
+
+Activities Count: ${dashboardManager.activities.length}</pre>
+                `;
+                statusDiv.classList.add('show');
+                statusBadge.textContent = 'Dashboard Active';
+                statusBadge.className = 'status-badge active';
+            } else {
+                statusDiv.innerHTML = '<pre>❌ Dashboard Manager not available. Please load dashboard-manager.js first.</pre>';
+                statusDiv.classList.add('show');
+                statusBadge.textContent = 'Dashboard Inactive';
+                statusBadge.className = 'status-badge inactive';
+            }
+        }
+
+        function reinitializeDashboard() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            dashboardManager.initialize().then(() => {
+                alert('Dashboard re-initialized successfully!');
+                checkDashboardStatus();
+            }).catch(err => {
+                alert('Error: ' + err.message);
+            });
+        }
+
+        function displayCurrentMetrics() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            const metricsDiv = document.getElementById('metricsDisplay');
+            const metrics = dashboardManager.metrics;
+
+            metricsDiv.innerHTML = `
+                <div class="metric-item">
+                    <div class="metric-value">${metrics.documentsIndexed.toLocaleString()}</div>
+                    <div class="metric-label">Documents</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">${metrics.queriesProcessed.toLocaleString()}</div>
+                    <div class="metric-label">Queries</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">${metrics.accuracyRate}%</div>
+                    <div class="metric-label">Accuracy</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">${metrics.avgResponseTime}s</div>
+                    <div class="metric-label">Response Time</div>
+                </div>
+            `;
+        }
+
+        function refreshMetrics() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            dashboardManager.refreshMetrics();
+            displayCurrentMetrics();
+            alert('Metrics refreshed!');
+        }
+
+        function addSampleActivity() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            const icons = ['📊', '🎯', '✅', '🔍', '📈', '💡', '🚀', '⚡'];
+            const messages = [
+                'Test activity added',
+                'Sample data loaded',
+                'Metrics updated successfully',
+                'Query processed',
+                'Document indexed',
+                'Performance optimized',
+                'System health checked',
+                'Dashboard refreshed'
+            ];
+
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+            dashboardManager.addActivity(randomIcon, randomMessage);
+            updateActivityLog();
+        }
+
+        function addCustomActivity() {
+            const message = prompt('Enter custom activity message:');
+            if (message) {
+                const icon = prompt('Enter icon emoji (optional):', '📝');
+                dashboardManager.addActivity(icon || '📝', message);
+                updateActivityLog();
+            }
+        }
+
+        function updateActivityLog() {
+            if (!window.dashboardManager) return;
+
+            const logDiv = document.getElementById('activityLog');
+            const activities = dashboardManager.activities.slice(-10).reverse(); // Last 10 activities
+
+            if (activities.length === 0) {
+                logDiv.innerHTML = '<div class="info-box"><p>No activities yet. Add some to see them here!</p></div>';
+                return;
+            }
+
+            logDiv.innerHTML = activities.map(activity => {
+                const timeAgo = dashboardManager.formatTimeAgo ? dashboardManager.formatTimeAgo(activity.timestamp) : 'Just now';
+                return `
+                    <div class="activity-item">
+                        <div class="activity-icon">${activity.icon}</div>
+                        <div class="activity-message">${activity.message}</div>
+                        <div class="activity-time">${timeAgo}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearAllActivities() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            dashboardManager.clearActivities();
+            updateActivityLog();
+        }
+
+        function startAutoRefresh() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            dashboardManager.startAutoRefresh();
+            document.getElementById('autoRefreshStatus').innerHTML =
+                'Running <span class="auto-refresh-indicator"></span>';
+        }
+
+        function stopAutoRefresh() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            dashboardManager.stopAutoRefresh();
+            document.getElementById('autoRefreshStatus').textContent = 'Stopped';
+        }
+
+        function manualRefresh() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            const logDiv = document.getElementById('refreshLog');
+            const timestamp = new Date().toLocaleTimeString();
+
+            logDiv.innerHTML += `<div class="log-entry log-info">[${timestamp}] Starting full dashboard refresh...</div>`;
+
+            try {
+                dashboardManager.refresh();
+                logDiv.innerHTML += `<div class="log-entry log-success">[${timestamp}] ✅ Dashboard refreshed successfully</div>`;
+                displayCurrentMetrics();
+                updateActivityLog();
+            } catch (error) {
+                logDiv.innerHTML += `<div class="log-entry log-error">[${timestamp}] ❌ Error: ${error.message}</div>`;
+            }
+
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function refreshMetricsOnly() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            const logDiv = document.getElementById('refreshLog');
+            const timestamp = new Date().toLocaleTimeString();
+
+            logDiv.innerHTML += `<div class="log-entry log-info">[${timestamp}] Refreshing metrics only...</div>`;
+
+            try {
+                dashboardManager.refreshMetrics();
+                logDiv.innerHTML += `<div class="log-entry log-success">[${timestamp}] ✅ Metrics refreshed</div>`;
+                displayCurrentMetrics();
+            } catch (error) {
+                logDiv.innerHTML += `<div class="log-entry log-error">[${timestamp}] ❌ Error: ${error.message}</div>`;
+            }
+
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function exportDashboardPDF() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            const resultDiv = document.getElementById('exportResult');
+            resultDiv.innerHTML = '<pre>📄 Generating PDF report...</pre>';
+            resultDiv.classList.add('show');
+
+            try {
+                dashboardManager.exportData();
+                resultDiv.innerHTML = '<pre>✅ PDF export initiated! Check your downloads.</pre>';
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>❌ Export failed: ${error.message}\n\nNote: jsPDF library must be loaded for PDF export.</pre>`;
+            }
+        }
+
+        function resetDashboard() {
+            if (!window.dashboardManager) {
+                alert('Dashboard Manager not available');
+                return;
+            }
+
+            dashboardManager.reset();
+            displayCurrentMetrics();
+            updateActivityLog();
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            checkDashboardStatus();
+            if (window.dashboardManager) {
+                displayCurrentMetrics();
+                updateActivityLog();
+            }
+        });
+    </script>
+</body>
+</html>

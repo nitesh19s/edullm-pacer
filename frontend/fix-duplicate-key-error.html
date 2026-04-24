@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fix Duplicate Key Error</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        h1 {
+            color: #fff;
+            border-bottom: 3px solid #4ade80;
+            padding-bottom: 15px;
+        }
+        .section {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #4ade80;
+        }
+        button {
+            background: #4ade80;
+            color: #000;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #22c55e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.4);
+        }
+        .log {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .log-entry {
+            padding: 5px;
+            margin: 3px 0;
+        }
+        .success { color: #4ade80; }
+        .error { color: #ff6b6b; }
+        .warning { color: #ffd93d; }
+        .info { color: #6bcaff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Fix "Key Already Exists" Error</h1>
+
+        <div class="section">
+            <h2>❌ About This Error</h2>
+            <p>The error "Key already exists in the object store" occurs when:</p>
+            <ul>
+                <li>Multiple messages are saved with the same ID</li>
+                <li>IndexedDB database has corrupted entries</li>
+                <li>Chat history has duplicate timestamps</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🔧 Quick Fixes</h2>
+
+            <h3>Option 1: Clear Chat History (Recommended)</h3>
+            <p>This clears all RAG chat messages but keeps your uploaded documents safe.</p>
+            <button onclick="clearChatHistory()">Clear Chat History</button>
+
+            <h3>Option 2: Clear Query History</h3>
+            <p>This clears analytics data but keeps chat history.</p>
+            <button onclick="clearQueryHistory()">Clear Query History</button>
+
+            <h3>Option 3: Reset IndexedDB Database</h3>
+            <p><strong>⚠️ Warning:</strong> This will clear ALL data including uploaded documents!</p>
+            <button onclick="resetDatabase()" style="background: #ff6b6b;">Reset Database (Danger)</button>
+
+            <h3>Option 4: Refresh and Try Again</h3>
+            <p>Sometimes a simple refresh fixes the issue.</p>
+            <button onclick="location.reload()">Refresh Page</button>
+        </div>
+
+        <div class="section">
+            <h2>📊 Status</h2>
+            <div id="log" class="log">
+                <div class="log-entry info">Click a button above to begin...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✅ What Was Fixed</h2>
+            <p>The code has been updated with the following fixes:</p>
+            <ul>
+                <li>✅ All messages now have unique IDs (timestamp + random string)</li>
+                <li>✅ Better error handling for database operations</li>
+                <li>✅ Failed operations won't break the chat</li>
+                <li>✅ Warnings logged to console instead of showing errors to user</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🎯 After Fixing</h2>
+            <ol>
+                <li>Refresh the main platform page (Cmd/Ctrl + Shift + R)</li>
+                <li>Go to RAG Chat section</li>
+                <li>Try asking a question again</li>
+                <li>If error persists, clear chat history and try again</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = message;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(`[${type.toUpperCase()}]`, message);
+        }
+
+        function clearChatHistory() {
+            log('🔄 Clearing RAG chat history...', 'info');
+
+            try {
+                localStorage.removeItem('rag_chat_history');
+                log('✅ Chat history cleared successfully!', 'success');
+                log('💡 Refresh the page to see changes', 'info');
+
+                const count = localStorage.getItem('rag_chat_history');
+                if (!count) {
+                    log('✅ Verified: Chat history is empty', 'success');
+                }
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function clearQueryHistory() {
+            log('🔄 Clearing query history...', 'info');
+
+            try {
+                localStorage.removeItem('query_history');
+                log('✅ Query history cleared successfully!', 'success');
+                log('💡 This won\'t affect your chat messages', 'info');
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function resetDatabase() {
+            if (!confirm('⚠️ WARNING: This will DELETE ALL DATA including uploaded documents!\n\nAre you absolutely sure?')) {
+                log('❌ Operation cancelled', 'warning');
+                return;
+            }
+
+            if (!confirm('⚠️ FINAL WARNING: You will lose all uploaded PDFs and chat history.\n\nContinue?')) {
+                log('❌ Operation cancelled', 'warning');
+                return;
+            }
+
+            log('🔄 Resetting IndexedDB database...', 'warning');
+
+            try {
+                // Delete the database
+                const deleteRequest = indexedDB.deleteDatabase('eduLLM_DB');
+
+                deleteRequest.onsuccess = function() {
+                    log('✅ Database deleted successfully', 'success');
+                    log('💡 Please refresh the page', 'info');
+
+                    // Also clear localStorage
+                    localStorage.removeItem('rag_chat_history');
+                    localStorage.removeItem('query_history');
+                    localStorage.removeItem('upload_history');
+
+                    log('✅ All local data cleared', 'success');
+                    log('🔄 Refreshing page in 3 seconds...', 'info');
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
+                };
+
+                deleteRequest.onerror = function() {
+                    log('❌ Failed to delete database', 'error');
+                };
+
+                deleteRequest.onblocked = function() {
+                    log('⚠️ Database deletion blocked. Close all tabs and try again.', 'warning');
+                };
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-check status on load
+        window.addEventListener('load', () => {
+            log('🔍 Checking current status...', 'info');
+
+            const chatHistory = localStorage.getItem('rag_chat_history');
+            const queryHistory = localStorage.getItem('query_history');
+            const uploadHistory = localStorage.getItem('upload_history');
+
+            if (chatHistory) {
+                try {
+                    const parsed = JSON.parse(chatHistory);
+                    log(`📊 Chat history: ${parsed.length} messages`, 'info');
+                } catch (e) {
+                    log(`⚠️ Chat history exists but is corrupted`, 'warning');
+                    log('💡 Recommendation: Clear chat history', 'warning');
+                }
+            } else {
+                log('✅ No chat history (clean state)', 'success');
+            }
+
+            if (queryHistory) {
+                try {
+                    const parsed = JSON.parse(queryHistory);
+                    log(`📊 Query history: ${parsed.length} queries`, 'info');
+                } catch (e) {
+                    log(`⚠️ Query history is corrupted`, 'warning');
+                }
+            }
+
+            if (uploadHistory) {
+                try {
+                    const parsed = JSON.parse(uploadHistory);
+                    const successful = parsed.filter(u => u.status === 'success');
+                    log(`📊 Upload history: ${successful.length} documents`, 'info');
+                } catch (e) {
+                    log(`⚠️ Upload history is corrupted`, 'warning');
+                }
+            }
+
+            log('', 'info');
+            log('💡 Select a fix option above', 'info');
+        });
+    </script>
+</body>
+</html>
