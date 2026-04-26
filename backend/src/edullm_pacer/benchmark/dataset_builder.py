@@ -183,6 +183,7 @@ class BenchmarkDatasetBuilder:
     def _to_query(self, entry: dict) -> Query:
         """Convert a raw entry dict to a Query object."""
         qid = self._make_query_id(entry)
+        doc_id = entry.get("id", "")
         return Query(
             query_id=qid,
             text=entry["question"],
@@ -191,9 +192,10 @@ class BenchmarkDatasetBuilder:
             if isinstance(entry["grade_level"], GradeLevel)
             else GradeLevel.UNKNOWN,
             bloom_level=entry.get("bloom_level", BloomLevel.UNKNOWN),
+            expected_doc_ids=[doc_id] if doc_id else [],
             expected_answer=entry.get("answer") or None,
             extra={
-                "source_id": entry.get("id", ""),
+                "source_id": doc_id,
                 "chapter": entry.get("chapter") or "",
                 "topic": entry.get("topic") or "",
                 "difficulty": entry.get("difficulty", "medium"),
