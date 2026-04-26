@@ -1,0 +1,14 @@
+condition,embedding,n_chunks,index_time_s,query_p50_ms,query_mean_ms,notes
+fixed_512,all-MiniLM-L6-v2,9749,53.3,—,52.88,
+fixed_1024,all-MiniLM-L6-v2,8581,46.4,—,48.87,Fastest query
+recursive_512,all-MiniLM-L6-v2,36981,96.3,—,177.16,Slowest — 36k chunks
+recursive_1024,all-MiniLM-L6-v2,18389,—,—,—,
+semantic_1024,all-MiniLM-L6-v2,12987,—,—,—,
+educational_2000,all-MiniLM-L6-v2,16369,—,—,—,
+hybrid_2000,all-MiniLM-L6-v2,16375,—,—,—,
+pacer,all-MiniLM-L6-v2,16369,52.0,—,76.64,Overhead: routing+boundary
+fixed_1024,bge-large-en-v1.5,8581,939.9,—,80.35,
+recursive_512,bge-large-en-v1.5,36981,1487.2,—,214.09,
+recursive_1024,bge-large-en-v1.5,18389,1358.0,—,114.31,
+semantic_1024,bge-large-en-v1.5,12987,1198.4,—,85.39,
+hybrid_2000,bge-large-en-v1.5,16375,1026.9,—,102.53,

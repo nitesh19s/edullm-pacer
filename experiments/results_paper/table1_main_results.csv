@@ -1,0 +1,17 @@
+condition,embedding,mrr,ndcg_at_10,cas_overall,n_queries,n_chunks,latency_ms
+recursive_512,bge-large-en-v1.5,0.9354,0.8971,0.6766,900,36981,214.09
+recursive_512,all-MiniLM-L6-v2,0.9242,0.8864,0.6720,900,36981,177.16
+educational_2000,bge-large-en-v1.5,0.9241,0.9208,0.6511,900,16369,—
+hybrid_2000,bge-large-en-v1.5,0.9241,0.9208,0.6511,900,16375,102.53
+recursive_1024,bge-large-en-v1.5,0.9234,0.9024,0.6689,900,18389,114.31
+semantic_1024,bge-large-en-v1.5,0.9188,0.9129,0.6630,900,12987,85.39
+fixed_1024,bge-large-en-v1.5,0.9187,0.9308,0.6587,900,8581,80.35
+fixed_512,bge-large-en-v1.5,0.9185,0.9253,0.6584,900,9749,—
+semantic_1024,all-MiniLM-L6-v2,0.8979,0.8948,0.6609,900,12987,—
+recursive_1024,all-MiniLM-L6-v2,0.8958,0.8811,0.6647,900,18389,—
+fixed_1024,all-MiniLM-L6-v2,0.8932,0.9097,0.6548,900,8581,48.87
+fixed_512,all-MiniLM-L6-v2,0.8926,0.9046,0.6552,900,9749,52.88
+educational_2000,all-MiniLM-L6-v2,0.8845,0.8887,0.6436,900,16369,—
+hybrid_2000,all-MiniLM-L6-v2,0.8845,0.8887,0.6436,900,16375,—
+pacer,all-MiniLM-L6-v2,0.8845,0.8887,0.6436,900,16369,76.64
+pacer,bge-large-en-v1.5,PENDING,PENDING,PENDING,900,16369,—

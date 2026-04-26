@@ -1,0 +1,9 @@
+condition,embedding,mrr,ndcg_at_10,cas_overall,n_chunks,latency_ms,notes
+recursive_512,bge-large-en-v1.5,0.9354,0.8971,0.6766,36981,214.09,Best MRR
+recursive_1024,bge-large-en-v1.5,0.9234,0.9024,0.6689,18389,114.31,
+semantic_1024,bge-large-en-v1.5,0.9188,0.9129,0.6630,12987,85.39,
+fixed_1024,bge-large-en-v1.5,0.9187,0.9308,0.6587,8581,80.35,Best nDCG@10
+fixed_512,bge-large-en-v1.5,0.9185,0.9253,0.6584,9749,—,
+hybrid_2000,bge-large-en-v1.5,0.9241,0.9208,0.6511,16375,102.53,
+educational_2000,bge-large-en-v1.5,0.9241,0.9208,0.6511,16369,—,
+pacer,bge-large-en-v1.5,PENDING,PENDING,PENDING,16369,—,Colab session expired

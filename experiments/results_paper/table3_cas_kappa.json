@@ -1,0 +1,39 @@
+{
+  "cas_weights": {
+    "alpha_grade_match": 0.45,
+    "beta_prereq_preservation": 0.40,
+    "gamma_bloom_alignment": 0.15,
+    "calibration": "kappa-weighted from LLM judges"
+  },
+  "fleiss_kappa": {
+    "grade_match": 0.587,
+    "prereq_coverage": 0.611,
+    "bloom_fit": 0.439,
+    "overall_mean": 0.545
+  },
+  "pearson_r_groq70b_gemini": {
+    "grade_match": 0.755,
+    "prereq_coverage": 0.608,
+    "bloom_fit": 0.511,
+    "overall_mean": 0.624
+  },
+  "llm_judges": ["Groq Llama-3.3-70B", "Groq Llama-3.1-8B", "Gemini 2.5 Flash"],
+  "n_calibration_pairs": 150,
+  "status": "llm_judges_complete_pending_human_raters",
+  "cas_scores_by_condition": {
+    "recursive_512_bge": 0.6766,
+    "recursive_512_minilm": 0.6720,
+    "recursive_1024_bge": 0.6689,
+    "semantic_1024_bge": 0.6630,
+    "semantic_1024_minilm": 0.6609,
+    "fixed_1024_bge": 0.6587,
+    "fixed_512_bge": 0.6584,
+    "fixed_1024_minilm": 0.6548,
+    "fixed_512_minilm": 0.6552,
+    "hybrid_2000_bge": 0.6511,
+    "educational_2000_bge": 0.6511,
+    "pacer_minilm": 0.6436,
+    "educational_2000_minilm": 0.6436,
+    "hybrid_2000_minilm": 0.6436
+  }
+}
