@@ -211,6 +211,44 @@ def chunkers() -> dict[str, list[str]]:
     return {"strategies": [s.value for s in available_strategies()]}
 
 
+@app.get("/api/results/{table}")
+def get_results(table: str) -> dict:
+    """Serve experiment result files from experiments/results/.
+
+    table: one of main, ablation, latency, doctype, kappa, summary
+    """
+    _RESULTS_DIR = Path(__file__).parents[4] / "experiments" / "results"
+    table_map = {
+        "main":     _RESULTS_DIR / "task1_main_comparison.csv",
+        "ablation": _RESULTS_DIR / "task2_ablations.csv",
+        "doctype":  _RESULTS_DIR / "task3_per_doctype.csv",
+        "kappa":    _RESULTS_DIR / "task4_llm_kappa.json",
+        "latency":  _RESULTS_DIR / "task5_latency.csv",
+        "summary":  _RESULTS_DIR / "paper_tables.json",
+    }
+    if table not in table_map:
+        raise HTTPException(404, f"Unknown table '{table}'. Choose from: {list(table_map)}")
+    path = table_map[table]
+    if not path.exists():
+        raise HTTPException(404, f"Results file not found: {path.name}. Run experiments first.")
+    if path.suffix == ".json":
+        import json as _json
+        return _json.loads(path.read_text())
+    # CSV → list of dicts
+    import csv as _csv
+    rows = []
+    with open(path, newline="") as f:
+        for row in _csv.DictReader(f):
+            parsed: dict = {}
+            for k, v in row.items():
+                try:
+                    parsed[k] = float(v)
+                except (ValueError, TypeError):
+                    parsed[k] = v
+            rows.append(parsed)
+    return {"table": table, "rows": rows}
+
+
 @app.post("/api/query", response_model=QueryResponse)
 def query_endpoint(req: QueryRequest) -> QueryResponse:
     if state.pipeline is None:

@@ -34,12 +34,17 @@ data/db/*.db-wal
 data/raw/ncert-pdfs/**/*.pdf
 data/raw/ncert-pdfs/**/*.jpg
 data/raw/ncert-pdfs/**/*.DS_Store
-data/processed/
 data/benchmark/
 data/labels/
 
-# Experiments output
-experiments/
+# Keep benchmark queries but not raw/db data
+!data/processed/
+data/processed/*
+!data/processed/benchmark.jsonl
+
+# Experiments — track configs and scripts, not results
+experiments/results/
+experiments/__pycache__/
 
 # Node
 node_modules/

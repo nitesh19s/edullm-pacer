@@ -1,0 +1,98 @@
+experiment_id: pacer_v1
+description: >
+  PACER vs 7 baselines × 3 embedding models × 2 generators.
+  900 NCERT curriculum queries, grades 7-12, Math/Science/Social Science.
+  Retrieval-only evaluation (no generator needed for IR metrics).
+
+# ── Conditions (8 total: 1 PACER + 7 baselines) ───────────────────────────
+conditions:
+
+  # PACER — full adaptive system
+  - name: pacer
+    mode: adaptive
+    chunk_size: 2000
+    chunk_overlap: 100
+    max_unit_chars: 4000
+    use_boundary_pp: true
+    use_router: true
+    retriever: hybrid
+
+  # Baselines — fixed strategies
+  - name: fixed_512
+    mode: fixed
+    strategy: fixed
+    chunk_size: 512
+    chunk_overlap: 64
+    use_boundary_pp: false
+    retriever: hybrid
+
+  - name: fixed_1024
+    mode: fixed
+    strategy: fixed
+    chunk_size: 1024
+    chunk_overlap: 128
+    use_boundary_pp: false
+    retriever: hybrid
+
+  - name: recursive_512
+    mode: fixed
+    strategy: recursive
+    chunk_size: 512
+    chunk_overlap: 64
+    use_boundary_pp: false
+    retriever: hybrid
+
+  - name: recursive_1024
+    mode: fixed
+    strategy: recursive
+    chunk_size: 1024
+    chunk_overlap: 128
+    use_boundary_pp: false
+    retriever: hybrid
+
+  - name: semantic_1024
+    mode: fixed
+    strategy: semantic
+    chunk_size: 1024
+    chunk_overlap: 0
+    use_boundary_pp: false
+    retriever: hybrid
+
+  - name: educational_2000
+    mode: fixed
+    strategy: educational
+    chunk_size: 2000
+    chunk_overlap: 100
+    max_unit_chars: 4000
+    use_boundary_pp: false
+    retriever: hybrid
+
+  - name: hybrid_2000
+    mode: fixed
+    strategy: hybrid
+    chunk_size: 2000
+    chunk_overlap: 100
+    max_unit_chars: 4000
+    use_boundary_pp: false
+    retriever: hybrid
+
+# ── Models ────────────────────────────────────────────────────────────────
+embedding_models:
+  - BAAI/bge-large-en-v1.5
+  - sentence-transformers/all-MiniLM-L6-v2
+  - jinaai/jina-embeddings-v3
+
+generator_models:
+  - meta-llama/Llama-3.1-8B-Instruct
+  - Qwen/Qwen2.5-7B-Instruct
+
+# ── Paths ──────────────────────────────────────────────────────────────────
+benchmark_path: data/processed/benchmark.jsonl
+documents_db_path: data/db/edullm-database.db
+output_dir: experiments/results
+
+# ── Eval settings ──────────────────────────────────────────────────────────
+top_k: 10
+k_values: [1, 3, 5, 10]
+seed: 42
+# max_queries: 50    # uncomment for a quick smoke test

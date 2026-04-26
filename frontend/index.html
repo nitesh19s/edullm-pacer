@@ -159,6 +159,12 @@
                         </button>
                     </div>
                     <div class="nav-item">
+                        <button class="nav-link" data-section="pacer" onclick="if(window.pacerResultsManager&&!window.pacerResultsManager._initialized){window.pacerResultsManager._initialized=true;window.pacerResultsManager.initialize();}">
+                            <i class="fas fa-microscope"></i>
+                            <span>PACER Results</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
                         <button class="nav-link" data-section="settings">
                             <i class="fas fa-cog"></i>
                             <span data-i18n="nav.settings">Settings</span>
@@ -1432,6 +1438,96 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PACER Results Section -->
+            <section id="pacer" class="content-section" id="pacerSection">
+                <div class="section-header">
+                    <div class="section-header-left">
+                        <h2><i class="fas fa-microscope"></i> PACER Experiment Results</h2>
+                        <p>Pedagogy-Aware Adaptive Chunking — live paper tables &amp; CAS metrics</p>
+                    </div>
+                    <div class="section-header-right" style="display:flex;gap:0.5rem;align-items:center;">
+                        <span id="pacerDataSource"></span>
+                        <button class="btn-icon" title="Refresh from backend" onclick="window.pacerResultsManager?.refresh()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab bar -->
+                <div class="pacer-tabs">
+                    <button class="pacer-tab-btn active" data-tab="main"     onclick="window.pacerResultsManager?.switchTab('main')">
+                        <i class="fas fa-table"></i> Table 1 — Main
+                    </button>
+                    <button class="pacer-tab-btn" data-tab="ablation" onclick="window.pacerResultsManager?.switchTab('ablation')">
+                        <i class="fas fa-vials"></i> Table 2 — Ablation
+                    </button>
+                    <button class="pacer-tab-btn" data-tab="cas"      onclick="window.pacerResultsManager?.switchTab('cas')">
+                        <i class="fas fa-star-half-alt"></i> CAS Metrics
+                    </button>
+                    <button class="pacer-tab-btn" data-tab="latency"  onclick="window.pacerResultsManager?.switchTab('latency')">
+                        <i class="fas fa-bolt"></i> Latency
+                    </button>
+                    <button class="pacer-tab-btn" data-tab="kappa"    onclick="window.pacerResultsManager?.switchTab('kappa')">
+                        <i class="fas fa-handshake"></i> Inter-rater κ
+                    </button>
+                </div>
+
+                <!-- Tab: Main comparison -->
+                <div class="pacer-tab-pane active" id="pacerTab_main">
+                    <div class="glass-card pacer-panel">
+                        <h3>PACER vs Baselines — Retrieval Metrics</h3>
+                        <p class="pacer-note">PACER highlighted in blue. Best per-column bolded after Colab re-run.</p>
+                        <div class="pacer-chart-wrap">
+                            <canvas id="pacerMainChart"></canvas>
+                        </div>
+                        <div id="pacerMainTable" class="pacer-table-wrap"></div>
+                    </div>
+                </div>
+
+                <!-- Tab: Ablation -->
+                <div class="pacer-tab-pane" id="pacerTab_ablation">
+                    <div class="glass-card pacer-panel">
+                        <h3>Ablation Study — Effect of Router &amp; Boundary Post-processor</h3>
+                        <p class="pacer-note">PACER-Full = full system. A1/A2/A3 remove one component at a time.</p>
+                        <div class="pacer-chart-wrap">
+                            <canvas id="pacerAblationChart"></canvas>
+                        </div>
+                        <div id="pacerAblationTable" class="pacer-table-wrap"></div>
+                    </div>
+                </div>
+
+                <!-- Tab: CAS -->
+                <div class="pacer-tab-pane" id="pacerTab_cas">
+                    <div class="glass-card pacer-panel">
+                        <h3>Curriculum Alignment Score (CAS)</h3>
+                        <p class="pacer-note">CAS = α·grade_match + β·prereq_preservation + γ·bloom_alignment</p>
+                        <div id="pacerCASKPIs"></div>
+                        <div class="pacer-chart-wrap">
+                            <canvas id="pacerCASChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Latency -->
+                <div class="pacer-tab-pane" id="pacerTab_latency">
+                    <div class="glass-card pacer-panel">
+                        <h3>Latency — Indexing &amp; Query Time</h3>
+                        <p class="pacer-note">Index time in seconds (left axis). Query p50/p95 in ms (right axis).</p>
+                        <div class="pacer-chart-wrap">
+                            <canvas id="pacerLatencyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Kappa -->
+                <div class="pacer-tab-pane" id="pacerTab_kappa">
+                    <div class="glass-card pacer-panel">
+                        <h3>CAS Validation — Inter-rater Agreement</h3>
+                        <div id="pacerKappaPanel"></div>
                     </div>
                 </div>
             </section>
@@ -2974,6 +3070,8 @@
 
     <!-- Research Sample Data -->
     <script src="research-sample-data.js"></script>
+    <!-- PACER Results Dashboard -->
+    <script src="pacer-results.js"></script>
 
     <!-- PhD Research Module Initialization -->
     <script>
@@ -3011,4 +3109,86 @@
         transform: translateY(0) scale(1);
     }
 }
+
+/* ── PACER Results panel ─────────────────────────────────────────── */
+.pacer-tabs {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.pacer-tab-btn {
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--card));
+    color: hsl(var(--muted-foreground));
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.15s, color 0.15s;
+}
+.pacer-tab-btn:hover { background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
+.pacer-tab-btn.active { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-color: hsl(var(--primary)); }
+.pacer-tab-pane { display: none; }
+.pacer-tab-pane.active { display: block; }
+.pacer-panel { padding: 1.25rem 1.5rem; }
+.pacer-panel h3 { margin-bottom: 0.35rem; font-size: 1rem; }
+.pacer-note { font-size: 0.8rem; color: hsl(var(--muted-foreground)); margin-bottom: 1rem; }
+.pacer-chart-wrap { max-height: 340px; margin-bottom: 1.25rem; }
+.pacer-chart-wrap canvas { max-height: 320px; }
+.pacer-table-wrap { overflow-x: auto; }
+
+/* Shared table style */
+.pacer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+.pacer-table th, .pacer-table td {
+    padding: 0.45rem 0.75rem;
+    border-bottom: 1px solid hsl(var(--border));
+    text-align: right;
+}
+.pacer-table th:first-child, .pacer-table td:first-child { text-align: left; }
+.pacer-table thead th { background: hsl(var(--muted)); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.pacer-table .row-highlight { background: hsl(var(--primary) / 0.08); font-weight: 600; }
+.pacer-table .row-highlight td:first-child::after { content: ' ★'; color: hsl(var(--primary)); font-size: 0.75rem; }
+.pacer-table .row-good td { color: hsl(142, 71%, 35%); }
+.pacer-table .row-warn td { color: hsl(38, 92%, 40%); }
+.pacer-table .cas-col { font-style: italic; color: hsl(var(--muted-foreground)); }
+
+/* CAS KPIs */
+.cas-kpi-grid { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.cas-kpi {
+    flex: 1 1 120px;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--card));
+    text-align: center;
+}
+.cas-kpi.good { border-color: hsl(142, 71%, 45%); background: hsl(142, 71%, 95%); }
+.cas-kpi.warn { border-color: hsl(38, 92%, 50%); background: hsl(38, 92%, 95%); }
+.cas-kpi-label { display: block; font-size: 0.72rem; color: hsl(var(--muted-foreground)); margin-bottom: 0.2rem; }
+.cas-kpi-val   { display: block; font-size: 1.15rem; font-weight: 700; }
+.cas-pending-note {
+    padding: 0.5rem 0.75rem;
+    border-left: 3px solid hsl(38, 92%, 50%);
+    background: hsl(38, 92%, 97%);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.8rem;
+    color: hsl(38, 50%, 30%);
+    margin-top: 0.75rem;
+}
+
+/* Kappa panel */
+.kappa-status { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.5rem; }
+.kappa-status.good { background: hsl(142, 71%, 90%); color: hsl(142, 71%, 25%); }
+.kappa-status.warn { background: hsl(38, 92%, 90%); color: hsl(38, 60%, 25%); }
+.kappa-meta { font-size: 0.8rem; color: hsl(var(--muted-foreground)); margin-bottom: 0.75rem; }
+
+/* Badge */
+.badge { padding: 0.25rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem; }
+.badge-good { background: hsl(142, 71%, 90%); color: hsl(142, 71%, 25%); }
+.badge-warn { background: hsl(38, 92%, 90%); color: hsl(38, 60%, 25%); }
 </style>
