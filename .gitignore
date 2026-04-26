@@ -37,10 +37,11 @@ data/raw/ncert-pdfs/**/*.DS_Store
 data/benchmark/
 data/labels/
 
-# Keep benchmark queries but not raw/db data
+# Keep benchmark queries and exported documents, not raw/db data
 !data/processed/
 data/processed/*
 !data/processed/benchmark.jsonl
+!data/processed/documents.jsonl
 
 # Experiments — track configs and scripts, not results
 experiments/results/

@@ -140,9 +140,24 @@ class ConditionRunner:
     # ------------------------------------------------------------------
 
     def _load_documents(self) -> list[Document]:
+        """Load documents from SQLite DB or fallback JSONL (for Colab where DB is absent)."""
+        db_path = Path(self.cfg.documents_db_path)
+        jsonl_path = Path(self.cfg.documents_db_path).parent.parent / "processed" / "documents.jsonl"
+
+        if db_path.exists():
+            return self._load_documents_from_db()
+        elif jsonl_path.exists():
+            logger.info(f"DB not found — loading documents from {jsonl_path}")
+            return self._load_documents_from_jsonl(jsonl_path)
+        else:
+            raise FileNotFoundError(
+                f"Neither DB ({db_path}) nor JSONL ({jsonl_path}) found. "
+                "Run: python -c \"from edullm_pacer.benchmark.sqlite_exporter import export_entries; ...\""
+            )
+
+    def _load_documents_from_db(self) -> list[Document]:
         """Export from SQLite and convert to Document objects."""
         raw = export_entries(self.cfg.documents_db_path)
-        # Filter: keep only entries with enough text to be useful chunks.
         filtered = [e for e in raw if len(e.get("question", "") + e.get("answer", "")) > 100]
 
         documents: list[Document] = []
@@ -153,15 +168,11 @@ class ConditionRunner:
                 continue
             seen_ids.add(doc_id)
 
-            # Combine Q+A as the document text.
             text = f"Question: {e['question']}\n\nAnswer: {e['answer']}".strip()
             if not text:
                 continue
 
             grade_level = e.get("grade_level", GradeLevel.UNKNOWN)
-            # All NCERT SQLite entries are textbook Q&A pairs — set doc_type
-            # explicitly so the PACER router routes them to EDUCATIONAL chunking
-            # rather than falling back to UNKNOWN → HYBRID.
             meta = DocumentMetadata(
                 subject=e.get("subject"),
                 grade=grade_level if isinstance(grade_level, GradeLevel) else GradeLevel.UNKNOWN,
@@ -170,6 +181,31 @@ class ConditionRunner:
             )
             documents.append(Document(doc_id=doc_id, text=text, metadata=meta))
 
+        return documents
+
+    def _load_documents_from_jsonl(self, jsonl_path: Path) -> list[Document]:
+        """Load pre-exported documents from JSONL (Colab fallback)."""
+        import json as _json
+        documents: list[Document] = []
+        with open(jsonl_path) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                d = _json.loads(line)
+                meta_raw = d.get("metadata", {})
+                grade_raw = meta_raw.get("grade", GradeLevel.UNKNOWN)
+                try:
+                    grade = GradeLevel(grade_raw)
+                except ValueError:
+                    grade = GradeLevel.UNKNOWN
+                meta = DocumentMetadata(
+                    subject=meta_raw.get("subject"),
+                    grade=grade,
+                    doc_type=DocumentType.TEXTBOOK_CHAPTER,
+                    source=meta_raw.get("source", "NCERT"),
+                )
+                documents.append(Document(doc_id=d["doc_id"], text=d["text"], metadata=meta))
         return documents
 
     def _load_queries(self) -> list[Query]:
