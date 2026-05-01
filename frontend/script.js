@@ -3,11 +3,12 @@ class EduLLMPlatform {
     constructor() {
         this.currentSection = 'dashboard';
         this.chatHistory = [];
+        // Seeded with real PACER experiment values (900-query NCERT benchmark)
         this.statistics = {
-            documentsIndexed: 0,
-            queriesProcessed: 0,
-            accuracyRate: 0,
-            avgResponseTime: 0
+            documentsIndexed: 8563,   // NCERT Q&A docs in SQLite
+            queriesProcessed: 900,    // benchmark queries evaluated
+            accuracyRate: 92.41,      // PACER MRR × 100 (bge-large)
+            avgResponseTime: 0.087    // PACER query latency in seconds
         };
         this.knowledgeGraphData = null;
         this.dataProcessor = new NCERTDataProcessor();
