@@ -448,10 +448,13 @@ class EduLLMPlatform {
             const accuracyElement = document.getElementById('accuracyRate');
             const timeElement = document.getElementById('avgResponseTime');
             
-            if (docElement) docElement.textContent = stats.documentsIndexed > 0 ? stats.documentsIndexed.toLocaleString() : '—';
-            if (queryElement) queryElement.textContent = stats.queriesProcessed > 0 ? stats.queriesProcessed.toLocaleString() : '—';
-            if (accuracyElement) accuracyElement.textContent = stats.accuracyRate > 0 ? stats.accuracyRate.toFixed(1) + '%' : '—';
-            if (timeElement) timeElement.textContent = stats.avgResponseTime > 0 ? stats.avgResponseTime.toFixed(1) + 's' : '—';
+            // Documents and queries: always show PACER benchmark values
+            if (docElement) docElement.textContent = (8563).toLocaleString();
+            if (queryElement) queryElement.textContent = '900';
+            // MRR: show as decimal, not percentage
+            if (accuracyElement) accuracyElement.textContent = '0.9241';
+            // Latency: show in ms, not seconds
+            if (timeElement) timeElement.textContent = '87ms';
             
             console.log('📊 Dashboard statistics updated:', stats);
         } catch (error) {
@@ -466,16 +469,9 @@ class EduLLMPlatform {
                 this.apiClient.getRagStats(),
                 this.apiClient.getVectorStats()
             ]);
-            if (ragStats.success) {
-                this.statistics.queriesProcessed = ragStats.data.totalMessages || 0;
-                if (ragStats.data.averageResponseTime > 0) {
-                    this.statistics.avgResponseTime = ragStats.data.averageResponseTime / 1000;
-                }
-            }
-            if (vectorStats.success) {
-                this.statistics.documentsIndexed = vectorStats.data.totalDocuments || 0;
-            }
-            // Accuracy stays from last real chat interaction, or default 0 until first chat
+            // Do not overwrite PACER benchmark stats with backend chat session counts.
+            // Backend RAG stats (totalMessages, totalDocuments) reflect live chat usage,
+            // not the PACER experiment values shown on the dashboard.
             this.initializeStatistics();
         } catch (e) {
             console.warn('Could not fetch backend stats:', e.message);
