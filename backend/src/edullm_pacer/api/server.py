@@ -217,14 +217,12 @@ def get_results(table: str) -> dict:
 
     table: one of main, ablation, latency, doctype, kappa, summary
     """
-    _RESULTS_DIR = Path(__file__).parents[4] / "experiments" / "results"
+    _RESULTS_DIR = Path(__file__).parents[4] / "experiments" / "results_paper"
     table_map = {
-        "main":     _RESULTS_DIR / "task1_main_comparison.csv",
-        "ablation": _RESULTS_DIR / "task2_ablations.csv",
-        "doctype":  _RESULTS_DIR / "task3_per_doctype.csv",
-        "kappa":    _RESULTS_DIR / "task4_llm_kappa.json",
-        "latency":  _RESULTS_DIR / "task5_latency.csv",
-        "summary":  _RESULTS_DIR / "paper_tables.json",
+        "main":     _RESULTS_DIR / "table1_main_results.csv",
+        "ablation": _RESULTS_DIR / "table2_bge_large_only.csv",
+        "kappa":    _RESULTS_DIR / "table3_cas_kappa.json",
+        "latency":  _RESULTS_DIR / "table4_latency.csv",
     }
     if table not in table_map:
         raise HTTPException(404, f"Unknown table '{table}'. Choose from: {list(table_map)}")

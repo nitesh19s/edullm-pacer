@@ -111,11 +111,12 @@ class PACERResultsManager {
         const canvas = document.getElementById('pacerMainChart');
         if (!canvas) return;
         const rows = this._data.main;
-        const labels = rows.map(r => r.method || r.condition || '');
+        const labels = rows.map(r => this._label(r));
         const mrr    = rows.map(r => +(r.mrr || 0));
         const ndcg   = rows.map(r => +(r.ndcg_at_10 || r['ndcg@10'] || 0));
-        const colors = labels.map(l => l === 'PACER' || l === 'PACER-Full' ? '#3b82f6' : '#94a3b8');
-        const ndcgColors = labels.map(l => l === 'PACER' || l === 'PACER-Full' ? '#1d4ed8' : '#cbd5e1');
+        const isPacer = labels.map(l => l.toLowerCase().startsWith('pacer'));
+        const colors = isPacer.map(p => p ? '#3b82f6' : '#94a3b8');
+        const ndcgColors = isPacer.map(p => p ? '#1d4ed8' : '#cbd5e1');
 
         if (this._charts.main) this._charts.main.destroy();
         this._charts.main = new Chart(canvas.getContext('2d'), {
@@ -147,12 +148,12 @@ class PACERResultsManager {
         if (!el) return;
         const rows = this._data.main;
         const cols = [
-            { key: 'method',       label: 'Method',        fmt: v => v },
+            { key: '_label',       label: 'Method',        fmt: (v, r) => this._label(r) },
             { key: 'mrr',          label: 'MRR',           fmt: v => (+v).toFixed(4) },
             { key: 'ndcg_at_10',   label: 'nDCG@10',       fmt: v => (+v).toFixed(4), fallback: 'ndcg@10' },
             { key: 'cas_overall',  label: 'CAS',           fmt: v => (+v).toFixed(4), cls: 'cas-col' },
             { key: 'n_chunks',     label: '#Chunks',       fmt: v => Math.round(+v).toLocaleString() },
-            { key: 'latency_ms',   label: 'Latency (ms)',  fmt: v => v != null ? Math.round(+v) : '—' },
+            { key: 'latency_ms',   label: 'Latency (ms)',  fmt: v => v != null && v !== '—' ? Math.round(+v) : '—' },
         ];
         el.innerHTML = this._buildTable(rows, cols, 'PACER');
     }
@@ -165,7 +166,7 @@ class PACERResultsManager {
         const canvas = document.getElementById('pacerAblationChart');
         if (!canvas) return;
         const rows = this._data.ablation;
-        const labels = rows.map(r => r.method || r.condition || '');
+        const labels = rows.map(r => this._label(r));
         const mrr  = rows.map(r => +(r.mrr || 0));
         const ndcg = rows.map(r => +(r.ndcg_at_10 || r['ndcg@10'] || 0));
         const palette = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
@@ -199,7 +200,7 @@ class PACERResultsManager {
         if (!el) return;
         const rows = this._data.ablation;
         const cols = [
-            { key: 'method',      label: 'Condition', fmt: v => v },
+            { key: '_label',      label: 'Condition', fmt: (v, r) => this._label(r) },
             { key: 'mrr',         label: 'MRR',       fmt: v => v != null ? (+v).toFixed(4) : '—' },
             { key: 'ndcg_at_10',  label: 'nDCG@10',   fmt: v => v != null ? (+v).toFixed(4) : '—', fallback: 'ndcg@10' },
             { key: 'cas_overall', label: 'CAS',       fmt: v => v != null ? (+v).toFixed(4) : '—', cls: 'cas-col' },
@@ -283,9 +284,9 @@ class PACERResultsManager {
         const canvas = document.getElementById('pacerLatencyChart');
         if (!canvas) return;
         const rows   = this._data.latency;
-        const labels = rows.map(r => r.method || '');
+        const labels = rows.map(r => this._label(r));
         const latency = rows.map(r => r.latency_ms != null ? +r.latency_ms : null);
-        const ispacer = labels.map(l => l === 'PACER');
+        const ispacer = labels.map(l => l.toLowerCase().startsWith('pacer'));
 
         if (this._charts.latency) this._charts.latency.destroy();
         this._charts.latency = new Chart(canvas.getContext('2d'), {
@@ -360,14 +361,26 @@ class PACERResultsManager {
     // Shared table builder
     // -----------------------------------------------------------------------
 
+    _label(r) {
+        if (r.method) return r.method;
+        const cond = (r.condition || '').replace(/_/g, '-');
+        const emb  = r.embedding ? (r.embedding.includes('MiniLM') ? ' (MiniLM)' : ' (bge)') : '';
+        return cond + emb;
+    }
+
     _buildTable(rows, cols, highlightMethod) {
         const header = cols.map(c => `<th>${c.label}</th>`).join('');
         const body = rows.map(r => {
-            const method = r.method || r.condition || '';
-            const isHL = method === highlightMethod;
+            const label = this._label(r);
+            const isHL  = label === highlightMethod || (r.condition || '').toLowerCase() === 'pacer';
             const cells = cols.map(c => {
-                const raw = r[c.key] ?? (c.fallback ? r[c.fallback] : undefined);
-                const val = raw !== undefined && raw !== null && raw !== '' ? c.fmt(raw) : '—';
+                let val;
+                if (c.key === '_label') {
+                    val = c.fmt(null, r);
+                } else {
+                    const raw = r[c.key] ?? (c.fallback ? r[c.fallback] : undefined);
+                    val = raw !== undefined && raw !== null && raw !== '' ? c.fmt(raw, r) : '—';
+                }
                 return `<td class="${c.cls || ''}">${val}</td>`;
             }).join('');
             return `<tr class="${isHL ? 'row-highlight' : ''}">${cells}</tr>`;
