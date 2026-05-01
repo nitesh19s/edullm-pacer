@@ -406,9 +406,9 @@ class PACERResultsManager {
     // -----------------------------------------------------------------------
 
     switchTab(tabId) {
-        document.querySelectorAll('#pacerSection .pacer-tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('#pacerSection .pacer-tab-pane').forEach(p => p.classList.remove('active'));
-        const btn  = document.querySelector(`#pacerSection [data-tab="${tabId}"]`);
+        document.querySelectorAll('#pacer .pacer-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#pacer .pacer-tab-pane').forEach(p => p.classList.remove('active'));
+        const btn  = document.querySelector(`#pacer [data-tab="${tabId}"]`);
         const pane = document.getElementById(`pacerTab_${tabId}`);
         if (btn)  btn.classList.add('active');
         if (pane) pane.classList.add('active');
@@ -433,7 +433,7 @@ window.pacerResultsManager = new PACERResultsManager();
 document.addEventListener('DOMContentLoaded', () => {
     // Lazy-init when the PACER section is first shown
     const observer = new MutationObserver(() => {
-        const section = document.getElementById('pacerSection');
+        const section = document.getElementById('pacer');
         if (section && section.classList.contains('active')) {
             window.pacerResultsManager.initialize();
             observer.disconnect();
