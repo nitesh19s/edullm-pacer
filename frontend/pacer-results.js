@@ -221,7 +221,11 @@ class PACERResultsManager {
         const hasCAS = rows.some(r => +(r.cas_overall || 0) > 0);
 
         if (kpiEl) {
-            const kappa = this._data.kappa?.fleiss_kappa || {};
+            const _fk = this._data.kappa?.fleiss_kappa || {};
+            if (_fk.prereq_coverage !== undefined && _fk.prereq_preservation === undefined) {
+                _fk.prereq_preservation = _fk.prereq_coverage;
+            }
+            const kappa = _fk;
             kpiEl.innerHTML = `
               <div class="cas-kpi-grid">
                 <div class="cas-kpi ${kappa.grade_match >= 0.6 ? 'good' : 'warn'}">
@@ -246,7 +250,7 @@ class PACERResultsManager {
         }
 
         if (!canvas) return;
-        const labels = rows.map(r => r.method || r.condition || '');
+        const labels = rows.map(r => this._label(r));
         const gradeM = rows.map(r => +(r.cas_grade || r.cas_grade_match || 0));
         const prereq = rows.map(r => +(r.cas_prereq || r.cas_prereq_preservation || 0));
         const bloom  = rows.map(r => +(r.cas_bloom || r.cas_bloom_alignment || 0));
@@ -285,7 +289,10 @@ class PACERResultsManager {
         if (!canvas) return;
         const rows   = this._data.latency;
         const labels = rows.map(r => this._label(r));
-        const latency = rows.map(r => r.latency_ms != null ? +r.latency_ms : null);
+        const latency = rows.map(r => {
+            const v = r.query_mean_ms ?? r.latency_ms;
+            return v != null && v !== '—' ? +v : null;
+        });
         const ispacer = labels.map(l => l.toLowerCase().startsWith('pacer'));
 
         if (this._charts.latency) this._charts.latency.destroy();
@@ -326,7 +333,14 @@ class PACERResultsManager {
         if (!el) return;
         const k = this._data.kappa;
         const fk = k.fleiss_kappa || {};
-        const pk = k.pearson_groq70_gemini || {};
+        const pk = k.pearson_groq70_gemini || k.pearson_r_groq70b_gemini || {};
+        // Normalise key: JSON on disk uses prereq_coverage, fallback uses prereq_preservation
+        if (fk.prereq_coverage !== undefined && fk.prereq_preservation === undefined) {
+            fk.prereq_preservation = fk.prereq_coverage;
+        }
+        if (pk.prereq_coverage !== undefined && pk.prereq_preservation === undefined) {
+            pk.prereq_preservation = pk.prereq_coverage;
+        }
         const statusMap = {
             'llm_judges_complete_pending_human_raters': { cls: 'warn', label: 'LLM judges done — awaiting human raters' },
             'complete': { cls: 'good', label: 'Calibration complete' },
