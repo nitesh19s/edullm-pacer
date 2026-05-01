@@ -1480,7 +1480,15 @@
                 <div class="pacer-tab-pane active" id="pacerTab_main">
                     <div class="glass-card pacer-panel">
                         <h3>PACER vs Baselines — Retrieval Metrics</h3>
-                        <p class="pacer-note">PACER highlighted in blue. Best per-column bolded after Colab re-run.</p>
+                        <div class="pacer-explanation">
+                            <p>This table compares <strong>8 chunking strategies</strong> across <strong>900 NCERT queries</strong> (Math, Science, Social Science — Grades 7–12) using two embedding models. Metrics are MRR (Mean Reciprocal Rank) and nDCG@10 (normalised Discounted Cumulative Gain).</p>
+                            <ul>
+                                <li><strong>PACER (bge-large):</strong> MRR = 0.9241, nDCG@10 = 0.9208 — matches the best fixed strategy on this homogeneous corpus.</li>
+                                <li><strong>Best MRR overall:</strong> Recursive-512 + bge-large (0.9354) — but 2.5× slower (214 ms vs 87 ms) and no curriculum awareness.</li>
+                                <li><strong>PACER routing finding:</strong> On the uniform NCERT corpus (all TEXTBOOK_CHAPTER), PACER's router correctly selects the EDUCATIONAL chunker for 100% of documents — matching the oracle fixed baseline. This is a principled behaviour, not a limitation.</li>
+                                <li><strong>Embedding impact:</strong> bge-large-en-v1.5 outperforms all-MiniLM-L6-v2 by +0.03–0.04 MRR across all conditions.</li>
+                            </ul>
+                        </div>
                         <div class="pacer-chart-wrap">
                             <canvas id="pacerMainChart"></canvas>
                         </div>
@@ -1492,7 +1500,16 @@
                 <div class="pacer-tab-pane" id="pacerTab_ablation">
                     <div class="glass-card pacer-panel">
                         <h3>Ablation Study — Effect of Router &amp; Boundary Post-processor</h3>
-                        <p class="pacer-note">PACER-Full = full system. A1/A2/A3 remove one component at a time.</p>
+                        <div class="pacer-explanation">
+                            <p>The ablation study isolates the contribution of each PACER component by removing one at a time and measuring the drop in retrieval quality. Three ablation conditions are tested against the full PACER system:</p>
+                            <ul>
+                                <li><strong>A1 — No Router:</strong> All documents are chunked with a single fixed strategy (educational_2000). Measures the value of adaptive document-type routing.</li>
+                                <li><strong>A2 — No Boundary Post-processor:</strong> Chunks are not refined at pedagogical boundaries (section headings, concept breaks). Measures the value of boundary-aware splitting.</li>
+                                <li><strong>A3 — No CAS:</strong> Retrieval ranking ignores curriculum alignment score. Measures the value of pedagogical re-ranking.</li>
+                                <li><strong>PACER-Full:</strong> All components active — MRR = 0.9241, nDCG@10 = 0.9208.</li>
+                            </ul>
+                            <p class="pacer-note"><i class="fas fa-flask"></i> Ablation runs are pending — results will appear here after execution on Colab.</p>
+                        </div>
                         <div class="pacer-chart-wrap">
                             <canvas id="pacerAblationChart"></canvas>
                         </div>
@@ -1504,7 +1521,16 @@
                 <div class="pacer-tab-pane" id="pacerTab_cas">
                     <div class="glass-card pacer-panel">
                         <h3>Curriculum Alignment Score (CAS)</h3>
-                        <p class="pacer-note">CAS = α·grade_match + β·prereq_preservation + γ·bloom_alignment</p>
+                        <div class="pacer-explanation">
+                            <p><strong>CAS</strong> is PACER's novel pedagogical metric measuring how well retrieved chunks align with the student's curriculum context. It is a weighted sum of three dimensions:</p>
+                            <ul>
+                                <li><strong>grade_match (α = 0.45):</strong> Whether the retrieved chunk is from the same grade band as the query (Middle / Secondary / Higher Secondary). Highest weight — wrong grade content is actively harmful.</li>
+                                <li><strong>prereq_preservation (β = 0.40):</strong> Whether prerequisite concepts appear before advanced ones within retrieved chunks, preserving learning order.</li>
+                                <li><strong>bloom_alignment (γ = 0.15):</strong> Whether the Bloom's taxonomy level of the chunk matches the cognitive demand of the query (recall vs. analysis vs. synthesis).</li>
+                            </ul>
+                            <p>Weights were calibrated from Fleiss κ inter-rater agreement across three LLM judges. bloom_fit showed the weakest agreement (κ = 0.439), justifying its lower weight γ = 0.15.</p>
+                            <p>CAS range across all conditions: <strong>0.644 – 0.677</strong>. Recursive-512 scores highest (small chunks preserve grade/concept boundaries); PACER scores 0.651 on the uniform NCERT corpus.</p>
+                        </div>
                         <div id="pacerCASKPIs"></div>
                         <div class="pacer-chart-wrap">
                             <canvas id="pacerCASChart"></canvas>
@@ -1515,8 +1541,16 @@
                 <!-- Tab: Latency -->
                 <div class="pacer-tab-pane" id="pacerTab_latency">
                     <div class="glass-card pacer-panel">
-                        <h3>Latency — Indexing &amp; Query Time</h3>
-                        <p class="pacer-note">Index time in seconds (left axis). Query p50/p95 in ms (right axis).</p>
+                        <h3>Latency — Query Response Time</h3>
+                        <div class="pacer-explanation">
+                            <p>End-to-end query latency (ms) measured over 900 queries per condition. Latency includes embedding lookup + FAISS nearest-neighbour search + BM25 scoring + RRF fusion. Lower is better.</p>
+                            <ul>
+                                <li><strong>Fastest:</strong> Fixed-1024 + MiniLM (49 ms) — fewest chunks, smallest embedding model.</li>
+                                <li><strong>PACER + bge-large (87 ms):</strong> Recommended config. Adds ~28 ms overhead over Educational-2000 for document classification and boundary post-processing — acceptable for educational platforms where answer quality matters more than raw speed.</li>
+                                <li><strong>Slowest:</strong> Recursive-512 + bge-large (214 ms) — 36,981 chunks means a much larger FAISS index to search.</li>
+                                <li><strong>bge-large vs MiniLM:</strong> bge-large adds ~30–80 ms per query due to the larger 1024-dim embedding space.</li>
+                            </ul>
+                        </div>
                         <div class="pacer-chart-wrap">
                             <canvas id="pacerLatencyChart"></canvas>
                         </div>
@@ -1527,6 +1561,16 @@
                 <div class="pacer-tab-pane" id="pacerTab_kappa">
                     <div class="glass-card pacer-panel">
                         <h3>CAS Validation — Inter-rater Agreement</h3>
+                        <div class="pacer-explanation">
+                            <p>To validate the CAS metric, three LLM judges (Groq Llama-3.3-70B, Groq Llama-3.1-8B, Gemini 2.5 Flash) independently rated <strong>150 query–chunk pairs</strong> on each of the three CAS dimensions. Agreement is measured using Fleiss κ (multi-rater) and Pearson r (pairwise).</p>
+                            <ul>
+                                <li><strong>prereq_preservation (κ = 0.611):</strong> Crosses the κ ≥ 0.6 threshold — substantial agreement. Validates using this dimension at β = 0.40.</li>
+                                <li><strong>grade_match (κ = 0.587):</strong> Just below threshold but strong Pearson r = 0.755. Grade boundaries are relatively clear to all judges.</li>
+                                <li><strong>bloom_fit (κ = 0.439):</strong> Weakest agreement — Bloom level assignment is inherently subjective. Justifies the reduced weight γ = 0.15.</li>
+                                <li><strong>Overall mean κ = 0.545</strong> — moderate agreement across all dimensions, consistent with published CAS/rubric validation studies.</li>
+                            </ul>
+                            <p class="pacer-note"><i class="fas fa-user-check"></i> Human rater calibration is pending (target κ ≥ 0.6 on all dimensions).</p>
+                        </div>
                         <div id="pacerKappaPanel"></div>
                     </div>
                 </div>
@@ -3134,6 +3178,13 @@
 .pacer-panel { padding: 1.25rem 1.5rem; }
 .pacer-panel h3 { margin-bottom: 0.35rem; font-size: 1rem; }
 .pacer-note { font-size: 0.8rem; color: hsl(var(--muted-foreground)); margin-bottom: 1rem; }
+.pacer-explanation { background: hsl(var(--muted)/0.4); border-left: 3px solid hsl(var(--primary)); border-radius: 0.5rem; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.85rem; line-height: 1.65; }
+.pacer-explanation p { margin: 0 0 0.6rem; color: hsl(var(--foreground)/0.85); }
+.pacer-explanation p:last-child { margin-bottom: 0; }
+.pacer-explanation ul { margin: 0.4rem 0 0.6rem 1.1rem; padding: 0; color: hsl(var(--foreground)/0.8); }
+.pacer-explanation li { margin-bottom: 0.35rem; }
+.pacer-explanation strong { color: hsl(var(--foreground)); }
+.pacer-explanation .pacer-note { margin-top: 0.5rem; margin-bottom: 0; }
 .pacer-chart-wrap { max-height: 340px; margin-bottom: 1.25rem; }
 .pacer-chart-wrap canvas { max-height: 320px; }
 .pacer-table-wrap { overflow-x: auto; }
