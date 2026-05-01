@@ -173,6 +173,15 @@ class FlowManager {
                     { label: 'Back to Dashboard', action: 'navigate', target: 'dashboard' }
                 ],
                 helpText: 'Configure platform settings, privacy, and research parameters.'
+            },
+            pacer: {
+                name: 'PACER Results',
+                description: 'Experiment results and paper tables',
+                order: 14,
+                nextPages: ['dashboard'],
+                prerequisites: [],
+                quickActions: [],
+                helpText: 'View PACER experiment results, CAS metrics, and inter-rater agreement.'
             }
         };
     }
