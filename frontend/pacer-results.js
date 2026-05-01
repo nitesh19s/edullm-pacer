@@ -245,15 +245,14 @@ class PACERResultsManager {
                   <span class="cas-kpi-val">0.45 · 0.40 · 0.15</span>
                 </div>
               </div>
-              ${!hasCAS ? '<p class="cas-pending-note"><i class="fas fa-info-circle"></i> CAS sub-dimension breakdown requires per-chunk scores. Overall CAS (0.644–0.677) is available in Table 1.</p>' : ''}
+              <p class="cas-pending-note"><i class="fas fa-info-circle"></i> Chart shows overall CAS per condition. Range: 0.644–0.677. Sub-dimension κ weights shown above.</p>
             `;
         }
 
         if (!canvas) return;
-        const labels = rows.map(r => this._label(r));
-        const gradeM = rows.map(r => +(r.cas_grade || r.cas_grade_match || 0));
-        const prereq = rows.map(r => +(r.cas_prereq || r.cas_prereq_preservation || 0));
-        const bloom  = rows.map(r => +(r.cas_bloom || r.cas_bloom_alignment || 0));
+        const labels  = rows.map(r => this._label(r));
+        const casVals = rows.map(r => +(r.cas_overall || 0));
+        const isPacer = labels.map(l => l.toLowerCase().startsWith('pacer'));
 
         if (this._charts.cas) this._charts.cas.destroy();
         this._charts.cas = new Chart(canvas.getContext('2d'), {
@@ -261,20 +260,24 @@ class PACERResultsManager {
             data: {
                 labels,
                 datasets: [
-                    { label: 'grade_match (α=0.45)',       data: gradeM, backgroundColor: '#3b82f688', borderRadius: 3 },
-                    { label: 'prereq_preservation (β=0.40)', data: prereq, backgroundColor: '#10b98188', borderRadius: 3 },
-                    { label: 'bloom_alignment (γ=0.15)',    data: bloom,  backgroundColor: '#f59e0b88', borderRadius: 3 },
+                    {
+                        label: 'CAS (overall)',
+                        data: casVals,
+                        backgroundColor: isPacer.map(p => p ? '#3b82f6cc' : '#94a3b8aa'),
+                        borderRadius: 3,
+                    },
                 ],
             },
             options: {
                 responsive: true,
                 plugins: {
                     legend: { position: 'top' },
-                    title: { display: true, text: 'CAS Sub-Dimension Breakdown per Method' },
+                    title: { display: true, text: 'Curriculum Alignment Score per Condition' },
+                    tooltip: { callbacks: { label: ctx => `CAS: ${ctx.parsed.y.toFixed(4)}` } },
                 },
                 scales: {
-                    y: { min: 0, max: 1, title: { display: true, text: 'Score [0–1]' } },
-                    x: { stacked: false },
+                    y: { min: 0.62, max: 0.70, title: { display: true, text: 'CAS [0–1]' } },
+                    x: { ticks: { maxRotation: 40 } },
                 },
             },
         });
