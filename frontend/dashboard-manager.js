@@ -2873,10 +2873,12 @@ class DashboardManager {
                     checkAddPage(12);
 
                     const timeAgo = this.formatTimeAgo(activity.timestamp);
+                    // Strip non-Latin1 chars (emojis etc.) that crash jsPDF's default fonts
+                    const safeMessage = (activity.message || '').replace(/[^\x00-\xFF]/g, '');
                     doc.setFont('helvetica', 'bold');
                     doc.text(`${index + 1}.`, margin, yPos);
                     doc.setFont('helvetica', 'normal');
-                    doc.text(activity.message, margin + 8, yPos);
+                    doc.text(safeMessage, margin + 8, yPos);
                     doc.setTextColor(100, 100, 100);
                     doc.text(timeAgo, pageWidth - margin - 40, yPos);
                     doc.setTextColor(0, 0, 0);
@@ -2901,7 +2903,7 @@ class DashboardManager {
                 { label: 'Embeddings Generated', value: '45,234' },
                 { label: 'Knowledge Graph Concepts', value: '342' },
                 { label: 'Active Experiments', value: '3' },
-                { label: 'System Status', value: 'Online ✓' }
+                { label: 'System Status', value: 'Online' }
             ];
 
             doc.setFontSize(10);
@@ -2950,7 +2952,7 @@ class DashboardManager {
             console.log('📥 Dashboard report exported as PDF:', filename);
 
             // Track analytics
-            if (window.analytics) {
+            if (window.analytics && typeof window.analytics.trackInteraction === 'function') {
                 window.analytics.trackInteraction('dashboard', 'report_exported_pdf');
             }
 

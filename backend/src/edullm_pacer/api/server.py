@@ -17,6 +17,7 @@ Then point your existing index.html at http://localhost:8000/api/query.
 """
 from __future__ import annotations
 
+import os
 import time
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -30,7 +31,7 @@ from pydantic import BaseModel, Field
 
 from edullm_pacer.chunkers import get_chunker
 from edullm_pacer.embeddings import HashEmbedder, SentenceTransformerEmbedder
-from edullm_pacer.generation import DummyGenerator, Generator
+from edullm_pacer.generation import AnthropicGenerator, DummyGenerator, GroqGenerator, Generator
 from edullm_pacer.pipeline import RAGPipeline
 from edullm_pacer.schemas import ChunkingStrategy, Query
 from edullm_pacer.utils.logging import get_logger
@@ -58,20 +59,14 @@ state = AppState()
 def build_default_pipeline(
     chunker_strategy: str = "educational",
     embedder_backend: str = "hash",
+    embedder_model: str = "sentence-transformers/all-MiniLM-L6-v2",
     generator: Generator | None = None,
 ) -> RAGPipeline:
-    """Construct a pipeline with sensible defaults.
-
-    The defaults (hash embedder + dummy generator) run with no downloads so
-    the server comes up instantly for local development. For production swap
-    to "sentence-transformer" + a real generator.
-    """
+    """Construct a pipeline with sensible defaults."""
     if embedder_backend == "hash":
         embedder = HashEmbedder(dim=128)
     elif embedder_backend == "sentence-transformer":
-        embedder = SentenceTransformerEmbedder(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
-        )
+        embedder = SentenceTransformerEmbedder(model_name=embedder_model)
     else:
         raise ValueError(f"Unknown embedder backend: {embedder_backend}")
 
@@ -80,11 +75,48 @@ def build_default_pipeline(
     return RAGPipeline(chunker=chunker, embedder=embedder, generator=gen, top_k=5)
 
 
+_INDEX_DIR = Path(__file__).parents[4] / "data" / "index"
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # type: ignore[no-untyped-def]
     """Build the pipeline on startup, clean up on shutdown."""
     logger.info("Starting EduLLM-PACER API server")
-    state.pipeline = build_default_pipeline()
+    if os.getenv("GROQ_API_KEY"):
+        generator = GroqGenerator()
+    elif os.getenv("ANTHROPIC_API_KEY"):
+        generator = AnthropicGenerator()
+    else:
+        generator = DummyGenerator()
+    embedder_model = os.getenv("EDULLM_EMBEDDER_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+    logger.info(f"Embedder: {embedder_model}")
+    state.pipeline = build_default_pipeline(
+        embedder_backend="sentence-transformer",
+        generator=generator,
+        embedder_model=embedder_model,
+    )
+
+    # Load saved index or build from corpus
+    _CORPUS_JSONL = Path(os.getenv("EDULLM_CORPUS_JSONL",
+        str(Path(__file__).parents[4] / "data" / "processed" / "documents_reconstructed.jsonl")))
+
+    if (_INDEX_DIR / "meta.json").exists():
+        from edullm_pacer.retrieval.faiss_retriever import FaissRetriever
+        logger.info(f"Loading saved index from {_INDEX_DIR}")
+        state.pipeline.retriever = FaissRetriever.load(_INDEX_DIR, state.pipeline.embedder)
+        logger.info(f"Index loaded: {len(state.pipeline):,} chunks ready")
+    elif _CORPUS_JSONL.exists():
+        from edullm_pacer.schemas import Document
+        from edullm_pacer.utils.io import read_jsonl_as
+        logger.info(f"Building index from {_CORPUS_JSONL} ...")
+        docs = list(read_jsonl_as(_CORPUS_JSONL, Document))
+        state.pipeline.index(docs, show_progress=True)
+        _INDEX_DIR.mkdir(parents=True, exist_ok=True)
+        state.pipeline.retriever.save(_INDEX_DIR)
+        logger.info(f"Index built and saved: {len(state.pipeline):,} chunks")
+    else:
+        logger.warning("No index and no corpus JSONL found — retrieval will return empty results")
+
     logger.info("Server ready")
     yield
     logger.info("Shutting down")
@@ -153,6 +185,7 @@ class QueryRequest(BaseModel):
     query: str
     filters: QueryFilters | None = None
     k: int = 5
+    language: str = "en"   # "en", "hi", or "bilingual"
 
 
 class CitedSource(BaseModel):
@@ -252,7 +285,15 @@ def query_endpoint(req: QueryRequest) -> QueryResponse:
     if state.pipeline is None:
         raise HTTPException(503, "Pipeline not initialized")
 
-    q = Query(query_id=f"q_{state.stats['total_queries']}", text=req.query)
+    _LANG_INSTRUCTION = {
+        "hi": "Respond entirely in Hindi (हिंदी में उत्तर दें).",
+        "bilingual": "Respond in both English and Hindi side by side.",
+    }
+    query_text = req.query
+    if req.language in _LANG_INSTRUCTION:
+        query_text = f"{_LANG_INSTRUCTION[req.language]}\n\n{req.query}"
+
+    q = Query(query_id=f"q_{state.stats['total_queries']}", text=query_text)
     metadata_filter = req.filters.to_metadata_filter() if req.filters else None
 
     try:

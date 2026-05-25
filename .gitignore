@@ -36,6 +36,11 @@ data/raw/ncert-pdfs/**/*.jpg
 data/raw/ncert-pdfs/**/*.DS_Store
 data/benchmark/
 data/labels/
+data/index/
+
+# Runtime logs
+backend/experiments/logs/
+experiments/logs/
 
 # Keep benchmark queries and exported documents, not raw/db data
 !data/processed/

@@ -134,7 +134,7 @@ class RAGChatManager {
     }
 
     /**
-     * Main RAG processing pipeline
+     * Main RAG processing pipeline — routes to backend API if available
      */
     async processRAGQuery(userQuery) {
         console.log('🔍 RAG Query Started:', userQuery);
@@ -145,11 +145,48 @@ class RAGChatManager {
         const startTime = Date.now();
 
         try {
-            // Step 1: Pre-process query
-            const cleanQuery = this.preprocessQuery(userQuery);
-            console.log('✨ Query cleaned:', cleanQuery);
+            // Try backend API first
+            const backendURL = 'http://localhost:8000/api/query';
+            let backendOk = false;
 
-            // Step 2: Check if we have data
+            try {
+                const res = await fetch(backendURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: userQuery,
+                        k: this.settings.topK || 5,
+                        filters: this.currentFilters.subject !== 'all'
+                            ? { subject: this.currentFilters.subject }
+                            : null
+                    }),
+                    signal: AbortSignal.timeout(30000)
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    const sources = (data.sources || []).map(s => ({
+                        text: s.preview,
+                        metadata: { subject: s.subject, grade: s.grade, doc_type: s.doc_type },
+                        score: 1.0
+                    }));
+                    this.addAssistantMessage(data.answer, sources);
+                    this.trackQueryMetrics(userQuery, sources, Date.now() - startTime);
+                    if (window.dashboardManager) {
+                        window.dashboardManager.addActivity('comments',
+                            `RAG query: "${userQuery.substring(0, 30)}..."`);
+                    }
+                    console.log(`✅ Backend RAG complete (${data.total_latency_ms?.toFixed(0)}ms)`);
+                    backendOk = true;
+                }
+            } catch (backendErr) {
+                console.warn('⚠️ Backend unavailable, falling back to local RAG:', backendErr.message);
+            }
+
+            if (backendOk) return;
+
+            // Fallback: local RAG pipeline
+            const cleanQuery = this.preprocessQuery(userQuery);
             const hasData = this.checkDataAvailability();
             if (!hasData) {
                 this.addAssistantMessage(
@@ -162,10 +199,7 @@ class RAGChatManager {
                 return;
             }
 
-            // Step 3: Retrieve relevant context
             const retrievedChunks = await this.retrieveContext(cleanQuery);
-            console.log(`📦 Retrieved ${retrievedChunks.length} chunks`);
-
             if (retrievedChunks.length === 0) {
                 this.addAssistantMessage(
                     'I couldn\'t find relevant information in the curriculum for your question. ' +
@@ -177,42 +211,12 @@ class RAGChatManager {
                 return;
             }
 
-            // Step 4: Check if LLM is configured
-            const llmConfigured = this.isLLMConfigured();
+            const response = this.isLLMConfigured()
+                ? await this.generateLLMResponse(userQuery, retrievedChunks)
+                : this.generateTemplateResponse(userQuery, retrievedChunks);
 
-            let response;
-            if (llmConfigured) {
-                // Step 5a: Generate response with LLM
-                response = await this.generateLLMResponse(userQuery, retrievedChunks);
-            } else {
-                // Step 5b: Generate response without LLM (template-based)
-                response = this.generateTemplateResponse(userQuery, retrievedChunks);
-            }
-
-            // Step 6: Display response
             this.addAssistantMessage(response.text, response.sources);
-
-            // Step 7: Track metrics
-            const duration = Date.now() - startTime;
-            try {
-                this.trackQueryMetrics(userQuery, retrievedChunks, duration);
-            } catch (metricsError) {
-                console.warn('⚠️ Failed to track metrics:', metricsError.message);
-            }
-
-            // Step 8: Add to dashboard activity
-            try {
-                if (window.dashboardManager) {
-                    window.dashboardManager.addActivity(
-                        'comments',
-                        `RAG query processed: "${userQuery.substring(0, 30)}..."`
-                    );
-                }
-            } catch (dashboardError) {
-                console.warn('⚠️ Failed to log dashboard activity:', dashboardError.message);
-            }
-
-            console.log(`✅ RAG Query Complete (${duration}ms)`);
+            this.trackQueryMetrics(userQuery, retrievedChunks, Date.now() - startTime);
 
         } catch (error) {
             console.error('❌ RAG Query Error:', error);

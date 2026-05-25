@@ -7,7 +7,7 @@
 
 class EduLLMAPIClient {
     constructor(config = {}) {
-        this.baseURL = config.baseURL || 'http://localhost:3000/api/v1';
+        this.baseURL = config.baseURL || 'http://localhost:8000/api';
         this.apiKey = config.apiKey || localStorage.getItem('edullm_api_key') || '';
         this.timeout = config.timeout || 30000;
         this.retries = config.retries || 3;
@@ -42,7 +42,7 @@ class EduLLMAPIClient {
      */
     async checkConnection() {
         try {
-            const response = await fetch(`${this.baseURL.replace('/api/v1', '')}/health`, {
+            const response = await fetch(`${this.baseURL.replace('/api', '')}/`, {
                 method: 'GET',
                 signal: AbortSignal.timeout(5000)
             });
@@ -332,9 +332,16 @@ class EduLLMAPIClient {
      * Send chat message
      */
     async sendMessage(data) {
-        return this.request('/rag/chat', {
+        return this.request('/query', {
             method: 'POST',
-            body: data
+            body: {
+                query: data.message,
+                k: data.retrievalConfig?.topK || 5,
+                filters: (data.context?.subject)
+                    ? { subject: data.context.subject }
+                    : null,
+                language: data.language || 'en'
+            }
         });
     }
 

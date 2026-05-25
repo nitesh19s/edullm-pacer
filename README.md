@@ -1,3 +1,14 @@
+---
+title: EduLLM PACER
+emoji: 📚
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+license: apache-2.0
+short_description: Pedagogy-Aware Chunking for Educational RAG over NCERT content
+---
+
 # EduLLM
 
 **Educational Localized Language Model Platform with PACER**

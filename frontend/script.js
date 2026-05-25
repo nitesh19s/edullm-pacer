@@ -68,7 +68,7 @@ class EduLLMPlatform {
                 localStorage.setItem('edullm_api_key', DEFAULT_API_KEY);
             }
             this.apiClient = new EduLLMAPIClient({
-                baseURL: 'http://localhost:3000/api/v1',
+                baseURL: 'http://localhost:8000/api',
                 apiKey: savedKey,
                 timeout: 120000,  // 2 min — Ollama can be slow
                 retries: 1
@@ -465,13 +465,9 @@ class EduLLMPlatform {
     async fetchBackendStats() {
         if (!this.backendAvailable || !this.apiClient) return;
         try {
-            const [ragStats, vectorStats] = await Promise.all([
-                this.apiClient.getRagStats(),
-                this.apiClient.getVectorStats()
-            ]);
+            await this.apiClient.request('/stats');
             // Do not overwrite PACER benchmark stats with backend chat session counts.
-            // Backend RAG stats (totalMessages, totalDocuments) reflect live chat usage,
-            // not the PACER experiment values shown on the dashboard.
+            // Backend stats reflect live usage, not the PACER experiment values on the dashboard.
             this.initializeStatistics();
         } catch (e) {
             console.warn('Could not fetch backend stats:', e.message);
@@ -516,6 +512,7 @@ class EduLLMPlatform {
             if (this.backendAvailable && this.apiClient) {
                 try {
                     const filters = this.getCurrentFilters();
+                    const lang = document.getElementById('languageSelect')?.value || 'en';
                     const payload = {
                         message,
                         sessionId: this.backendSessionId || undefined,
@@ -523,30 +520,23 @@ class EduLLMPlatform {
                             subject: filters.subject || undefined,
                             grade:   filters.grade ? parseInt(filters.grade) : undefined
                         },
-                        retrievalConfig: { topK: 5 }
+                        retrievalConfig: { topK: 5 },
+                        language: lang
                     };
 
                     const result = await this.apiClient.sendMessage(payload);
 
-                    if (result.success) {
-                        this.backendSessionId = result.data.sessionId;
-                        const msg = result.data.message;
-                        const ctx = result.data.retrievedContext || [];
+                    if (result.answer) {
+                        const gradeLabel = { middle: 'Grades 6–8', secondary: 'Grades 9–10', higher_secondary: 'Grades 11–12', unknown: '' };
+                        const sources = (result.sources || []).map(s => {
+                            const subj = s.subject ? s.subject.charAt(0).toUpperCase() + s.subject.slice(1) : 'Content';
+                            const grade = gradeLabel[s.grade] || s.grade || '';
+                            const preview = s.preview ? s.preview.replace(/\s+/g, ' ').substring(0, 80).trim() + '…' : '';
+                            return `NCERT ${subj}${grade ? ' · ' + grade : ''}${preview ? ' — ' + preview : ''}`;
+                        });
 
-                        response = {
-                            text: msg.content,
-                            sources: ctx.map(c =>
-                                `NCERT ${c.metadata?.subject || 'Content'} Grade ${c.metadata?.grade || ''}${c.metadata?.chapter ? ' — ' + c.metadata.chapter : ''}`
-                            ),
-                            confidence: ctx.length > 0 ? 0.92 : 0.75,
-                            model:      msg.metadata?.model || 'llama3.2',
-                            responseTime: (msg.metadata?.responseTime || 0) / 1000
-                        };
-
-                        this.statistics.avgResponseTime = response.responseTime;
-                        this.statistics.accuracyRate    = ctx.length > 0 ? 94 : 80;
                         this.hideTypingIndicator();
-                        this.addMessageToChat(response.text, 'assistant', response.sources);
+                        this.addMessageToChat(result.answer, 'assistant', sources);
                         input.value = '';
                         return;
                     }
@@ -1670,7 +1660,7 @@ class EduLLMPlatform {
                 try {
                     if (!this.apiClient) {
                         this.apiClient = new EduLLMAPIClient({
-                            baseURL: 'http://localhost:3000/api/v1',
+                            baseURL: 'http://localhost:8000/api',
                             apiKey: localStorage.getItem('edullm_api_key') || ''
                         });
                     }

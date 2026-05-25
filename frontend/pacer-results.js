@@ -349,11 +349,12 @@ class PACERResultsManager {
             'complete': { cls: 'good', label: 'Calibration complete' },
         };
         const statusInfo = statusMap[k.status] || { cls: '', label: k.status };
+        const nPairs = k.n_pairs || k.n_calibration_pairs || '—';
         el.innerHTML = `
           <div class="kappa-status ${statusInfo.cls}">
             <i class="fas fa-circle-dot"></i> ${statusInfo.label}
           </div>
-          <p class="kappa-meta">${k.n_pairs} calibration pairs · Judges: ${(k.llm_judges || []).join(', ')}</p>
+          <p class="kappa-meta">${nPairs} calibration pairs · Judges: ${(k.llm_judges || []).join(', ')}</p>
           <table class="pacer-table">
             <thead><tr><th>Dimension</th><th>Fleiss κ</th><th>Pearson r (Groq70 × Gemini)</th><th>Target κ</th></tr></thead>
             <tbody>
