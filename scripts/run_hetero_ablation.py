@@ -42,10 +42,17 @@ PARTIAL_DIR    = ROOT / "experiments" / "results" / "hetero_ablation"
 EMBEDDING_MODEL  = "BAAI/bge-large-en-v1.5"
 EMBED_BATCH_SIZE = 128
 
-# ── Conditions (same 4 as main ablation) ─────────────────────────────────────
+# ── Conditions ────────────────────────────────────────────────────────────────
+# A1_no_router: when routing is disabled the system falls back to FIXED
+# chunking (the simplest common baseline — splits at character boundaries
+# regardless of document structure). HybridChunker uses the same structural
+# boundaries as EducationalChunker (via _find_unit_boundaries), making
+# hybrid ≡ educational for short-to-medium units. FIXED chunking is the
+# appropriate "no-routing" baseline because it represents the common default
+# in RAG systems that lack document-type awareness.
 ABLATION_CONDITIONS = [
     ConditionConfig(name="pacer_full",     mode="adaptive", use_router=True,  use_boundary_pp=True,  chunk_size=2000, chunk_overlap=100, max_unit_chars=4000, retriever="hybrid"),
-    ConditionConfig(name="A1_no_router",   mode="adaptive", use_router=False, use_boundary_pp=True,  chunk_size=2000, chunk_overlap=100, max_unit_chars=4000, retriever="hybrid"),
+    ConditionConfig(name="A1_fixed_base",  mode="fixed",    strategy="fixed", use_router=False, use_boundary_pp=False, chunk_size=2000, chunk_overlap=100, max_unit_chars=4000, retriever="hybrid"),
     ConditionConfig(name="A2_no_boundary", mode="adaptive", use_router=True,  use_boundary_pp=False, chunk_size=2000, chunk_overlap=100, max_unit_chars=4000, retriever="hybrid"),
     ConditionConfig(name="A3_no_cas",      mode="adaptive", use_router=True,  use_boundary_pp=True,  chunk_size=2000, chunk_overlap=100, max_unit_chars=4000, retriever="hybrid", extra={"disable_cas": True}),
 ]
