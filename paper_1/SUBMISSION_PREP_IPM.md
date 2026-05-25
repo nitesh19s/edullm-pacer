@@ -147,6 +147,12 @@ An AI writing assistant (Claude, Anthropic) was used for grammar checking and co
 | NCERT nDCG@10 B0_recursive_base = 0.9584 | table2_ablation.csv |
 | NCERT chunks pacer_full = 16,369 | table2_ablation.csv |
 | NCERT chunks B0_recursive = 9,493 | table2_ablation.csv |
+| Chunk completeness PACER overall = 78.8% | table5_chunk_quality.csv |
+| Chunk completeness B0_recursive overall = 63.7% | table5_chunk_quality.csv |
+| Chunk completeness PACER worked_example = 96.7% | table5_chunk_quality.csv |
+| Chunk completeness B0_recursive worked_example = 0.0% | table5_chunk_quality.csv |
+| Boundary start PACER worked_example = 96.7% | table5_chunk_quality.csv |
+| Boundary start B0_recursive worked_example = 26.7% | table5_chunk_quality.csv |
 
 ---
 

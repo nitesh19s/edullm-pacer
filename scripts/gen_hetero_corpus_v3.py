@@ -794,28 +794,27 @@ def build_real_docs() -> list[dict]:
         "(3 marks) each | Answer all questions\n\n"
     )
 
+    # 5 docs from 5 maximally diverse chapters — cross-chapter topical diversity
+    # ensures embeddings can distinguish each doc by subject matter.
+    # (Same-chapter examples failed: all examples within one chapter cover the
+    #  same concept, so embeddings cannot distinguish sub-document chunks.)
     specs = [
-        # (doc_id, rel_path, dtype, kind, *args)
-        ("ncert_math11_sets_examples",
-         "mathematics/11/kemh101.pdf", "worked_example", "ex", 18, 4),
-        ("ncert_math11_relations_examples",
-         "mathematics/11/kemh102.pdf", "worked_example", "ex", 3,  4),
-        ("ncert_math11_inequalities_examples",
-         "mathematics/11/kemh105.pdf", "worked_example", "ex", 5,  4),
-        ("ncert_math12_relations_examples",
-         "mathematics/12/lemh101.pdf",  "worked_example", "ex", 1,  5),
-        ("ncert_math12_inversetrig_examples",
-         "mathematics/12/lemh102.pdf",  "worked_example", "ex", 1,  5),
-        ("ncert_math11_sets_exercise15",
-         "mathematics/11/kemh101.pdf", "past_paper", "exer", "EXERCISE 1.5"),
-        ("ncert_math11_relations_exercise21",
-         "mathematics/11/kemh102.pdf", "past_paper", "exer", "EXERCISE 2.1"),
-        ("ncert_math11_inequalities_exercise51",
-         "mathematics/11/kemh105.pdf", "past_paper", "exer", "EXERCISE 5.1"),
-        ("ncert_math12_relations_exercise11",
-         "mathematics/12/lemh101.pdf",  "past_paper", "exer", "EXERCISE 1.1"),
-        ("ncert_math12_inversetrig_exercise21",
-         "mathematics/12/lemh102.pdf",  "past_paper", "exer", "EXERCISE 2.1"),
+        # (doc_id, rel_path, dtype, kind, start_ex, count)
+        # Ch3 Gr11: Trigonometry — angle conversion, radian/degree, arc length
+        ("ncert_math11_trig_examples",
+         "mathematics/11/kemh103.pdf", "worked_example", "ex", 1, 5),
+        # Ch6 Gr11: Permutations & Combinations — counting, arrangements, selections
+        ("ncert_math11_perm_comb_examples",
+         "mathematics/11/kemh106.pdf", "worked_example", "ex", 1, 5),
+        # Ch3 Gr12: Matrices — matrix representation, orders, element construction
+        ("ncert_math12_matrices_examples",
+         "mathematics/12/lemh103.pdf", "worked_example", "ex", 1, 5),
+        # Ch5 Gr12: Continuity — limit definition, continuity at a point
+        ("ncert_math12_continuity_examples",
+         "mathematics/12/lemh105.pdf", "worked_example", "ex", 1, 10),
+        # Ch6 Gr12: Applications of Derivatives — rates of change, related rates
+        ("ncert_math12_aod_examples",
+         "mathematics/12/lemh106.pdf", "worked_example", "ex", 1, 8),
     ]
 
     docs = []
@@ -825,10 +824,7 @@ def build_real_docs() -> list[dict]:
         if not full:
             print(f"  ⚠  PDF not found: {rel}")
             continue
-        if kind == "ex":
-            block = ex_block(full, spec[4], spec[5])
-        else:
-            block = exer_block(full, spec[4])
+        block = ex_block(full, spec[4], spec[5])
         if not block:
             print(f"  ⚠  Extraction failed: {doc_id}")
             continue
@@ -839,7 +835,7 @@ def build_real_docs() -> list[dict]:
             "metadata": {"doc_type": "unknown", "subject": "mathematics",
                          "grade": "higher_secondary", "source": "NCERT"},
         })
-    print(f"  ✅ Extracted {len(docs)}/10 real NCERT docs")
+    print(f"  ✅ Extracted {len(docs)}/5 real NCERT docs")
     return docs
 
 # ── Benchmark queries ──────────────────────────────────────────────────────────
@@ -1155,79 +1151,62 @@ add_queries("reference_computer_science_v2", [
 ])
 
 # ── Real NCERT document queries ───────────────────────────────────────────────
+# Each query targets a specific example in a specific chapter.
+# Cross-chapter topical diversity ensures embeddings distinguish docs cleanly.
 REAL_DOC_QUERIES = {
-    "ncert_math11_sets_examples": [
-        "What is A – B when A = {1,2,3,4,5,6} and B = {2,4,6,8} per Example 18?",
-        "Why is A – B not equal to B – A for A={1,2,3,4,5,6} and B={2,4,6,8} in Example 18?",
-        "In Example 19, if V = {a,e,i,o,u} and B = {a,i,k,u}, what is V – B?",
-        "What is B – V in Example 19 where V={a,e,i,o,u} and B={a,i,k,u}?",
+    # Ch3 Gr11: Trigonometry — angle conversion, radians, arc length
+    "ncert_math11_trig_examples": [
+        "How do you convert 40°20′ into radian measure? (NCERT Trigonometry Example 1)",
+        "Convert 6 radians to degree measure using π = 22/7 (NCERT Trigonometry Example 2)",
+        "Find the radius of a circle where a 60° central angle intercepts an arc of 37.4 cm (Example 3)",
+        "What is 40°20′ expressed as a decimal degree before converting to radians? (Trigonometry)",
+        "In NCERT Trigonometry, how many degrees is 6 radians approximately? (Example 2)",
     ],
-    "ncert_math11_relations_examples": [
-        "Find A × (B ∩ C) when A={1,2,3}, B={3,4}, C={4,5,6} as in Example 3.",
-        "What is (A × B) ∩ (A × C) for A={1,2,3}, B={3,4}, C={4,5,6} from Example 3?",
-        "What does Example 3 show about A × (B ∪ C) versus (A × B) ∪ (A × C)?",
-        "What is the Cartesian product A × (B ∩ C) worked out in the relations example?",
+    # Ch6 Gr11: Permutations & Combinations — counting, arrangements
+    "ncert_math11_perm_comb_examples": [
+        "How many 4-letter words can be formed from ROSE without repetition? (NCERT Permutations Example 1)",
+        "With 4 differently coloured flags, how many 2-flag signals can be generated? (Example 2)",
+        "How many 2-digit even numbers can be formed from digits 1,2,3,4,5 with repetition? (Example 3)",
+        "In NCERT Permutations Example 1, how many ways can 4 vacant places be filled with letters of ROSE?",
+        "What multiplication principle is applied in NCERT Permutations Example 2 (flag signals)?",
     ],
-    "ncert_math11_inequalities_examples": [
-        "Solve the inequality 7x + 3 < 5x + 9 as shown in Example 5.",
-        "What is the graphical solution of x < 3 on a number line from Example 5?",
-        "How do you solve 3x/4 + 1 ≥ x/2 − 1/4 as demonstrated in Example 6?",
-        "What step does Example 5 take after obtaining 2x < 6?",
+    # Ch3 Gr12: Matrices — matrix representation, orders, element construction
+    "ncert_math12_matrices_examples": [
+        "Represent men and women workers for three factories I, II, III as a 3×2 matrix (NCERT Matrices Example 1)",
+        "If a matrix has 8 elements, what are the possible matrix orders? (NCERT Matrices Example 2)",
+        "Construct a 3×2 matrix whose elements satisfy aᵢⱼ = ½|3i − j| (NCERT Matrices Example 3)",
+        "What does the entry in the third row and second column represent in the factory workers matrix?",
+        "In NCERT Matrices Example 2, list all possible order pairs (m×n) for a matrix with 8 elements.",
     ],
-    "ncert_math12_relations_examples": [
-        "Why is R = {(a,b): a is sister of b} an empty relation in a boys school per Example 1?",
-        "What makes R′ = {(a,b): height difference < 3 m} a universal relation in Example 1?",
-        "Define universal relation using the example from NCERT Class 12 Relations chapter.",
-        "What is an empty relation? Give the boys school example from the textbook.",
+    # Ch5 Gr12: Continuity — limit definition, continuity checks
+    "ncert_math12_continuity_examples": [
+        "Check continuity of f(x) = 2x + 3 at x = 1 using limit definition (NCERT Continuity Example 1)",
+        "Is f(x) = x² continuous at x = 0? Show using limits (NCERT Continuity Example 2)",
+        "Discuss continuity of f(x) = |x| at x = 0 using left-hand and right-hand limits (Example 3)",
+        "For f(x) = 2x+3, what is lim_{x→1} f(x) and how does it confirm continuity? (NCERT)",
+        "What three conditions must hold for a function f to be continuous at x = c? (NCERT Continuity)",
     ],
-    "ncert_math12_inversetrig_examples": [
-        "What is the principal value of sin⁻¹(1/2) per Example 1 of inverse trigonometric functions?",
-        "In Example 1, what range is used to determine the principal value of sin⁻¹?",
-        "Find the principal value of cot⁻¹(−1/√3) as shown in Example 2.",
-        "What is the range of the principal value branch of sin⁻¹ according to NCERT?",
-    ],
-    "ncert_math11_sets_exercise15": [
-        "In EXERCISE 1.5 Q.1, find A′ when U={1,...,9} and A={1,2,3,4}.",
-        "What is (A ∪ C)′ in Exercise 1.5 Q.1 where U={1,...,9}, A={1,2,3,4}, C={3,4,5,6}?",
-        "Find the complement of B={d,e,f,g} in U={a,b,c,d,e,f,g,h} from Exercise 1.5 Q.2.",
-        "What is (A ∪ B)′ in EXERCISE 1.5 Question 1?",
-    ],
-    "ncert_math11_relations_exercise21": [
-        "In EXERCISE 2.1 Q.2, if set A has 3 elements and B={3,4,5}, how many elements are in A×B?",
-        "Find G × H when G={7,8} and H={5,4,2} from Exercise 2.1 Q.3.",
-        "What is H × G when G={7,8} and H={5,4,2} per EXERCISE 2.1?",
-        "What values satisfy Q.1 of Exercise 2.1 where the ordered pairs are equal?",
-    ],
-    "ncert_math11_inequalities_exercise51": [
-        "Solve 24x < 100 when x is a natural number from EXERCISE 5.1 Q.1.",
-        "What are the integer solutions of −12x > 30 per EXERCISE 5.1 Q.2?",
-        "Solve 4x + 3 < 5x + 7 from Exercise 5.1.",
-        "Solve 5x – 3 < 7 when x is an integer from EXERCISE 5.1 Q.3.",
-    ],
-    "ncert_math12_relations_exercise11": [
-        "Is R = {(x,y): 3x – y = 0} in A={1,...,14} reflexive, symmetric or transitive? (EXERCISE 1.1 Q.1i)",
-        "Is R = {(x,y): y=x+5, x<4} in natural numbers symmetric? (EXERCISE 1.1 Q.1ii)",
-        "Is R = {(x,y): y is divisible by x} in {1,2,3,4,5,6} transitive? (EXERCISE 1.1 Q.1iii)",
-        "Determine reflexivity of EXERCISE 1.1 Q.1(i) relation in NCERT Class 12.",
-    ],
-    "ncert_math12_inversetrig_exercise21": [
-        "Find the principal value of sin⁻¹(−1/2) from EXERCISE 2.1 Q.1.",
-        "What is cos⁻¹(√3/2) per EXERCISE 2.1 Q.2?",
-        "Find the principal value of tan⁻¹(−1) from EXERCISE 2.1 Q.6.",
-        "What is the principal value of cosec⁻¹(2) from EXERCISE 2.1 Q.3?",
+    # Ch6 Gr12: Applications of Derivatives — rates of change, related rates
+    "ncert_math12_aod_examples": [
+        "Find the rate of change of area of a circle per second when r = 5 cm (NCERT AOD Example 1)",
+        "Volume of a cube increases at 9 cm³/s — how fast does surface area increase when side = 10 cm? (AOD Example 2)",
+        "Waves move in circles at 4 cm/s — find rate of increase of enclosed area when r = 10 cm (Example 3)",
+        "In NCERT Applications of Derivatives Example 1, what is dA/dr for a circle of radius r?",
+        "What formula relates dV/dt and ds/dt for a cube in NCERT AOD Example 2?",
     ],
 }
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     # Use only the 30 v2 synthetic docs (proven to show PACER advantage) +
-    # 10 real NCERT docs. The 20 new synthetic docs (new syllabuses + references)
-    # are defined above but NOT included — they are short enough to fit in one
-    # 2000-char fixed chunk, so they produce identical retrieval for all conditions.
+    # 5 real NCERT docs from 5 maximally diverse chapters. The 20 new synthetic
+    # docs (new syllabuses + references) are defined above but NOT included —
+    # they are short enough to fit in one 2000-char fixed chunk, so they
+    # produce identical retrieval for all conditions.
     V2_COUNT = 30  # lecture(10) + worked(5) + syllabus(5) + past_paper(5) + reference(5)
     v2_docs = SYNTHETIC_DOCS[:V2_COUNT]
 
-    print(f"Building heterogeneous corpus v3 (40 docs: 30 v2 synthetic + 10 real NCERT)…")
+    print(f"Building heterogeneous corpus v3 (35 docs: 30 v2 synthetic + 5 real NCERT)…")
 
     # Real NCERT docs
     real_docs = build_real_docs()
@@ -1287,7 +1266,7 @@ def main():
         src = d["metadata"].get("source", "?")
         type_counts[src] += 1
     print(f"\n  Source breakdown: {dict(type_counts)}")
-    print(f"\n🎉 v3 corpus ready: {len(all_docs)} docs, {len(all_queries)} queries")
+    print(f"\n🎉 v3b corpus ready: {len(all_docs)} docs, {len(all_queries)} queries")
 
 
 if __name__ == "__main__":

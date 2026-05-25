@@ -1,0 +1,13 @@
+condition,doc_type,n_queries,complete_pct,boundary_start_pct,avg_chunk_length
+pacer_full,OVERALL,179,78.8,22.9,1141
+B0_recursive_base,OVERALL,179,63.7,5.6,1588
+pacer_full,lecture_notes,60,88.3,11.7,1355
+B0_recursive_base,lecture_notes,60,91.7,3.3,1461
+pacer_full,past_paper,30,100.0,0.0,211
+B0_recursive_base,past_paper,30,100.0,0.0,1850
+pacer_full,reference_material,30,0.0,16.7,1025
+B0_recursive_base,reference_material,30,0.0,0.0,1761
+pacer_full,syllabus,29,100.0,0.0,1302
+B0_recursive_base,syllabus,29,100.0,0.0,1292
+pacer_full,worked_example,30,96.7,96.7,1602
+B0_recursive_base,worked_example,30,0.0,26.7,1695
