@@ -55,6 +55,8 @@ ABLATION_CONDITIONS = [
     ConditionConfig(name="A1_fixed_base",  mode="fixed",    strategy="fixed", use_router=False, use_boundary_pp=False, chunk_size=2000, chunk_overlap=100, max_unit_chars=4000, retriever="hybrid"),
     ConditionConfig(name="A2_no_boundary", mode="adaptive", use_router=True,  use_boundary_pp=False, chunk_size=2000, chunk_overlap=100, max_unit_chars=4000, retriever="hybrid"),
     ConditionConfig(name="A3_no_cas",      mode="adaptive", use_router=True,  use_boundary_pp=True,  chunk_size=2000, chunk_overlap=100, max_unit_chars=4000, retriever="hybrid", extra={"disable_cas": True}),
+    # External baseline: LangChain-style RecursiveCharacterTextSplitter, no routing, no boundary PP.
+    ConditionConfig(name="B0_recursive_base", mode="fixed", strategy="recursive", use_router=False, use_boundary_pp=False, chunk_size=2000, chunk_overlap=100, max_unit_chars=4000, retriever="hybrid"),
 ]
 
 BASE_CFG = dict(
