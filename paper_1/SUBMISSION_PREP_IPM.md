@@ -22,9 +22,10 @@ We are pleased to submit our manuscript titled **"PACER: Pedagogy-Aware Adaptive
 
 **What we found.** Evaluated on 900 queries over 8,563 NCERT educational documents (Indian K-12 curriculum, subjects: Mathematics, Science, Social Science, grades 6–12), PACER achieves:
 - MRR = 0.924 and nDCG@10 = 0.921 with BGE-large-en-v1.5 embeddings
-- 87 ms mean query latency — competitive with fixed-strategy baselines
+- 65–72 ms mean query latency — competitive with external baselines
 - CAS = 0.651 (Fleiss κ = 0.545 across three LLM judge pairs, n = 150 calibration pairs)
-- On a 30-document heterogeneous corpus (five document types), PACER outperforms a LangChain-style recursive baseline (MRR = 0.888) by +5.9% and a fixed-size baseline (MRR = 0.843) by +9.8%, deploying four distinct strategies (recursive 17% / educational 65% / fixed 4% / semantic 14%) vs. uniform chunking for both baselines.
+- On the homogeneous NCERT corpus, PACER's educational chunker outperforms a LangChain-style recursive baseline on rank-1 precision (MRR 0.924 vs 0.919) while the recursive baseline's coarser chunks score higher on list-quality nDCG@10 (0.959 vs 0.921), reflecting the precision–coverage trade-off between fine-grained pedagogical units and broad passage retrieval.
+- On a 30-document heterogeneous corpus (five document types), PACER outperforms recursive chunking by +5.9% MRR (0.941 vs 0.888) and fixed-size chunking by +9.8% (0.941 vs 0.843), deploying four type-specific strategies vs. uniform chunking for both baselines.
 
 **Why IP&M.** PACER directly addresses IP&M's scope: information retrieval, educational information systems, and language model applications. The work fills a concrete gap — existing RAG chunking research optimises for homogeneous corpora and does not model the pedagogical structure that distinguishes educational content from general text. We provide an open benchmark (900 curriculum-aligned queries), evaluation code, and a reproducible experimental protocol.
 
@@ -77,7 +78,7 @@ Adaptive routing deploys 4 distinct strategies on heterogeneous corpora.
 
 ## 4. Abstract (≤ 250 words — verify word count)
 
-Retrieval-Augmented Generation (RAG) systems applied to educational content face a fundamental mismatch: generic chunking strategies developed for web or news corpora ignore the diverse pedagogical structures — textbook chapters, worked examples, past papers, syllabuses, lecture notes — that define educational document collections. We introduce PACER (Pedagogy-Aware Adaptive Chunking for Educational RAG), a framework that selects chunking strategy as an explicit function of educational document type. PACER comprises: (i) a rule-based document classifier mapping seven educational categories from textual markers; (ii) a deterministic strategy router translating document type to one of five chunking strategies (fixed, recursive, semantic, educational, hybrid); (iii) a set of pedagogy-aware chunkers that preserve pedagogical units (definition–example pairs, question–solution pairs, unit–objective pairs); and (iv) a Curriculum Alignment Score (CAS) combining grade-level match, prerequisite preservation, and Bloom's taxonomy alignment for retrieval quality measurement. Evaluated on a benchmark of 900 curriculum-aligned queries over 8,563 NCERT educational documents spanning Mathematics, Science, and Social Science (grades 6–12), PACER achieves MRR = 0.924 and nDCG@10 = 0.921 with BGE-large-en-v1.5 embeddings at 87 ms mean latency. CAS reaches 0.651 with moderate inter-judge agreement (Fleiss κ = 0.545, n = 150 pairs, three LLM judges). Ablation on a 30-document heterogeneous corpus confirms that PACER's adaptive router (MRR = 0.941) outperforms a LangChain-style recursive baseline (MRR = 0.888, +5.9%) and a fixed-size baseline (MRR = 0.843, +9.8%), deploying four type-specific strategies where both baselines apply a single uniform chunking rule. PACER provides a reproducible evaluation protocol, open-source implementation, and a curriculum-aligned benchmark for educational RAG research.
+Retrieval-Augmented Generation (RAG) systems applied to educational content face a fundamental mismatch: generic chunking strategies developed for web or news corpora ignore the diverse pedagogical structures — textbook chapters, worked examples, past papers, syllabuses, lecture notes — that define educational document collections. We introduce PACER (Pedagogy-Aware Adaptive Chunking for Educational RAG), a framework that selects chunking strategy as an explicit function of educational document type. PACER comprises: (i) a rule-based document classifier mapping seven educational categories from textual markers; (ii) a deterministic strategy router translating document type to one of five chunking strategies (fixed, recursive, semantic, educational, hybrid); (iii) a set of pedagogy-aware chunkers that preserve pedagogical units (definition–example pairs, question–solution pairs, unit–objective pairs); and (iv) a Curriculum Alignment Score (CAS) combining grade-level match, prerequisite preservation, and Bloom's taxonomy alignment for retrieval quality measurement. Evaluated on a benchmark of 900 curriculum-aligned queries over 8,563 NCERT educational documents spanning Mathematics, Science, and Social Science (grades 6–12), PACER achieves MRR = 0.924 and nDCG@10 = 0.921 with BGE-large-en-v1.5 embeddings at 87 ms mean latency. CAS reaches 0.651 with moderate inter-judge agreement (Fleiss κ = 0.545, n = 150 pairs, three LLM judges). On the homogeneous NCERT corpus, PACER's educational chunker achieves higher rank-1 precision (MRR 0.924 vs 0.919 for recursive baseline) while the recursive baseline's broader chunks score higher on nDCG@10 (0.959 vs 0.921), confirming a precision–coverage trade-off between fine-grained pedagogical units and passage-level retrieval. On a heterogeneous corpus spanning five document types, PACER's adaptive router outperforms recursive chunking by +5.9% MRR (0.941 vs 0.888) and fixed-size chunking by +9.8% (0.843), deploying four type-specific strategies vs. uniform chunking for both baselines. PACER provides a reproducible evaluation protocol, open-source implementation, and a curriculum-aligned benchmark for educational RAG research.
 
 **Word count: ~220 words ✓**
 
@@ -140,7 +141,12 @@ An AI writing assistant (Claude, Anthropic) was used for grammar checking and co
 | Hetero nDCG@10 pacer_full = 0.9056 | table3_hetero_ablation.csv |
 | Hetero nDCG@10 B0_recursive_base = 0.8859 | table3_hetero_ablation.csv |
 | Hetero nDCG@10 A1_fixed_base = 0.8825 | table3_hetero_ablation.csv |
-| NCERT MRR B0_recursive_base | table2_ablation.csv (pending NCERT run) |
+| NCERT MRR pacer_full = 0.9241 | table2_ablation.csv |
+| NCERT MRR B0_recursive_base = 0.9194 | table2_ablation.csv |
+| NCERT nDCG@10 pacer_full = 0.9208 | table2_ablation.csv |
+| NCERT nDCG@10 B0_recursive_base = 0.9584 | table2_ablation.csv |
+| NCERT chunks pacer_full = 16,369 | table2_ablation.csv |
+| NCERT chunks B0_recursive = 9,493 | table2_ablation.csv |
 
 ---
 

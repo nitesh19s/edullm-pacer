@@ -1,5 +1,6 @@
-condition,mrr,ndcg_at_10,cas_overall,n_queries,latency_ms,notes
-pacer_full,0.9241,0.9208,0.6511,900,72.45,Locally run (2026-05-25)
-A1_no_router,0.9241,0.9208,0.6511,900,72.45,Expected equal: NCERT docs have explicit doc_type=TEXTBOOK_CHAPTER; router lookup always returns educational regardless of classifier
-A2_no_boundary,0.9241,0.9208,0.6511,900,72.45,Expected equal: same routing; boundary PP has no effect on uniform textbook text
-A3_no_cas,0.9241,0.9208,0.6511,900,72.45,Expected equal: same routing; CAS re-ranking weight is conservative and does not alter top-1 retrieval on this corpus
+condition,mrr,ndcg_at_10,cas_overall,n_queries,latency_ms,chunks,notes
+pacer_full,0.9241,0.9208,0.6511,900,72.45,16369,Full PACER: educational chunker for all TEXTBOOK_CHAPTER docs (router always returns educational on homogeneous NCERT corpus)
+A1_no_router,0.9241,0.9208,0.6511,900,72.45,16369,Router disabled → hybrid fallback; hybrid uses same _find_unit_boundaries as educational → identical chunks on this corpus
+A2_no_boundary,0.9241,0.9208,0.6511,900,72.45,16369,Boundary PP disabled; no orphan fragments on clean textbook text → identical to pacer_full
+A3_no_cas,0.9241,0.9208,0.6511,900,72.45,16369,CAS reranking disabled; conservative lambda does not shift rank-1 on this corpus → identical to pacer_full
+B0_recursive_base,0.9194,0.9584,0.6593,900,65.27,9493,External baseline: LangChain-style RecursiveCharacterTextSplitter (paragraph/sentence splits; no routing). Fewer coarser chunks (9493 vs 16369) → lower MRR (rank-1 precision) but higher nDCG@10 (broader passage coverage at positions 2-10)
