@@ -47,8 +47,10 @@ experiments/logs/
 data/processed/*
 !data/processed/benchmark.jsonl
 !data/processed/documents.jsonl
+!data/processed/hetero_corpus.jsonl
+!data/processed/hetero_benchmark.jsonl
 
-# Experiments — track configs and scripts, not results
+# Experiments — track paper-level CSVs (results_paper/); ignore raw run results
 experiments/results/
 experiments/__pycache__/
 

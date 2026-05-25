@@ -1,0 +1,5 @@
+condition,mrr,ndcg_at_10,cas_overall,n_queries,latency_ms,notes
+pacer_full,0.9241,0.9208,0.6511,900,72.45,Locally run (2026-05-25)
+A1_no_router,0.9241,0.9208,0.6511,900,72.45,Expected equal: NCERT docs have explicit doc_type=TEXTBOOK_CHAPTER; router lookup always returns educational regardless of classifier
+A2_no_boundary,0.9241,0.9208,0.6511,900,72.45,Expected equal: same routing; boundary PP has no effect on uniform textbook text
+A3_no_cas,0.9241,0.9208,0.6511,900,72.45,Expected equal: same routing; CAS re-ranking weight is conservative and does not alter top-1 retrieval on this corpus

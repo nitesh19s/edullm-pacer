@@ -1,0 +1,5 @@
+condition,mrr,ndcg_at_10,cas_overall,n_queries,latency_ms
+pacer_full,0.7759,0.8002,0.7035,180,23.3339
+A1_no_router,0.8122,0.8149,0.702,180,22.5964
+A2_no_boundary,0.7759,0.8002,0.7035,180,22.6356
+A3_no_cas,0.7759,0.8002,0.7035,180,22.5893
