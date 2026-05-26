@@ -1,6 +1,5 @@
 ---
 title: EduLLM PACER
-emoji: 📚
 colorFrom: blue
 colorTo: purple
 sdk: docker
@@ -24,7 +23,6 @@ edullm/
 ├── data/             # NCERT corpus, SQLite DB, benchmarks
 ├── experiments/      # Reproducible experiment configs + results
 ├── paper/            # Paper 1 manuscript
-├── CLAUDE.md         # Instructions for Claude Code
 └── README.md         # This file
 ```
 
