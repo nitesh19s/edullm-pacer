@@ -1630,29 +1630,49 @@ a.nav-link.active {
     gap: 1rem;
 }
 
-/* ── Experiment toolbar ─────────────────────────────────── */
+/* ── Experiment toolbar — two-row card ──────────────────── */
 .experiment-controls {
     display: flex;
+    flex-direction: column;
+    padding: 0;
+    gap: 0;
+}
+
+/* Row 1 — title + primary actions */
+.exp-header-row {
+    display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    padding: 0.7rem 1rem;
+    justify-content: space-between;
+    padding: 0.65rem 1.1rem;
+    gap: 0.75rem;
 }
 
-/* Separator — thin vertical rule between groups */
-.exp-sep {
-    width: 1px;
-    height: 22px;
-    background: hsl(var(--border));
+.exp-title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    white-space: nowrap;
     flex-shrink: 0;
-    align-self: center;
-    margin: 0 0.2rem;
+}
+.exp-title i {
+    color: hsl(var(--primary));
+    font-size: 0.9rem;
 }
 
-/* New Experiment — primary action */
+.exp-primary-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-shrink: 0;
+}
+
+/* Primary button */
 .exp-new-btn {
-    padding: 0.4rem 0.9rem !important;
-    font-size: 0.83rem !important;
+    padding: 0.38rem 0.85rem !important;
+    font-size: 0.82rem !important;
     font-weight: 600 !important;
     white-space: nowrap;
 }
@@ -1661,9 +1681,9 @@ a.nav-link.active {
 .exp-run-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.4rem 0.85rem;
-    font-size: 0.83rem;
+    gap: 0.3rem;
+    padding: 0.38rem 0.8rem;
+    font-size: 0.82rem;
     font-weight: 500;
     border-radius: var(--radius);
     cursor: pointer;
@@ -1676,7 +1696,7 @@ a.nav-link.active {
     background: hsl(142 55% 48% / 0.08);
     color: hsl(142 55% 28%);
 }
-.exp-run-btn.run-start i { color: #16a34a; font-size: 0.72rem; }
+.exp-run-btn.run-start i { color: #16a34a; font-size: 0.68rem; }
 .exp-run-btn.run-start:hover:not(:disabled) {
     background: hsl(142 55% 48% / 0.16);
     border-color: hsl(142 55% 45% / 0.65);
@@ -1686,78 +1706,80 @@ a.nav-link.active {
     background: hsl(0 70% 50% / 0.06);
     color: hsl(0 70% 32%);
 }
-.exp-run-btn.run-end i { color: #dc2626; font-size: 0.72rem; }
+.exp-run-btn.run-end i { color: #dc2626; font-size: 0.68rem; }
 .exp-run-btn.run-end:hover:not(:disabled) {
     background: hsl(0 70% 50% / 0.13);
     border-color: hsl(0 70% 50% / 0.55);
 }
 .exp-run-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-/* Tool buttons — ghost style */
+/* Thin divider between rows */
+.exp-row-divider {
+    height: 1px;
+    background: hsl(var(--border) / 0.7);
+    margin: 0;
+}
+
+/* Row 2 — secondary tools + stats */
+.exp-tools-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 0.85rem 0.45rem 0.6rem;
+    gap: 0.5rem;
+    background: hsl(var(--muted) / 0.3);
+    border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.exp-secondary-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    flex-shrink: 0;
+}
+
+/* Ghost tool buttons */
 .exp-tool-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.83rem;
+    gap: 0.3rem;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.78rem;
     font-weight: 500;
     border-radius: var(--radius);
-    border: 1px solid transparent;
+    border: none;
     background: transparent;
-    color: hsl(var(--foreground) / 0.65);
+    color: hsl(var(--foreground) / 0.6);
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s;
     white-space: nowrap;
 }
-.exp-tool-btn i { font-size: 0.8rem; color: hsl(var(--primary) / 0.55); transition: color 0.15s; }
+.exp-tool-btn i { font-size: 0.75rem; color: hsl(var(--primary) / 0.5); transition: color 0.15s; }
 .exp-tool-btn:hover {
-    background: hsl(var(--primary) / 0.08);
-    border-color: hsl(var(--primary) / 0.25);
+    background: hsl(var(--primary) / 0.09);
     color: hsl(var(--foreground));
 }
 .exp-tool-btn:hover i { color: hsl(var(--primary)); }
 
-/* Stats — pushed to far right */
+/* Inline stats */
 .exp-stats-row {
     display: flex;
     align-items: center;
-    gap: 0;
-    margin-left: auto;
+    gap: 0.35rem;
     flex-shrink: 0;
-    border-left: 1px solid hsl(var(--border) / 0.6);
-    padding-left: 0.75rem;
-}
-.exp-kpi {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.15rem 0.85rem;
-    border-right: 1px solid hsl(var(--border) / 0.4);
-    min-width: 58px;
-    cursor: default;
-}
-.exp-kpi:last-child { border-right: none; }
-.exp-kpi-val {
-    font-size: 1rem;
-    font-weight: 700;
-    color: hsl(var(--foreground));
-    letter-spacing: -0.02em;
-    line-height: 1.3;
-}
-.exp-kpi-label {
-    font-size: 0.58rem;
-    font-weight: 600;
+    font-size: 0.75rem;
     color: hsl(var(--muted-foreground));
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    line-height: 1;
 }
-.exp-kpi-active .exp-kpi-val {
-    color: #15803d;
-    display: flex;
+.exp-stat {
+    display: inline-flex;
     align-items: center;
     gap: 0.25rem;
+    white-space: nowrap;
 }
+.exp-stat span[id] { font-weight: 600; color: hsl(var(--foreground)); }
+.exp-stat-dot { color: hsl(var(--border)); font-size: 1rem; line-height: 1; }
+.exp-stat-active { color: #15803d; font-weight: 500; }
+.exp-stat-active span[id] { color: #15803d; }
 .exp-kpi-dot {
     width: 6px; height: 6px;
     border-radius: 50%;
@@ -1767,12 +1789,16 @@ a.nav-link.active {
 }
 
 /* hide legacy elements */
+.exp-sep { display: none; }
 .exp-group { display: none; }
 .exp-ctrl-title { display: none; }
 .exp-divider { display: none; }
 .exp-stat-chip { display: none !important; }
+.exp-kpi { display: none; }
+.exp-kpi-val { display: none; }
+.exp-kpi-label { display: none; }
 
-/* List / details — full width in flex-column container */
+/* List / details — full width */
 .experiments-list  { }
 .experiment-details { }
 
@@ -1799,10 +1825,6 @@ a.nav-link.active {
 .stat-row:last-child { border-bottom: none; }
 .stat-row span  { color: hsl(var(--muted-foreground)); }
 .stat-row strong { color: hsl(var(--foreground)); }
-
-@media (max-width: 768px) {
-    .exp-stats-row { margin-left: 0; padding-left: 0; border-left: none; width: 100%; justify-content: space-around; }
-}
 
 .experiment-item {
     padding: 1rem;
