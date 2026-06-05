@@ -1259,42 +1259,35 @@
                     <!-- Experiment Controls -->
                     <div class="experiment-controls glass-card">
 
-                        <!-- Left: title + primary -->
-                        <div class="exp-group exp-group-primary">
-                            <span class="exp-ctrl-title"><i class="fas fa-flask"></i> Experiments</span>
-                            <button class="btn-primary exp-new-btn" id="createExperimentBtn">
-                                <i class="fas fa-plus"></i> New Experiment
-                            </button>
-                        </div>
+                        <!-- Left actions -->
+                        <button class="btn-primary exp-new-btn" id="createExperimentBtn">
+                            <i class="fas fa-plus"></i> New Experiment
+                        </button>
 
-                        <!-- Run group -->
-                        <div class="exp-group exp-group-run">
-                            <button class="exp-run-btn run-start" id="startRunBtn" disabled>
-                                <i class="fas fa-play"></i> Start Run
-                            </button>
-                            <button class="exp-run-btn run-end" id="endRunBtn" disabled>
-                                <i class="fas fa-stop"></i> End Run
-                            </button>
-                        </div>
+                        <button class="exp-run-btn run-start" id="startRunBtn" disabled>
+                            <i class="fas fa-play"></i> Start Run
+                        </button>
+                        <button class="exp-run-btn run-end" id="endRunBtn" disabled>
+                            <i class="fas fa-stop"></i> End Run
+                        </button>
 
-                        <!-- Tools group -->
-                        <div class="exp-group exp-group-tools">
-                            <button class="exp-tool-btn" id="compareRunsBtn">
-                                <i class="fas fa-exchange-alt"></i> Compare
-                            </button>
-                            <button class="exp-tool-btn" id="exportExperimentsBtn">
-                                <i class="fas fa-download"></i> Export
-                            </button>
-                            <button class="exp-tool-btn" id="importExperimentsBtn">
-                                <i class="fas fa-upload"></i> Import
-                            </button>
-                            <button class="exp-tool-btn" id="indexNCERTBtn">
-                                <i class="fas fa-database"></i> Index
-                            </button>
-                        </div>
+                        <div class="exp-sep"></div>
+
+                        <button class="exp-tool-btn" id="compareRunsBtn">
+                            <i class="fas fa-exchange-alt"></i> Compare
+                        </button>
+                        <button class="exp-tool-btn" id="exportExperimentsBtn">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="exp-tool-btn" id="importExperimentsBtn">
+                            <i class="fas fa-upload"></i> Import
+                        </button>
+                        <button class="exp-tool-btn" id="indexNCERTBtn">
+                            <i class="fas fa-database"></i> Index NCERT
+                        </button>
                         <input type="file" id="importFileInput" accept=".json" style="display: none;">
 
-                        <!-- Stats — inline KPIs pushed right -->
+                        <!-- Right stats -->
                         <div class="exp-stats-row">
                             <div class="exp-kpi">
                                 <span class="exp-kpi-val" id="totalExperiments">0</span>
@@ -1307,7 +1300,7 @@
                             <div class="exp-kpi exp-kpi-active">
                                 <span class="exp-kpi-dot"></span>
                                 <span class="exp-kpi-val" id="activeRun">None</span>
-                                <span class="exp-kpi-label">Active</span>
+                                <span class="exp-kpi-label">Active Run</span>
                             </div>
                             <div class="exp-kpi">
                                 <span class="exp-kpi-val" id="vectorStoreCount">0</span>
