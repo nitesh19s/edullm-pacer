@@ -1259,65 +1259,60 @@
                     <!-- Experiment Controls -->
                     <div class="experiment-controls glass-card">
 
-                        <!-- Section label -->
-                        <span class="exp-ctrl-title">
-                            <i class="fas fa-flask"></i> Experiments
-                        </span>
+                        <!-- Left: title + primary -->
+                        <div class="exp-group exp-group-primary">
+                            <span class="exp-ctrl-title"><i class="fas fa-flask"></i> Experiments</span>
+                            <button class="btn-primary exp-new-btn" id="createExperimentBtn">
+                                <i class="fas fa-plus"></i> New Experiment
+                            </button>
+                        </div>
 
-                        <!-- Primary action -->
-                        <button class="btn-primary exp-new-btn" id="createExperimentBtn">
-                            <i class="fas fa-plus"></i> New Experiment
-                        </button>
+                        <!-- Run group -->
+                        <div class="exp-group exp-group-run">
+                            <button class="exp-run-btn run-start" id="startRunBtn" disabled>
+                                <i class="fas fa-play"></i> Start Run
+                            </button>
+                            <button class="exp-run-btn run-end" id="endRunBtn" disabled>
+                                <i class="fas fa-stop"></i> End Run
+                            </button>
+                        </div>
 
-                        <div class="exp-divider"></div>
-
-                        <!-- Run state -->
-                        <button class="exp-run-btn run-start" id="startRunBtn" disabled>
-                            <i class="fas fa-play"></i> Start Run
-                        </button>
-                        <button class="exp-run-btn run-end" id="endRunBtn" disabled>
-                            <i class="fas fa-stop"></i> End Run
-                        </button>
-
-                        <div class="exp-divider"></div>
-
-                        <!-- Tools -->
-                        <button class="exp-tool-btn" id="compareRunsBtn">
-                            <i class="fas fa-exchange-alt"></i> Compare
-                        </button>
-                        <button class="exp-tool-btn" id="exportExperimentsBtn">
-                            <i class="fas fa-download"></i> Export
-                        </button>
-                        <button class="exp-tool-btn" id="importExperimentsBtn">
-                            <i class="fas fa-upload"></i> Import
-                        </button>
-                        <button class="exp-tool-btn" id="indexNCERTBtn">
-                            <i class="fas fa-database"></i> Index NCERT
-                        </button>
+                        <!-- Tools group -->
+                        <div class="exp-group exp-group-tools">
+                            <button class="exp-tool-btn" id="compareRunsBtn">
+                                <i class="fas fa-exchange-alt"></i> Compare
+                            </button>
+                            <button class="exp-tool-btn" id="exportExperimentsBtn">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                            <button class="exp-tool-btn" id="importExperimentsBtn">
+                                <i class="fas fa-upload"></i> Import
+                            </button>
+                            <button class="exp-tool-btn" id="indexNCERTBtn">
+                                <i class="fas fa-database"></i> Index
+                            </button>
+                        </div>
                         <input type="file" id="importFileInput" accept=".json" style="display: none;">
 
-                        <!-- Stats KPI badges — right end -->
+                        <!-- Stats — inline KPIs pushed right -->
                         <div class="exp-stats-row">
-                            <span class="exp-stat-chip" title="Total Experiments">
-                                <i class="fas fa-flask"></i>
-                                <strong id="totalExperiments">0</strong>
-                                <small>Experiments</small>
-                            </span>
-                            <span class="exp-stat-chip" title="Total Runs">
-                                <i class="fas fa-redo-alt"></i>
-                                <strong id="totalRuns">0</strong>
-                                <small>Runs</small>
-                            </span>
-                            <span class="exp-stat-chip exp-active-chip" title="Active Run">
-                                <i class="fas fa-circle"></i>
-                                <strong id="activeRun">None</strong>
-                                <small>Active</small>
-                            </span>
-                            <span class="exp-stat-chip" title="Vector Store Size">
-                                <i class="fas fa-layer-group"></i>
-                                <strong id="vectorStoreCount">0</strong>
-                                <small>Vectors</small>
-                            </span>
+                            <div class="exp-kpi">
+                                <span class="exp-kpi-val" id="totalExperiments">0</span>
+                                <span class="exp-kpi-label">Experiments</span>
+                            </div>
+                            <div class="exp-kpi">
+                                <span class="exp-kpi-val" id="totalRuns">0</span>
+                                <span class="exp-kpi-label">Runs</span>
+                            </div>
+                            <div class="exp-kpi exp-kpi-active">
+                                <span class="exp-kpi-dot"></span>
+                                <span class="exp-kpi-val" id="activeRun">None</span>
+                                <span class="exp-kpi-label">Active</span>
+                            </div>
+                            <div class="exp-kpi">
+                                <span class="exp-kpi-val" id="vectorStoreCount">0</span>
+                                <span class="exp-kpi-label">Vectors</span>
+                            </div>
                         </div>
                     </div>
 

@@ -1630,179 +1630,156 @@ a.nav-link.active {
     gap: 1rem;
 }
 
-/* ── Experiment toolbar ───────────────────────────────────── */
+/* ══ Experiment toolbar — single cohesive row ══════════════ */
 .experiment-controls {
     display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.75rem 1.25rem !important;
-    flex-wrap: wrap;
-    overflow: visible;
-    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--primary) / 0.02) 100%);
-    border-bottom: 1px solid hsl(var(--border) / 0.6);
+    align-items: stretch;
+    gap: 0;
+    padding: 0 !important;
+    overflow: hidden;
 }
 
-/* Section label — compact icon-only badge */
+/* Button groups — each a padded flex zone */
+.exp-group {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.65rem 1rem;
+}
+.exp-group + .exp-group { border-left: 1px solid hsl(var(--border) / 0.6); }
+.exp-group-primary { background: hsl(var(--primary) / 0.03); gap: 0.65rem; }
+
+/* Title — plain bold text, no box */
 .exp-ctrl-title {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: hsl(var(--primary));
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
     white-space: nowrap;
-    background: hsl(var(--primary) / 0.08);
-    border: 1px solid hsl(var(--primary) / 0.2);
-    border-radius: 6px;
-    padding: 0.3rem 0.6rem;
-    margin-right: 0.2rem;
-    flex-shrink: 0;
 }
-.exp-ctrl-title i { font-size: 0.75rem; }
+.exp-ctrl-title i { color: hsl(var(--primary)); font-size: 0.9rem; }
 
-/* Divider */
-.exp-divider {
-    width: 1px;
-    height: 28px;
-    background: hsl(var(--border));
-    margin: 0 0.2rem;
-    flex-shrink: 0;
-    opacity: 0.7;
-}
-
-/* New Experiment — primary action */
+/* New Experiment */
 .exp-new-btn {
-    padding: 0.5rem 1.1rem !important;
-    font-size: 0.875rem !important;
+    padding: 0.45rem 1rem !important;
+    font-size: 0.85rem !important;
     font-weight: 600 !important;
     border-radius: var(--radius) !important;
     height: auto !important;
     line-height: 1.5 !important;
     white-space: nowrap;
-    flex-shrink: 0;
-    box-shadow: 0 1px 4px hsl(var(--primary) / 0.25) !important;
+    box-shadow: 0 1px 4px hsl(var(--primary) / 0.3) !important;
 }
 
-/* Start Run — green tinted */
+/* Run buttons */
 .exp-run-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
     border-radius: var(--radius);
     cursor: pointer;
-    transition: all 0.18s ease;
+    transition: all 0.15s ease;
     white-space: nowrap;
-    flex-shrink: 0;
 }
 .exp-run-btn.run-start {
-    border: 1px solid hsl(142 60% 45% / 0.4);
-    background: hsl(142 60% 45% / 0.07);
-    color: hsl(142 60% 30%);
+    border: 1px solid hsl(142 55% 45% / 0.35);
+    background: hsl(142 55% 48% / 0.06);
+    color: hsl(142 55% 28%);
 }
-.exp-run-btn.run-start i { color: #16a34a; }
-.exp-run-btn.run-start:hover:not(:disabled) {
-    background: hsl(142 60% 45% / 0.14);
-    border-color: hsl(142 60% 45% / 0.6);
-}
+.exp-run-btn.run-start i { color: #16a34a; font-size: 0.75rem; }
+.exp-run-btn.run-start:hover:not(:disabled) { background: hsl(142 55% 48% / 0.13); border-color: hsl(142 55% 45% / 0.6); }
 .exp-run-btn.run-end {
-    border: 1px solid hsl(0 72% 51% / 0.35);
-    background: hsl(0 72% 51% / 0.06);
-    color: hsl(0 72% 35%);
+    border: 1px solid hsl(0 70% 50% / 0.3);
+    background: hsl(0 70% 50% / 0.05);
+    color: hsl(0 70% 32%);
 }
-.exp-run-btn.run-end i { color: #dc2626; }
-.exp-run-btn.run-end:hover:not(:disabled) {
-    background: hsl(0 72% 51% / 0.12);
-    border-color: hsl(0 72% 51% / 0.55);
-}
-.exp-run-btn:disabled { opacity: 0.32; cursor: not-allowed; filter: grayscale(0.4); }
+.exp-run-btn.run-end i { color: #dc2626; font-size: 0.75rem; }
+.exp-run-btn.run-end:hover:not(:disabled) { background: hsl(0 70% 50% / 0.11); border-color: hsl(0 70% 50% / 0.5); }
+.exp-run-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-/* Tool buttons — slate toned */
+/* Tool buttons */
 .exp-tool-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
     border-radius: var(--radius);
-    border: 1px solid hsl(var(--border));
-    background: hsl(var(--background));
-    color: hsl(var(--foreground) / 0.75);
+    border: 1px solid transparent;
+    background: transparent;
+    color: hsl(var(--foreground) / 0.7);
     cursor: pointer;
-    transition: all 0.18s ease;
+    transition: all 0.15s ease;
     white-space: nowrap;
-    flex-shrink: 0;
-    box-shadow: 0 1px 2px hsl(0 0% 0% / 0.04);
 }
-.exp-tool-btn i {
-    font-size: 0.85rem;
-    color: hsl(var(--primary) / 0.65);
-    transition: color 0.18s;
-}
+.exp-tool-btn i { font-size: 0.82rem; color: hsl(var(--primary) / 0.6); transition: color 0.15s; }
 .exp-tool-btn:hover {
-    background: hsl(var(--primary) / 0.06);
-    border-color: hsl(var(--primary) / 0.3);
+    background: hsl(var(--primary) / 0.07);
+    border-color: hsl(var(--primary) / 0.2);
     color: hsl(var(--foreground));
-    box-shadow: 0 2px 6px hsl(var(--primary) / 0.1);
-    transform: translateY(-1px);
 }
 .exp-tool-btn:hover i { color: hsl(var(--primary)); }
-.exp-tool-btn:active { transform: translateY(0); }
 
-/* Stats — right end, compact number badges */
+/* ── Stats KPIs — stacked number + label, pushed far right ── */
 .exp-stats-row {
     display: flex;
-    align-items: center;
-    gap: 0.35rem;
+    align-items: stretch;
     margin-left: auto;
+    border-left: 1px solid hsl(var(--border) / 0.6);
     flex-shrink: 0;
-    padding-left: 0.6rem;
-    border-left: 1px solid hsl(var(--border) / 0.7);
 }
-.exp-stat-chip {
-    display: inline-flex;
+.exp-kpi {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.35rem;
-    background: hsl(var(--background));
-    border: 1.5px solid hsl(var(--border));
-    border-radius: var(--radius);
-    padding: 0.32rem 0.8rem;
-    white-space: nowrap;
-    transition: all 0.15s;
+    justify-content: center;
+    padding: 0 1.1rem;
+    border-right: 1px solid hsl(var(--border) / 0.45);
+    min-width: 64px;
+    gap: 0.05rem;
     cursor: default;
-    box-shadow: 0 1px 3px hsl(0 0% 0% / 0.07);
+    transition: background 0.15s;
 }
-.exp-stat-chip i {
-    font-size: 0.78rem;
-    color: hsl(var(--primary));
-    opacity: 0.85;
-}
-.exp-stat-chip strong {
+.exp-kpi:last-child { border-right: none; }
+.exp-kpi:hover { background: hsl(var(--muted) / 0.5); }
+.exp-kpi-val {
+    font-size: 1.05rem;
     font-weight: 800;
-    font-size: 1rem;
     color: hsl(var(--foreground));
     letter-spacing: -0.02em;
+    line-height: 1.2;
 }
-.exp-stat-chip small { display: none; }
-.exp-stat-chip:hover {
-    border-color: hsl(var(--primary) / 0.4);
-    box-shadow: 0 2px 6px hsl(var(--primary) / 0.12);
-    transform: translateY(-1px);
+.exp-kpi-label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: hsl(var(--muted-foreground));
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1;
+}
+.exp-kpi-active .exp-kpi-val {
+    color: #15803d;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.exp-kpi-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #16a34a;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px hsl(142 55% 45% / 0.2);
 }
 
-/* Active run chip — green accent */
-.exp-active-chip {
-    background: hsl(142 60% 45% / 0.08);
-    border-color: hsl(142 60% 45% / 0.45);
-    box-shadow: 0 1px 3px hsl(142 60% 45% / 0.15);
-}
-.exp-active-chip strong { color: hsl(142 55% 25%); font-size: 0.9rem; }
-.exp-active-chip i { color: #16a34a; font-size: 0.55rem; opacity: 1; }
+/* hide old chip elements */
+.exp-divider { display: none; }
+.exp-stat-chip { display: none !important; }
 
 /* List / details — full width */
 .experiments-list  { /* no span needed in flex column */ }
