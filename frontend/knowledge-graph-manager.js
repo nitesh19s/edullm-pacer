@@ -929,6 +929,19 @@ class KnowledgeGraphManager {
             activeSubjects.includes(node.subject)
         );
 
+        // If all subjects unchecked — clear canvas and show hint
+        if (filteredNodes.length === 0) {
+            nodesGroup.innerHTML = '';
+            edgesGroup.innerHTML = '';
+            const svg = this.visualization.svg;
+            const w = svg.viewBox?.baseVal?.width || 800;
+            const h = svg.viewBox?.baseVal?.height || 600;
+            nodesGroup.innerHTML = `<text x="${w/2}" y="${h/2}" text-anchor="middle"
+                font-size="15" fill="hsl(var(--muted-foreground,215 20% 55%))"
+                font-family="inherit">No subjects selected — check at least one filter to show nodes</text>`;
+            return;
+        }
+
         // Calculate positions based on visualization mode
         const positions = this.calculateNodePositions(filteredNodes);
 
@@ -1598,9 +1611,8 @@ class KnowledgeGraphManager {
      */
     getActiveSubjectFilters() {
         const filters = document.querySelectorAll('.subject-filter:checked');
-        if (filters.length === 0) {
-            return ['mathematics', 'physics', 'chemistry', 'biology', 'general'];
-        }
+        // If NONE are checked → return empty array so no nodes render
+        // (old code returned all subjects when none checked — that was backwards)
         return Array.from(filters).map(f => f.value);
     }
 
@@ -1701,26 +1713,30 @@ class KnowledgeGraphManager {
     }
 
     /**
-     * Rebuild graph from current chunks
+     * Rebuild graph — re-injects the PACER NCERT concept graph.
+     * (Original flow built from raw chunk keywords which produced noisy nodes
+     * like "Theorem", "Find", "Therefore". We always use the curated NCERT graph.)
      */
     async rebuildGraph() {
-        if (!window.chunkingManager || window.chunkingManager.chunks.length === 0) {
-            alert('No chunks available. Please chunk some documents first in the Smart Chunking tab.');
-            return;
+        console.log('🔄 Rebuilding PACER NCERT knowledge graph...');
+
+        // Clear stale localStorage so initKnowledgeGraph() re-seeds cleanly
+        try { localStorage.removeItem('knowledge_graph'); } catch(e) {}
+
+        // Re-run the PACER seeder if available (defined in pacer-research-tools.js)
+        if (typeof window._pacerSeedKnowledgeGraph === 'function') {
+            window._pacerSeedKnowledgeGraph(this);
+        } else {
+            // Fallback: just re-render what's already in graph (PACER nodes)
+            this.renderGraph();
         }
 
-        console.log('🔄 Rebuilding knowledge graph...');
-
-        await this.buildGraphFromChunks(window.chunkingManager.chunks);
-        this.renderGraph();
         this.updateStatisticsDisplay();
 
-        // Notify dashboard
         if (window.dashboardManager) {
-            window.dashboardManager.addActivity('sync', 'Knowledge graph rebuilt');
+            window.dashboardManager.addActivity('sync', 'Knowledge graph refreshed (PACER NCERT)');
         }
-
-        console.log('✅ Knowledge graph rebuilt successfully!');
+        console.log('✅ PACER knowledge graph refreshed:', this.graph.nodes.length, 'nodes');
     }
 
     /**

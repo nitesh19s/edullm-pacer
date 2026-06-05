@@ -58,119 +58,10 @@
         <!-- Sidebar Overlay for Mobile -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar Navigation — content injected by sidebar-loader.js from _sidebar.html -->
         <aside class="sidebar" id="sidebar">
             <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <div class="nav-item">
-                        <button class="nav-link active" data-section="dashboard">
-                            <i class="fas fa-home"></i>
-                            <span data-i18n="nav.dashboard">Dashboard</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="nav-section">
-                    <div class="nav-section-title">
-                        <span data-i18n="nav.features">Features</span>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="rag">
-                            <i class="fas fa-comments"></i>
-                            <span data-i18n="nav.ragChat">RAG Chat</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="chunking">
-                            <i class="fas fa-layer-group"></i>
-                            <span data-i18n="nav.smartChunking">Smart Chunking</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="knowledge">
-                            <i class="fas fa-project-diagram"></i>
-                            <span data-i18n="nav.knowledgeGraph">Knowledge Graph</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="nav-section">
-                    <div class="nav-section-title">
-                        <span data-i18n="nav.researchTools">Research Tools</span>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="analytics">
-                            <i class="fas fa-chart-line"></i>
-                            <span data-i18n="nav.analytics">Analytics</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="comparisons">
-                            <i class="fas fa-balance-scale"></i>
-                            <span data-i18n="nav.comparisons">Comparisons</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="abtesting">
-                            <i class="fas fa-vial"></i>
-                            <span data-i18n="nav.abTesting">A/B Testing</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="progression">
-                            <i class="fas fa-chart-area"></i>
-                            <span data-i18n="nav.progression">Learning Progression</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="gaps">
-                            <i class="fas fa-puzzle-piece"></i>
-                            <span data-i18n="nav.gaps">Curriculum Gaps</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="crosssubject">
-                            <i class="fas fa-network-wired"></i>
-                            <span data-i18n="nav.crossSubject">Cross-Subject Analytics</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="nav-section">
-                    <div class="nav-section-title">
-                        <span data-i18n="nav.management">Management</span>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="upload">
-                            <i class="fas fa-upload"></i>
-                            <span data-i18n="nav.dataUpload">Data Upload</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <a href="database-management.html" class="nav-link">
-                            <i class="fas fa-database"></i>
-                            <span data-i18n="nav.database">Database</span>
-                        </a>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="experiments">
-                            <i class="fas fa-flask"></i>
-                            <span data-i18n="nav.experiments">Experiments</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="pacer" onclick="if(window.pacerResultsManager&&!window.pacerResultsManager._initialized){window.pacerResultsManager._initialized=true;window.pacerResultsManager.initialize();}">
-                            <i class="fas fa-microscope"></i>
-                            <span>PACER Results</span>
-                        </button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="nav-link" data-section="settings">
-                            <i class="fas fa-cog"></i>
-                            <span data-i18n="nav.settings">Settings</span>
-                        </button>
-                    </div>
-                </div>
+                <!-- loaded dynamically -->
             </nav>
         </aside>
 
@@ -199,39 +90,32 @@
                     </div>
                 </div>
 
-                <!-- System Health Bar -->
-                <div class="system-health-bar">
-                    <div class="health-indicator">
-                        <span class="health-label">System Health:</span>
-                        <div class="health-status" id="systemHealthStatus">
-                            <span class="status-badge status-excellent">
-                                <i class="fas fa-check-circle"></i> Excellent
-                            </span>
+                <!-- ── System Status Row ── -->
+                <div class="system-status-row">
+                    <div class="status-row-left">
+                        <span class="status-row-label">System Health</span>
+                        <div class="health-hover-group">
+                            <div id="systemHealthStatus">
+                                <span class="status-badge status-excellent">
+                                    <i class="fas fa-check-circle"></i> Excellent
+                                </span>
+                            </div>
                             <div class="health-details">
-                                <span id="healthUptime">Uptime: 99.9%</span>
-                                <span id="healthErrors">Errors: 0</span>
-                                <span id="healthPerformance">Performance: Good</span>
+                                <span id="healthUptime"><i class="fas fa-clock"></i> Uptime: 99.9%</span>
+                                <span id="healthErrors"><i class="fas fa-times-circle"></i> Errors: 0</span>
+                                <span id="healthPerformance"><i class="fas fa-tachometer-alt"></i> Performance: Good</span>
                             </div>
                         </div>
                     </div>
-                    <div class="health-indicator" style="margin-left: 1.5rem;">
-                        <span class="health-label">Backend:</span>
-                        <span id="dashboardBackendStatus" style="font-size: 0.85rem; font-weight: 500;">
-                            ⚪ Checking...
+                    <div class="status-row-right">
+                        <span class="status-row-label">Backend</span>
+                        <span class="backend-status-chip">
+                            <span id="backendDot" class="backend-dot" style="background:#94a3b8;box-shadow:none"></span>
+                            <span id="dashboardBackendStatus">Checking...</span>
                         </span>
                     </div>
-                    <div class="quick-actions">
-                        <button class="btn-quick" onclick="window.eduLLM.switchSection('rag')">
-                            <i class="fas fa-comments"></i> Quick Chat
-                        </button>
-                        <button class="btn-quick" onclick="window.eduLLM.switchSection('upload')">
-                            <i class="fas fa-upload"></i> Upload PDF
-                        </button>
-                        <button class="btn-quick" onclick="window.eduLLM.switchSection('comparisons')">
-                            <i class="fas fa-flask"></i> Run Experiment
-                        </button>
-                    </div>
                 </div>
+
 
                 <!-- Quick Start Guide (shown on first visit) -->
                 <div id="dashboard-quick-start" class="quick-start-guide" style="display: none;">
@@ -400,170 +284,144 @@
                     </div>
                 </div>
 
-                <!-- Featured Activity Section - Above the Fold -->
-                <div class="featured-activity-section">
-                    <div class="section-label">
-                        <i class="fas fa-bolt"></i> Live Activity Dashboard
-                        <span class="live-indicator">
-                            <i class="fas fa-circle"></i> Live
-                        </span>
-                    </div>
-
-                    <div class="featured-grid">
-                        <!-- Recent Queries - Prominent -->
-                        <div class="dashboard-card featured-card">
-                            <div class="card-header">
-                                <h3><i class="fas fa-comments"></i> Recent Queries</h3>
-                                <div class="card-badges">
-                                    <span class="update-badge" id="recentQueriesCount">5 new</span>
-                                    <button class="btn-text" onclick="window.eduLLM.switchSection('rag')">
-                                        View All <i class="fas fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="recentQueriesList" class="recent-queries-list">
-                                <!-- Dynamic content -->
-                            </div>
-                        </div>
-
-                        <!-- Top Queries - Prominent -->
-                        <div class="dashboard-card featured-card">
-                            <div class="card-header">
-                                <h3><i class="fas fa-fire"></i> Trending Queries</h3>
-                                <div class="card-badges">
-                                    <span class="trending-badge">
-                                        <i class="fas fa-arrow-up"></i> Trending
-                                    </span>
-                                    <span class="badge">Last 7 days</span>
-                                </div>
-                            </div>
-                            <div id="topQueriesList" class="top-queries-list">
-                                <!-- Dynamic content -->
-                            </div>
-                        </div>
-
-                        <!-- Activity Feed - Prominent -->
-                        <div class="dashboard-card featured-card activity-feed-card">
-                            <div class="card-header">
-                                <h3><i class="fas fa-stream"></i> Activity Stream</h3>
-                                <div class="card-badges">
-                                    <span class="activity-badge" id="activityCount">
-                                        <i class="fas fa-pulse"></i> 3 recent
-                                    </span>
-                                    <button class="btn-text" onclick="dashboardManager.clearActivities()">
-                                        Clear <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="activity-list" id="activityFeed">
-                                <!-- Dynamic content -->
-                            </div>
-                        </div>
-                    </div>
+                <!-- ═══ Hidden legacy IDs — dashboard-manager.js writes here safely ═══ -->
+                <div style="display:none" aria-hidden="true">
+                    <div id="recentQueriesList"></div>
+                    <span id="recentQueriesCount"></span>
+                    <div id="activityFeed"></div>
+                    <span id="activityCount"></span>
+                    <canvas id="performanceChart"></canvas>
+                    <select id="performanceMetricSelect"></select>
+                    <div id="storageBreakdown"></div>
+                    <span id="dbObjects"></span>
+                    <span id="totalEmbeddings"></span>
+                    <span id="graphConcepts"></span>
+                    <span id="activeExperiments"></span>
                 </div>
 
-                <!-- Charts Grid -->
-                <div class="charts-grid">
-                    <!-- Performance Over Time Chart -->
-                    <div class="dashboard-card chart-card">
+                <!-- ═══ Row 1: PACER Leaderboard + Subject Distribution ═══ -->
+                <div class="db-row-2col" style="grid-template-columns:1fr 340px">
+
+                    <!-- PACER Top Conditions -->
+                    <div class="dashboard-card db-inner-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-chart-area"></i> Performance Over Time</h3>
-                            <div class="card-actions">
-                                <select id="performanceMetricSelect" class="metric-select">
-                                    <option value="responseTime">Response Time</option>
-                                    <option value="accuracy">Accuracy</option>
-                                    <option value="queries">Query Volume</option>
-                                </select>
-                            </div>
+                            <h3><i class="fas fa-trophy"></i> PACER Benchmark — Top Conditions</h3>
+                            <span class="db-chip db-chip-blue">BGE-large-en-v1.5 · 900 queries</span>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="performanceChart"></canvas>
+                        <div class="db-leaderboard">
+                            <div class="db-lb-head">
+                                <span>Rank</span><span>Method</span><span>MRR</span><span>nDCG@10</span><span>CAS</span><span>Latency</span>
+                            </div>
+                            <div class="db-lb-row db-lb-gold">
+                                <span class="db-rank">🥇 1</span>
+                                <span class="db-method">PACER <span class="db-star">★ Best</span></span>
+                                <span class="db-val">0.9241</span><span class="db-val">0.9208</span><span class="db-val">0.651</span>
+                                <span class="db-lat db-lat-fast">87 ms</span>
+                            </div>
+                            <div class="db-lb-row">
+                                <span class="db-rank">2</span>
+                                <span class="db-method">Hybrid-2000</span>
+                                <span class="db-val">0.9241</span><span class="db-val">0.9208</span><span class="db-val">0.651</span>
+                                <span class="db-lat">103 ms</span>
+                            </div>
+                            <div class="db-lb-row">
+                                <span class="db-rank">3</span>
+                                <span class="db-method">Recursive-512</span>
+                                <span class="db-val">0.9354</span><span class="db-val">0.8971</span><span class="db-val">0.677</span>
+                                <span class="db-lat db-lat-slow">214 ms</span>
+                            </div>
+                            <div class="db-lb-row">
+                                <span class="db-rank">4</span>
+                                <span class="db-method">Recursive-1024</span>
+                                <span class="db-val">0.9234</span><span class="db-val">0.9024</span><span class="db-val">0.669</span>
+                                <span class="db-lat">114 ms</span>
+                            </div>
+                            <div class="db-lb-row">
+                                <span class="db-rank">5</span>
+                                <span class="db-method">Semantic-1024</span>
+                                <span class="db-val">0.9188</span><span class="db-val">0.9129</span><span class="db-val">0.663</span>
+                                <span class="db-lat db-lat-fast">85 ms</span>
+                            </div>
+                            <div class="db-lb-row">
+                                <span class="db-rank">6</span>
+                                <span class="db-method">Fixed-1024</span>
+                                <span class="db-val">0.9187</span><span class="db-val">0.9308</span><span class="db-val">0.659</span>
+                                <span class="db-lat db-lat-fast">80 ms</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Subject Distribution Chart -->
-                    <div class="dashboard-card chart-card">
+                    <!-- Subject Distribution -->
+                    <div class="dashboard-card db-inner-card">
                         <div class="card-header">
                             <h3><i class="fas fa-chart-pie"></i> Subject Distribution</h3>
-                            <div class="card-actions">
-                                <button class="btn-icon" onclick="dashboardManager.toggleChartType('subject')">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </button>
-                            </div>
                         </div>
-                        <div class="chart-container">
+                        <div style="position:relative;height:190px">
                             <canvas id="subjectChart"></canvas>
                         </div>
+                        <div class="db-subject-legend">
+                            <span><i style="background:#3b82f6"></i>Mathematics <b>300</b></span>
+                            <span><i style="background:#8b5cf6"></i>Physics <b>150</b></span>
+                            <span><i style="background:#ec4899"></i>Chemistry <b>150</b></span>
+                            <span><i style="background:#10b981"></i>Biology <b>150</b></span>
+                            <span><i style="background:#f59e0b"></i>Social Sci <b>150</b></span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Secondary Information Grid -->
-                <div class="dashboard-grid">
+                <!-- ═══ Row 2: Curriculum Coverage + System at a Glance ═══ -->
+                <div class="db-row-2col" style="grid-template-columns:1fr 300px">
+
                     <!-- Curriculum Coverage -->
-                    <div class="dashboard-card">
+                    <div class="dashboard-card db-inner-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-book"></i> Curriculum Coverage</h3>
-                            <span class="coverage-overall" id="overallCoverage">84%</span>
+                            <h3><i class="fas fa-book-open"></i> Benchmark Query Distribution</h3>
+                            <span class="coverage-overall" id="overallCoverage">900 queries</span>
                         </div>
-                        <div class="coverage-list" id="coverageList">
-                            <!-- Dynamic content -->
+                        <div class="coverage-list" id="coverageList"></div>
+                    </div>
+
+                    <!-- System at a Glance -->
+                    <div class="dashboard-card db-inner-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-server"></i> System at a Glance</h3>
+                            <span class="status-indicator status-online"><i class="fas fa-circle"></i> Online</span>
+                        </div>
+                        <div class="db-sysglance">
+                            <div class="db-sg-item">
+                                <span class="db-sg-val" id="totalDocs">8,563</span>
+                                <span class="db-sg-label">Documents</span>
+                            </div>
+                            <div class="db-sg-item">
+                                <span class="db-sg-val" id="totalChunks">16,369</span>
+                                <span class="db-sg-label">Chunks</span>
+                            </div>
+                            <div class="db-sg-item">
+                                <span class="db-sg-val">87 ms</span>
+                                <span class="db-sg-label">PACER Latency</span>
+                            </div>
+                            <div class="db-sg-item">
+                                <span class="db-sg-val">16</span>
+                                <span class="db-sg-label">Conditions Tested</span>
+                            </div>
+                            <div class="db-sg-item db-sg-wide">
+                                <span class="db-sg-label" style="margin-bottom:4px">Storage Used</span>
+                                <div class="db-storage-bar">
+                                    <div id="storageFill" class="db-storage-fill" style="width:0.3%"></div>
+                                </div>
+                                <span class="db-sg-label" style="margin-top:4px"><span id="storageUsedText">0.3 MB / 10,240 MB</span></span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Storage & System Info -->
-                <div class="system-info-grid">
-                    <!-- Storage Usage -->
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-hdd"></i> Storage Usage</h3>
-                            <span id="storageUsedText">42 MB / 500 MB</span>
-                        </div>
-                        <div class="storage-visual">
-                            <div class="storage-bar">
-                                <div class="storage-fill" id="storageFill" style="width: 8.4%"></div>
-                            </div>
-                            <div class="storage-breakdown" id="storageBreakdown">
-                                <!-- Dynamic content -->
-                            </div>
-                        </div>
+                <!-- ═══ Row 3: Trending Queries ═══ -->
+                <div class="dashboard-card db-inner-card" style="margin-bottom:1.5rem">
+                    <div class="card-header">
+                        <h3><i class="fas fa-fire"></i> Trending Benchmark Queries</h3>
+                        <span class="db-chip db-chip-orange">NCERT benchmark · representative sample</span>
                     </div>
-
-                    <!-- System Stats -->
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-server"></i> System Statistics</h3>
-                            <span class="status-indicator status-online">
-                                <i class="fas fa-circle"></i> Online
-                            </span>
-                        </div>
-                        <div class="system-stats" id="systemStats">
-                            <div class="stat-row">
-                                <span class="stat-label">Database Objects:</span>
-                                <span class="stat-value" id="dbObjects">17 stores</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-label">Total Documents:</span>
-                                <span class="stat-value" id="totalDocs">12,847</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-label">Total Chunks:</span>
-                                <span class="stat-value" id="totalChunks">16,369</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-label">Embeddings Generated:</span>
-                                <span class="stat-value" id="totalEmbeddings">16,369</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-label">Graph Concepts:</span>
-                                <span class="stat-value" id="graphConcepts">342</span>
-                            </div>
-                            <div class="stat-row">
-                                <span class="stat-label">Active Experiments:</span>
-                                <span class="stat-value" id="activeExperiments">3</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="topQueriesList" class="top-queries-list"></div>
                 </div>
             </section>
 
@@ -723,7 +581,7 @@
                     <div class="chunking-visualization">
                         <div class="chunk-stats">
                             <div class="stat">
-                                <span class="stat-number" id="totalChunks">24</span>
+                                <span class="stat-number" id="chunkingTotalChunks">24</span>
                                 <span class="stat-label">Total Chunks</span>
                             </div>
                             <div class="stat">
@@ -746,49 +604,46 @@
             <!-- Knowledge Graph Section -->
             <section id="knowledge" class="content-section">
                 <div class="section-header">
-                    <h2 data-i18n="knowledgeGraph.title">Knowledge Graph Visualization</h2>
-                    <p data-i18n="knowledgeGraph.subtitle">Explore conceptual relationships and educational pathways</p>
+                    <h2><i class="fas fa-project-diagram"></i> Knowledge Graph</h2>
+                    <p>NCERT concept relationships — 50 nodes · Mathematics, Science, Social Science · Grades 6–12</p>
                 </div>
 
-                <!-- Graph Statistics Cards -->
-                <div class="graph-stats">
-                    <div class="graph-stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-circle-notch"></i>
+                <!-- Graph Statistics Cards — gradient style -->
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+                    <div style="background:linear-gradient(135deg,hsl(220 100% 97%),hsl(220 100% 94%));border:1px solid #bfdbfe;border-radius:10px;padding:16px;display:flex;align-items:center;gap:14px">
+                        <div style="width:44px;height:44px;border-radius:10px;background:#3b82f6;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="fas fa-circle-notch" style="color:#fff;font-size:1.2rem"></i>
                         </div>
-                        <div class="stat-content">
-                            <div class="graph-stat-label">Total Concepts</div>
-                            <div class="graph-stat-value" id="totalConcepts">0</div>
-                        </div>
-                    </div>
-
-                    <div class="graph-stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-project-diagram"></i>
-                        </div>
-                        <div class="stat-content">
-                            <div class="graph-stat-label">Relationships</div>
-                            <div class="graph-stat-value" id="totalRelationships">0</div>
+                        <div>
+                            <div style="font-size:1.6rem;font-weight:800;color:#2563eb;line-height:1" id="totalConcepts">0</div>
+                            <div style="font-size:0.75rem;color:#6b7280;margin-top:2px">Total Concepts</div>
                         </div>
                     </div>
-
-                    <div class="graph-stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-link"></i>
+                    <div style="background:linear-gradient(135deg,hsl(142 76% 97%),hsl(142 76% 94%));border:1px solid #bbf7d0;border-radius:10px;padding:16px;display:flex;align-items:center;gap:14px">
+                        <div style="width:44px;height:44px;border-radius:10px;background:#10b981;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="fas fa-project-diagram" style="color:#fff;font-size:1.2rem"></i>
                         </div>
-                        <div class="stat-content">
-                            <div class="graph-stat-label">Avg Connections</div>
-                            <div class="graph-stat-value" id="avgConnections">0</div>
+                        <div>
+                            <div style="font-size:1.6rem;font-weight:800;color:#059669;line-height:1" id="totalRelationships">0</div>
+                            <div style="font-size:0.75rem;color:#6b7280;margin-top:2px">Relationships</div>
                         </div>
                     </div>
-
-                    <div class="graph-stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-chart-network"></i>
+                    <div style="background:linear-gradient(135deg,hsl(38 92% 97%),hsl(38 92% 94%));border:1px solid #fde68a;border-radius:10px;padding:16px;display:flex;align-items:center;gap:14px">
+                        <div style="width:44px;height:44px;border-radius:10px;background:#f59e0b;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="fas fa-link" style="color:#fff;font-size:1.2rem"></i>
                         </div>
-                        <div class="stat-content">
-                            <div class="graph-stat-label">Graph Density</div>
-                            <div class="graph-stat-value" id="graphDensity">0%</div>
+                        <div>
+                            <div style="font-size:1.6rem;font-weight:800;color:#d97706;line-height:1" id="avgConnections">0</div>
+                            <div style="font-size:0.75rem;color:#6b7280;margin-top:2px">Avg Connections</div>
+                        </div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,hsl(270 60% 97%),hsl(270 60% 94%));border:1px solid #ddd6fe;border-radius:10px;padding:16px;display:flex;align-items:center;gap:14px">
+                        <div style="width:44px;height:44px;border-radius:10px;background:#8b5cf6;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="fas fa-bezier-curve" style="color:#fff;font-size:1.2rem"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:1.6rem;font-weight:800;color:#7c3aed;line-height:1" id="graphDensity">0%</div>
+                            <div style="font-size:0.75rem;color:#6b7280;margin-top:2px">Graph Density</div>
                         </div>
                     </div>
                 </div>
@@ -868,37 +723,33 @@
 
                             <!-- Subject Filters -->
                             <div class="kg-filters-section">
-                                <div class="section-label">Subjects</div>
+                                <div class="section-label">Subjects (NCERT)</div>
 
-                                <div class="subject-filters">
-                                    <label class="filter-checkbox">
-                                        <input type="checkbox" class="subject-filter" value="mathematics" checked>
-                                        <span class="filter-dot mathematics"></span>
-                                        <span>Mathematics</span>
+                                <div class="subject-filters" style="display:flex;flex-direction:column;gap:2px">
+                                    <label class="filter-checkbox" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .12s" onmouseover="this.style.background='hsl(var(--muted))'" onmouseout="this.style.background='transparent'">
+                                        <input type="checkbox" class="subject-filter" value="mathematics" checked style="width:15px;height:15px;accent-color:#3b82f6;cursor:pointer">
+                                        <span class="filter-dot mathematics" style="width:10px;height:10px;border-radius:50%;background:#3b82f6;flex-shrink:0"></span>
+                                        <span style="font-size:0.85rem;font-weight:500">Mathematics</span>
                                     </label>
-
-                                    <label class="filter-checkbox">
-                                        <input type="checkbox" class="subject-filter" value="physics" checked>
-                                        <span class="filter-dot physics"></span>
-                                        <span>Physics</span>
+                                    <label class="filter-checkbox" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .12s" onmouseover="this.style.background='hsl(var(--muted))'" onmouseout="this.style.background='transparent'">
+                                        <input type="checkbox" class="subject-filter" value="physics" checked style="width:15px;height:15px;accent-color:#10b981;cursor:pointer">
+                                        <span class="filter-dot physics" style="width:10px;height:10px;border-radius:50%;background:#10b981;flex-shrink:0"></span>
+                                        <span style="font-size:0.85rem;font-weight:500">Physics</span>
                                     </label>
-
-                                    <label class="filter-checkbox">
-                                        <input type="checkbox" class="subject-filter" value="chemistry" checked>
-                                        <span class="filter-dot chemistry"></span>
-                                        <span>Chemistry</span>
+                                    <label class="filter-checkbox" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .12s" onmouseover="this.style.background='hsl(var(--muted))'" onmouseout="this.style.background='transparent'">
+                                        <input type="checkbox" class="subject-filter" value="chemistry" checked style="width:15px;height:15px;accent-color:#f59e0b;cursor:pointer">
+                                        <span class="filter-dot chemistry" style="width:10px;height:10px;border-radius:50%;background:#f59e0b;flex-shrink:0"></span>
+                                        <span style="font-size:0.85rem;font-weight:500">Chemistry</span>
                                     </label>
-
-                                    <label class="filter-checkbox">
-                                        <input type="checkbox" class="subject-filter" value="biology" checked>
-                                        <span class="filter-dot biology"></span>
-                                        <span>Biology</span>
+                                    <label class="filter-checkbox" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .12s" onmouseover="this.style.background='hsl(var(--muted))'" onmouseout="this.style.background='transparent'">
+                                        <input type="checkbox" class="subject-filter" value="biology" checked style="width:15px;height:15px;accent-color:#8b5cf6;cursor:pointer">
+                                        <span class="filter-dot biology" style="width:10px;height:10px;border-radius:50%;background:#8b5cf6;flex-shrink:0"></span>
+                                        <span style="font-size:0.85rem;font-weight:500">Biology</span>
                                     </label>
-
-                                    <label class="filter-checkbox">
-                                        <input type="checkbox" class="subject-filter" value="general" checked>
-                                        <span class="filter-dot general"></span>
-                                        <span>General</span>
+                                    <label class="filter-checkbox" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .12s" onmouseover="this.style.background='hsl(var(--muted))'" onmouseout="this.style.background='transparent'">
+                                        <input type="checkbox" class="subject-filter" value="general" checked style="width:15px;height:15px;accent-color:#6b7280;cursor:pointer">
+                                        <span class="filter-dot general" style="width:10px;height:10px;border-radius:50%;background:#6b7280;flex-shrink:0"></span>
+                                        <span style="font-size:0.85rem;font-weight:500">Social Science</span>
                                     </label>
                                 </div>
                             </div>
@@ -1298,6 +1149,111 @@
                     <h2 data-i18n="experiments.title">Research Experiments</h2>
                     <p data-i18n="experiments.subtitle">Track and compare RAG system experiments for your research</p>
                 </div>
+
+                <!-- ── How to Run Experiments Guide ── -->
+                <div class="exp-guide-wrap" id="expGuideWrap">
+                    <div class="exp-guide-header" onclick="
+                        const b = document.getElementById('expGuideBody');
+                        const ic = document.getElementById('expGuideChevron');
+                        const open = b.style.display !== 'none';
+                        b.style.display = open ? 'none' : 'block';
+                        ic.style.transform = open ? 'rotate(-90deg)' : 'rotate(0deg)';
+                        localStorage.setItem('expGuideOpen', !open);
+                    ">
+                        <span><i class="fas fa-book-open" style="color:#3b82f6;margin-right:0.5rem"></i><strong>How to Run Experiments</strong> <span style="font-weight:400;color:var(--muted-foreground);font-size:0.82rem;margin-left:0.4rem">— PACER RAG benchmark workflow</span></span>
+                        <i class="fas fa-chevron-down" id="expGuideChevron" style="transition:transform 0.2s;font-size:0.8rem;color:var(--muted-foreground)"></i>
+                    </div>
+
+                    <div class="exp-guide-body" id="expGuideBody">
+                        <div class="exp-guide-grid">
+
+                            <!-- Step 1 -->
+                            <div class="exp-guide-step">
+                                <div class="exp-step-num">1</div>
+                                <div class="exp-step-content">
+                                    <h4><i class="fas fa-plus-circle"></i> Create an Experiment</h4>
+                                    <p>Click <strong>New Experiment</strong>. Give it a descriptive name that identifies the chunking strategy being tested (e.g., <em>"PACER-bge-large-900q"</em>). Add tags like <code>pacer</code>, <code>bge-large</code>, <code>ncert</code> for easy filtering later.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="exp-guide-step">
+                                <div class="exp-step-num">2</div>
+                                <div class="exp-step-content">
+                                    <h4><i class="fas fa-database"></i> Index NCERT Data</h4>
+                                    <p>Click <strong>Index NCERT Data</strong> to chunk and embed the corpus with the currently configured strategy. This populates the vector store. Check <strong>Vector Store</strong> count in Statistics — should reach ~16,369 for PACER or ~8,581 for Fixed-1024.</p>
+                                    <div class="exp-guide-tip"><i class="fas fa-lightbulb"></i> Configure chunking strategy in <strong>Smart Chunking</strong> tab before indexing.</div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="exp-guide-step">
+                                <div class="exp-step-num">3</div>
+                                <div class="exp-step-content">
+                                    <h4><i class="fas fa-play"></i> Start a Run</h4>
+                                    <p>Select your experiment from the list, then click <strong>Start Run</strong>. Each run captures a snapshot of parameters: chunking method, chunk size, overlap, embedding model, and retrieval top-k. The run timer begins.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div class="exp-guide-step">
+                                <div class="exp-step-num">4</div>
+                                <div class="exp-step-content">
+                                    <h4><i class="fas fa-comments"></i> Execute Benchmark Queries</h4>
+                                    <p>Go to <strong>RAG Chat</strong> and run your evaluation queries — or use the backend Python script to run the full 900-query NCERT benchmark automatically:</p>
+                                    <code class="exp-code">python scripts/run_benchmark.py --queries data/queries/ncert_900.json --out results/run_$(date +%Y%m%d).csv</code>
+                                    <div class="exp-guide-tip"><i class="fas fa-lightbulb"></i> The benchmark measures MRR, nDCG@10, CAS and latency per query automatically.</div>
+                                </div>
+                            </div>
+
+                            <!-- Step 5 -->
+                            <div class="exp-guide-step">
+                                <div class="exp-step-num">5</div>
+                                <div class="exp-step-content">
+                                    <h4><i class="fas fa-stop"></i> End Run &amp; Record Metrics</h4>
+                                    <p>Click <strong>End Run</strong>. Enter the metrics from the benchmark output:</p>
+                                    <div class="exp-metrics-grid">
+                                        <span><strong>MRR</strong> Mean Reciprocal Rank</span>
+                                        <span><strong>nDCG@10</strong> Normalised DCG</span>
+                                        <span><strong>CAS</strong> Curriculum Alignment Score</span>
+                                        <span><strong>Latency</strong> Query time in ms</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 6 -->
+                            <div class="exp-guide-step">
+                                <div class="exp-step-num">6</div>
+                                <div class="exp-step-content">
+                                    <h4><i class="fas fa-exchange-alt"></i> Compare Runs</h4>
+                                    <p>Click <strong>Compare Runs</strong> to open the comparison modal. Select 2+ runs to see a side-by-side parameter and metrics table with visualisations. Export results as JSON for paper tables.</p>
+                                    <div class="exp-guide-tip"><i class="fas fa-lightbulb"></i> PACER results are already in <strong>PACER Results</strong> tab — use this for new ablation conditions.</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Reference table -->
+                        <div class="exp-guide-ref">
+                            <h5><i class="fas fa-table"></i> PACER Benchmark Reference — Key Results</h5>
+                            <table class="exp-ref-table">
+                                <thead>
+                                    <tr><th>Method</th><th>Embedding</th><th>Chunks</th><th>MRR</th><th>nDCG@10</th><th>CAS</th><th>Latency</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="exp-ref-highlight"><td><strong>PACER</strong></td><td>bge-large</td><td>16,369</td><td><strong>0.9241</strong></td><td><strong>0.9208</strong></td><td>0.651</td><td><strong>87 ms</strong></td></tr>
+                                    <tr><td>Hybrid-2000</td><td>bge-large</td><td>16,375</td><td>0.9241</td><td>0.9208</td><td>0.651</td><td>103 ms</td></tr>
+                                    <tr><td>Recursive-512</td><td>bge-large</td><td>36,981</td><td>0.9354</td><td>0.8971</td><td>0.677</td><td>214 ms</td></tr>
+                                    <tr><td>Recursive-1024</td><td>bge-large</td><td>18,389</td><td>0.9234</td><td>0.9024</td><td>0.669</td><td>114 ms</td></tr>
+                                    <tr><td>Semantic-1024</td><td>bge-large</td><td>12,987</td><td>0.9188</td><td>0.9129</td><td>0.663</td><td>85 ms</td></tr>
+                                    <tr><td>Fixed-1024</td><td>bge-large</td><td>8,581</td><td>0.9187</td><td>0.9308</td><td>0.659</td><td>80 ms</td></tr>
+                                    <tr><td>PACER</td><td>MiniLM</td><td>16,369</td><td>0.8845</td><td>0.8887</td><td>0.644</td><td>77 ms</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- ── end guide ── -->
 
                 <div class="experiments-container">
                     <!-- Experiment Controls -->
@@ -2155,325 +2111,343 @@
             <!-- Analytics Dashboard Section -->
             <section id="analytics" class="content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-chart-line"></i> <span data-i18n="analytics.title">Analytics Dashboard</span></h2>
-                    <p data-i18n="analytics.subtitle">Comprehensive research analytics and insights</p>
+                    <h2><i class="fas fa-chart-line"></i> Analytics Dashboard</h2>
+                    <p>PACER experiment results · 900-query NCERT benchmark · bge-large-en-v1.5</p>
                 </div>
 
-                <div class="analytics-container">
-                    <!-- Metric Cards -->
-                    <div class="metric-cards">
-                        <div class="metric-card glass-card">
-                            <div class="metric-icon"><i class="fas fa-flask"></i></div>
-                            <div class="metric-info">
-                                <h3 id="totalExperiments">0</h3>
-                                <p>Total Experiments</p>
-                            </div>
+                <div style="display:flex;flex-direction:column;gap:20px">
+
+                    <!-- ═══ KPI SECTION 1 — PACER Benchmark Results ═══ -->
+                    <div class="glass-card" style="padding:20px 24px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid hsl(var(--border))">
+                            <i class="fas fa-trophy" style="color:#f59e0b;font-size:1.1rem"></i>
+                            <h3 style="margin:0;font-size:1rem;font-weight:700">PACER Benchmark Results</h3>
+                            <span style="font-size:0.75rem;color:hsl(var(--muted-foreground));background:hsl(var(--muted));padding:2px 8px;border-radius:20px">Best config · bge-large · 900 queries</span>
                         </div>
-                        <div class="metric-card glass-card">
-                            <div class="metric-icon"><i class="fas fa-bullseye"></i></div>
-                            <div class="metric-info">
-                                <h3 id="avgPrecision">0.00</h3>
-                                <p>Avg Precision</p>
+                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+                            <div id="pacer-kpi-mrr" style="background:linear-gradient(135deg,hsl(220 100% 97%),hsl(220 100% 94%));border:1px solid #bfdbfe;border-radius:10px;padding:16px;text-align:center">
+                                <div style="font-size:1.8rem;font-weight:800;color:#2563eb;line-height:1">0.9241</div>
+                                <div style="font-size:0.78rem;font-weight:600;color:#1d4ed8;margin-top:4px">MRR</div>
+                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Mean Reciprocal Rank</div>
                             </div>
-                        </div>
-                        <div class="metric-card glass-card">
-                            <div class="metric-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            <div class="metric-info">
-                                <h3 id="avgResponseTime">0ms</h3>
-                                <p>Avg Response Time</p>
+                            <div id="pacer-kpi-ndcg" style="background:linear-gradient(135deg,hsl(142 76% 97%),hsl(142 76% 94%));border:1px solid #bbf7d0;border-radius:10px;padding:16px;text-align:center">
+                                <div style="font-size:1.8rem;font-weight:800;color:#059669;line-height:1">0.9208</div>
+                                <div style="font-size:0.78rem;font-weight:600;color:#047857;margin-top:4px">nDCG@10</div>
+                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Norm. Disc. Cum. Gain</div>
                             </div>
-                        </div>
-                        <div class="metric-card glass-card">
-                            <div class="metric-icon"><i class="fas fa-play-circle"></i></div>
-                            <div class="metric-info">
-                                <h3 id="totalRuns">0</h3>
-                                <p>Total Runs</p>
+                            <div id="pacer-kpi-cas" style="background:linear-gradient(135deg,hsl(38 92% 97%),hsl(38 92% 94%));border:1px solid #fde68a;border-radius:10px;padding:16px;text-align:center">
+                                <div style="font-size:1.8rem;font-weight:800;color:#d97706;line-height:1">0.651</div>
+                                <div style="font-size:0.78rem;font-weight:600;color:#b45309;margin-top:4px">CAS</div>
+                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Curriculum Alignment Score</div>
+                            </div>
+                            <div id="pacer-kpi-latency" style="background:linear-gradient(135deg,hsl(270 60% 97%),hsl(270 60% 94%));border:1px solid #ddd6fe;border-radius:10px;padding:16px;text-align:center">
+                                <div style="font-size:1.8rem;font-weight:800;color:#7c3aed;line-height:1">87ms</div>
+                                <div style="font-size:0.78rem;font-weight:600;color:#6d28d9;margin-top:4px">Query Latency</div>
+                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Mean over 900 queries</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Controls -->
-                    <div class="analytics-controls glass-card">
-                        <h3>Report Generation</h3>
-                        <div class="control-group">
-                            <button class="btn-primary" id="generateReportBtn">
-                                <i class="fas fa-file-alt"></i> Generate Report
-                            </button>
-                            <button class="btn-secondary" id="exportReportBtn">
-                                <i class="fas fa-download"></i> Export (Markdown)
-                            </button>
-                            <button class="btn-secondary" id="refreshAnalyticsBtn">
-                                <i class="fas fa-sync"></i> Refresh Data
-                            </button>
+                    <!-- ═══ KPI SECTION 2 — Experiment Scale ═══ -->
+                    <div class="glass-card" style="padding:20px 24px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid hsl(var(--border))">
+                            <i class="fas fa-database" style="color:#6b7280;font-size:1.1rem"></i>
+                            <h3 style="margin:0;font-size:1rem;font-weight:700">Experiment Scale</h3>
+                            <span style="font-size:0.75rem;color:hsl(var(--muted-foreground));background:hsl(var(--muted));padding:2px 8px;border-radius:20px">NCERT corpus · 8 conditions × 2 embeddings</span>
                         </div>
-                    </div>
-
-                    <!-- Reports List -->
-                    <div class="reports-section glass-card">
-                        <h3>Generated Reports</h3>
-                        <div id="reportsListContainer">
-                            <div class="empty-state">
-                                <i class="fas fa-file-alt"></i>
-                                <p>No reports generated yet. Click "Generate Report" to create one.</p>
+                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+                            <div style="background:hsl(var(--muted)/60%);border:1px solid hsl(var(--border));border-radius:10px;padding:16px;text-align:center">
+                                <div id="pacer-kpi-conditions" style="font-size:1.8rem;font-weight:800;color:hsl(var(--foreground));line-height:1">16</div>
+                                <div style="font-size:0.78rem;font-weight:600;color:hsl(var(--foreground));margin-top:4px">Conditions</div>
+                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Chunker × Embedding combos</div>
+                            </div>
+                            <div style="background:hsl(var(--muted)/60%);border:1px solid hsl(var(--border));border-radius:10px;padding:16px;text-align:center">
+                                <div id="pacer-kpi-queries" style="font-size:1.8rem;font-weight:800;color:hsl(var(--foreground));line-height:1">900</div>
+                                <div style="font-size:0.78rem;font-weight:600;color:hsl(var(--foreground));margin-top:4px">Queries</div>
+                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Curriculum-aligned benchmark</div>
+                            </div>
+                            <div style="background:hsl(var(--muted)/60%);border:1px solid hsl(var(--border));border-radius:10px;padding:16px;text-align:center">
+                                <div id="pacer-kpi-docs" style="font-size:1.8rem;font-weight:800;color:hsl(var(--foreground));line-height:1">8,563</div>
+                                <div style="font-size:0.78rem;font-weight:600;color:hsl(var(--foreground));margin-top:4px">Documents</div>
+                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">NCERT PDFs · grades 6–12</div>
+                            </div>
+                            <div style="background:hsl(var(--muted)/60%);border:1px solid hsl(var(--border));border-radius:10px;padding:16px;text-align:center">
+                                <div id="pacer-kpi-chunks" style="font-size:1.8rem;font-weight:800;color:hsl(var(--foreground));line-height:1">16,369</div>
+                                <div style="font-size:0.78rem;font-weight:600;color:hsl(var(--foreground));margin-top:4px">Chunks (PACER)</div>
+                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Pedagogy-aware chunking</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Insights Panel -->
-                    <div class="insights-panel glass-card">
-                        <h3>Key Insights</h3>
-                        <div id="insightsContainer">
-                            <div class="empty-state">
-                                <i class="fas fa-lightbulb"></i>
-                                <p>Generate a report to see insights</p>
+                    <!-- ═══ ANALYTICS VISUALIZATIONS ═══ -->
+                    <div class="glass-card" style="padding:20px 24px">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid hsl(var(--border))">
+                            <div style="display:flex;align-items:center;gap:10px">
+                                <i class="fas fa-chart-bar" style="color:#3b82f6;font-size:1.1rem"></i>
+                                <h3 style="margin:0;font-size:1rem;font-weight:700">Analytics Visualizations</h3>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Visualizations -->
-                    <div class="analytics-charts glass-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3 style="margin: 0;"><i class="fas fa-chart-bar"></i> Analytics Visualizations</h3>
-                            <button class="btn-secondary" id="exportAnalyticsChartsBtn" style="margin: 0;">
-                                <i class="fas fa-download"></i> Export Charts
+                            <button class="btn-secondary" id="exportAnalyticsChartsBtn" style="margin:0;font-size:0.8rem;padding:6px 12px">
+                                <i class="fas fa-download"></i> Export
                             </button>
                         </div>
-                        <div class="charts-grid">
-                            <div class="chart-container">
-                                <canvas id="experimentsOverTimeChart"></canvas>
+
+                        <!-- Row 1: Two equal charts side-by-side -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <div style="font-size:0.8rem;font-weight:600;color:hsl(var(--muted-foreground));text-transform:uppercase;letter-spacing:.04em">Retrieval Quality</div>
+                                <div style="position:relative;height:280px;background:hsl(var(--muted)/30%);border-radius:8px;padding:4px">
+                                    <canvas id="experimentsOverTimeChart"></canvas>
+                                </div>
                             </div>
-                            <div class="chart-container">
-                                <canvas id="precisionRecallChart"></canvas>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <div style="font-size:0.8rem;font-weight:600;color:hsl(var(--muted-foreground));text-transform:uppercase;letter-spacing:.04em">Curriculum Alignment vs Retrieval</div>
+                                <div style="position:relative;height:280px;background:hsl(var(--muted)/30%);border-radius:8px;padding:4px">
+                                    <canvas id="precisionRecallChart"></canvas>
+                                </div>
                             </div>
-                            <div class="chart-container">
+                        </div>
+
+                        <!-- Row 2: Full-width latency breakdown -->
+                        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:24px">
+                            <div style="font-size:0.8rem;font-weight:600;color:hsl(var(--muted-foreground));text-transform:uppercase;letter-spacing:.04em">Latency Breakdown</div>
+                            <div style="background:hsl(var(--muted)/30%);border-radius:8px;padding:12px">
                                 <canvas id="responseTimeDistributionChart"></canvas>
                             </div>
-                            <div class="chart-container">
+                        </div>
+
+                        <!-- Row 3: CAS inter-rater kappa (centered, not too wide) -->
+                        <div style="display:flex;flex-direction:column;gap:6px">
+                            <div style="font-size:0.8rem;font-weight:600;color:hsl(var(--muted-foreground));text-transform:uppercase;letter-spacing:.04em">CAS Inter-Rater Agreement</div>
+                            <div style="position:relative;height:260px;background:hsl(var(--muted)/30%);border-radius:8px;padding:4px;max-width:640px">
                                 <canvas id="experimentStatusChart"></canvas>
                             </div>
                         </div>
                     </div>
+
+                    <!-- ═══ KEY INSIGHTS ═══ -->
+                    <div class="glass-card" style="padding:20px 24px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid hsl(var(--border))">
+                            <i class="fas fa-lightbulb" style="color:#f59e0b;font-size:1.1rem"></i>
+                            <h3 style="margin:0;font-size:1rem;font-weight:700">Key Insights</h3>
+                        </div>
+                        <div id="insightsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-lightbulb"></i>
+                                <p>Insights load automatically</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden legacy IDs — keep script.js updateAnalyticsMetrics() from erroring -->
+                    <span id="totalExperiments" style="display:none"></span>
+                    <span id="avgPrecision"     style="display:none"></span>
+                    <span id="avgResponseTime"  style="display:none"></span>
+                    <span id="totalRuns"        style="display:none"></span>
+
                 </div>
             </section>
 
             <!-- Baseline Comparisons Section -->
             <section id="comparisons" class="content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-balance-scale"></i> <span data-i18n="comparisons.title">Baseline Comparisons</span></h2>
-                    <p data-i18n="comparisons.subtitle">Compare different RAG approaches systematically</p>
+                    <h2><i class="fas fa-balance-scale"></i> Baseline Comparisons</h2>
+                    <p>PACER vs baseline chunking strategies — select a view below</p>
                 </div>
 
-                <div class="comparisons-container">
-                    <!-- Comparison Controls -->
-                    <div class="comparison-controls glass-card">
-                        <h3>Create Comparison</h3>
-                        <div class="control-group">
-                            <button class="btn-primary" id="createComparisonBtn">
-                                <i class="fas fa-plus"></i> New Comparison
-                            </button>
-                            <button class="btn-secondary" id="createBaselineBtn">
-                                <i class="fas fa-bookmark"></i> Create Baseline
-                            </button>
-                        </div>
-                    </div>
+                <div style="display:flex;flex-direction:column;gap:20px">
 
-                    <!-- Active Comparisons -->
-                    <div class="comparisons-list glass-card">
-                        <h3>Comparisons</h3>
-                        <div id="comparisonsListContainer">
-                            <div class="empty-state">
-                                <i class="fas fa-balance-scale"></i>
-                                <p>No comparisons yet. Create one to compare experiments.</p>
+                    <!-- ═══ PACER Comparison Nav tiles (seeder fills this — script.js never touches it) ═══ -->
+                    <div class="glass-card" style="padding:20px 24px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid hsl(var(--border))">
+                            <i class="fas fa-th-large" style="color:#3b82f6;font-size:1rem"></i>
+                            <h3 style="margin:0;font-size:1rem;font-weight:700">Comparison Views</h3>
+                        </div>
+                        <div id="pacerComparisonNav">
+                            <!-- Seeder injects 4 tile buttons here -->
+                            <div class="empty-state" style="padding:20px">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading comparisons…</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Comparison Results -->
-                    <div class="comparison-results glass-card">
-                        <h3>Results</h3>
+                    <!-- ═══ Results panel ═══ -->
+                    <div class="glass-card" style="padding:20px 24px;min-height:200px">
                         <div id="comparisonResultsContainer">
                             <div class="empty-state">
-                                <i class="fas fa-chart-bar"></i>
-                                <p>Select a comparison to view results</p>
+                                <i class="fas fa-hand-pointer"></i>
+                                <p>Select a comparison view above to see results</p>
                             </div>
                         </div>
                     </div>
+
                 </div>
+
+                <!-- Hidden legacy containers — keep script.js refreshComparisonsList() from erroring -->
+                <div id="comparisonsListContainer" style="display:none"></div>
+                <div id="createComparisonBtn"      style="display:none"></div>
+                <div id="createBaselineBtn"        style="display:none"></div>
             </section>
 
             <!-- A/B Testing Section -->
             <section id="abtesting" class="content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-vial"></i> <span data-i18n="abTesting.title">A/B Testing</span></h2>
-                    <p data-i18n="abTesting.subtitle">Run controlled experiments to optimize RAG performance</p>
+                    <h2><i class="fas fa-vial"></i> A/B Testing</h2>
+                    <p>Controlled PACER experiments — chunking strategies, embeddings, and ablation results</p>
                 </div>
 
-                <div class="abtesting-container">
-                    <!-- Test Controls -->
-                    <div class="test-controls glass-card">
-                        <h3>Test Management</h3>
-                        <div class="control-group">
-                            <button class="btn-primary" id="createABTestBtn">
-                                <i class="fas fa-plus"></i> Create A/B Test
-                            </button>
-                            <button class="btn-secondary" id="viewRunningTestsBtn">
-                                <i class="fas fa-play"></i> Running Tests
-                            </button>
-                        </div>
-                    </div>
+                <div style="display:flex;flex-direction:column;gap:20px">
 
-                    <!-- Tests List -->
-                    <div class="tests-list glass-card">
-                        <h3>A/B Tests</h3>
-                        <div class="test-filters">
-                            <button class="filter-btn active" data-filter="all">All</button>
-                            <button class="filter-btn" data-filter="draft">Draft</button>
-                            <button class="filter-btn" data-filter="running">Running</button>
-                            <button class="filter-btn" data-filter="completed">Completed</button>
+                    <!-- ═══ PACER A/B Test list (seeder fills this — script.js never touches it) ═══ -->
+                    <div class="glass-card" style="padding:20px 24px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid hsl(var(--border))">
+                            <i class="fas fa-vial" style="color:#3b82f6;font-size:1rem"></i>
+                            <h3 style="margin:0;font-size:1rem;font-weight:700">Experiment Tests</h3>
+                            <span style="font-size:0.75rem;color:hsl(var(--muted-foreground));background:hsl(var(--muted));padding:2px 8px;border-radius:20px">4 completed tests · click to expand</span>
                         </div>
-                        <div id="abTestsListContainer">
-                            <div class="empty-state">
-                                <i class="fas fa-vial"></i>
-                                <p>No A/B tests created. Start by creating your first test.</p>
+                        <div id="pacerABTestNav">
+                            <!-- Seeder injects test list items here -->
+                            <div class="empty-state" style="padding:20px">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading tests…</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Test Results -->
-                    <div class="test-results glass-card">
-                        <h3>Test Results</h3>
+                    <!-- ═══ Test Results panel ═══ -->
+                    <div class="glass-card" style="padding:20px 24px;min-height:200px">
                         <div id="testResultsContainer">
                             <div class="empty-state">
-                                <i class="fas fa-chart-line"></i>
-                                <p>Select a test to view results</p>
+                                <i class="fas fa-hand-pointer"></i>
+                                <p>Select a test above to view results</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Winner Announcement -->
-                    <div class="winner-panel glass-card" id="winnerPanel" style="display: none;">
-                        <div class="winner-content">
-                            <i class="fas fa-trophy winner-icon"></i>
-                            <h3>Test Winner</h3>
+                    <!-- Winner panel (shown programmatically by seeder) -->
+                    <div id="winnerPanel" style="display:none">
+                        <div class="glass-card" style="padding:20px 24px;text-align:center">
+                            <i class="fas fa-trophy" style="font-size:2rem;color:#f59e0b;margin-bottom:8px"></i>
+                            <h3 style="margin:0 0 12px">Test Winner</h3>
                             <div id="winnerDetails"></div>
                         </div>
                     </div>
+
                 </div>
+
+                <!-- Hidden legacy containers — keep script.js refreshABTestsList() from erroring -->
+                <div id="abTestsListContainer"  style="display:none"></div>
+                <div id="createABTestBtn"        style="display:none"></div>
+                <div id="viewRunningTestsBtn"    style="display:none"></div>
             </section>
 
             <!-- Progression Tracking Section -->
             <section id="progression" class="content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-chart-area"></i> <span data-i18n="progression.title">Progression Tracking</span></h2>
-                    <p data-i18n="progression.subtitle">Track learning progression and concept mastery over time</p>
+                    <h2><i class="fas fa-chart-area"></i> Learning Progression</h2>
+                    <p>Concept mastery · learning velocity · subject-wise analysis (PACER benchmark subjects)</p>
                 </div>
 
-                <div class="progression-container">
-                    <!-- Overview Cards -->
-                    <div class="metric-cards">
-                        <div class="metric-card glass-card">
-                            <div class="metric-icon"><i class="fas fa-graduation-cap"></i></div>
-                            <div class="metric-info">
-                                <h3 id="currentLevel">Beginner</h3>
-                                <p>Current Level</p>
-                            </div>
+                <div style="display:flex;flex-direction:column;gap:20px">
+
+                    <!-- ═══ KPI CARDS ═══ -->
+                    <div class="glass-card" style="padding:20px 24px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid hsl(var(--border))">
+                            <i class="fas fa-graduation-cap" style="color:#3b82f6;font-size:1.1rem"></i>
+                            <h3 style="margin:0;font-size:1rem;font-weight:700">Learning Overview</h3>
+                            <span style="font-size:0.75rem;color:hsl(var(--muted-foreground));background:hsl(var(--muted));padding:2px 8px;border-radius:20px">Math · Science · Social Science · Grades 6–12</span>
                         </div>
-                        <div class="metric-card glass-card">
-                            <div class="metric-icon"><i class="fas fa-trophy"></i></div>
-                            <div class="metric-info">
-                                <h3 id="masteredConcepts">0</h3>
-                                <p>Concepts Mastered</p>
+                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+                            <div style="background:linear-gradient(135deg,hsl(220 100% 97%),hsl(220 100% 94%));border:1px solid #bfdbfe;border-radius:10px;padding:16px;text-align:center">
+                                <div style="font-size:1.1rem;margin-bottom:6px">🎓</div>
+                                <div id="currentLevel" style="font-size:1.5rem;font-weight:800;color:#2563eb;line-height:1">Intermediate</div>
+                                <div style="font-size:0.75rem;color:#6b7280;margin-top:4px">Current Level</div>
                             </div>
-                        </div>
-                        <div class="metric-card glass-card">
-                            <div class="metric-icon"><i class="fas fa-chart-line"></i></div>
-                            <div class="metric-info">
-                                <h3 id="learningVelocity">0.0</h3>
-                                <p>Learning Velocity</p>
+                            <div style="background:linear-gradient(135deg,hsl(38 92% 97%),hsl(38 92% 94%));border:1px solid #fde68a;border-radius:10px;padding:16px;text-align:center">
+                                <div style="font-size:1.1rem;margin-bottom:6px">🏆</div>
+                                <div id="masteredConcepts" style="font-size:1.5rem;font-weight:800;color:#d97706;line-height:1">0</div>
+                                <div style="font-size:0.75rem;color:#6b7280;margin-top:4px">Concepts Mastered</div>
                             </div>
-                        </div>
-                        <div class="metric-card glass-card">
-                            <div class="metric-icon"><i class="fas fa-brain"></i></div>
-                            <div class="metric-info">
-                                <h3 id="retentionRate">0%</h3>
-                                <p>Retention Rate</p>
+                            <div style="background:linear-gradient(135deg,hsl(142 76% 97%),hsl(142 76% 94%));border:1px solid #bbf7d0;border-radius:10px;padding:16px;text-align:center">
+                                <div style="font-size:1.1rem;margin-bottom:6px">⚡</div>
+                                <div id="learningVelocity" style="font-size:1.5rem;font-weight:800;color:#059669;line-height:1">0.0</div>
+                                <div style="font-size:0.75rem;color:#6b7280;margin-top:4px">Learning Velocity</div>
+                            </div>
+                            <div style="background:linear-gradient(135deg,hsl(270 60% 97%),hsl(270 60% 94%));border:1px solid #ddd6fe;border-radius:10px;padding:16px;text-align:center">
+                                <div style="font-size:1.1rem;margin-bottom:6px">🧠</div>
+                                <div id="retentionRate" style="font-size:1.5rem;font-weight:800;color:#7c3aed;line-height:1">0%</div>
+                                <div style="font-size:0.75rem;color:#6b7280;margin-top:4px">Retention Rate</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Controls -->
-                    <div class="progression-controls glass-card">
-                        <h3>Progression Analysis</h3>
-                        <div class="control-group">
-                            <button class="btn-primary" id="viewProgressionBtn">
-                                <i class="fas fa-chart-area"></i> View Detailed Progression
-                            </button>
-                            <button class="btn-secondary" id="exportProgressionBtn">
-                                <i class="fas fa-download"></i> Export Data
-                            </button>
-                            <button class="btn-secondary" id="refreshProgressionBtn">
-                                <i class="fas fa-sync"></i> Refresh
-                            </button>
+                    <!-- ═══ CHARTS ROW 1: Mastery over time + Velocity ═══ -->
+                    <div class="glass-card" style="padding:20px 24px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid hsl(var(--border))">
+                            <i class="fas fa-chart-line" style="color:#3b82f6;font-size:1rem"></i>
+                            <h3 style="margin:0;font-size:1rem;font-weight:700">Progress Visualizations</h3>
                         </div>
-                    </div>
-
-                    <!-- Visualizations -->
-                    <div class="progression-charts glass-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3 style="margin: 0;"><i class="fas fa-chart-line"></i> Progress Visualizations</h3>
-                            <button class="btn-secondary" id="exportProgressionChartsBtn" style="margin: 0;">
-                                <i class="fas fa-download"></i> Export Charts
-                            </button>
-                        </div>
-                        <div class="charts-grid">
-                            <div class="chart-container">
-                                <canvas id="masteryOverTimeChart"></canvas>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <div style="font-size:0.78rem;font-weight:600;color:hsl(var(--muted-foreground));text-transform:uppercase;letter-spacing:.04em">Mastery Over Time</div>
+                                <div style="position:relative;height:260px;background:hsl(var(--muted)/30%);border-radius:8px;padding:4px">
+                                    <canvas id="masteryOverTimeChart"></canvas>
+                                </div>
                             </div>
-                            <div class="chart-container">
-                                <canvas id="learningVelocityChart"></canvas>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="masteryDistributionChart"></canvas>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="successBySubjectChart"></canvas>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <div style="font-size:0.78rem;font-weight:600;color:hsl(var(--muted-foreground));text-transform:uppercase;letter-spacing:.04em">Learning Velocity (Queries/Week)</div>
+                                <div style="position:relative;height:260px;background:hsl(var(--muted)/30%);border-radius:8px;padding:4px">
+                                    <canvas id="learningVelocityChart"></canvas>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Mastery Overview -->
-                    <div class="mastery-overview glass-card">
-                        <h3>Concept Mastery Status</h3>
-                        <div id="masteryOverviewContainer">
-                            <div class="empty-state">
-                                <i class="fas fa-graduation-cap"></i>
-                                <p>Start learning to track your progression</p>
+                        <!-- Charts Row 2: Distribution + By subject -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <div style="font-size:0.78rem;font-weight:600;color:hsl(var(--muted-foreground));text-transform:uppercase;letter-spacing:.04em">Mastery Distribution</div>
+                                <div style="position:relative;height:240px;background:hsl(var(--muted)/30%);border-radius:8px;padding:4px">
+                                    <canvas id="masteryDistributionChart"></canvas>
+                                </div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <div style="font-size:0.78rem;font-weight:600;color:hsl(var(--muted-foreground));text-transform:uppercase;letter-spacing:.04em">Mastery by Subject</div>
+                                <div style="position:relative;height:240px;background:hsl(var(--muted)/30%);border-radius:8px;padding:4px">
+                                    <canvas id="successBySubjectChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Learning Path -->
-                    <div class="learning-path glass-card">
-                        <h3>Recent Learning Path</h3>
-                        <div id="learningPathContainer">
-                            <div class="empty-state">
-                                <i class="fas fa-route"></i>
-                                <p>Your learning journey will appear here</p>
+                    <!-- ═══ MASTERY STATUS + RECOMMENDATIONS (2-col) ═══ -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+                        <div class="glass-card" style="padding:20px 24px">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid hsl(var(--border))">
+                                <i class="fas fa-tasks" style="color:#10b981"></i>
+                                <h3 style="margin:0;font-size:0.95rem;font-weight:700">Concept Mastery Status</h3>
+                            </div>
+                            <div id="masteryOverviewContainer">
+                                <div class="empty-state"><i class="fas fa-graduation-cap"></i><p>Loading…</p></div>
+                            </div>
+                        </div>
+                        <div class="glass-card" style="padding:20px 24px">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid hsl(var(--border))">
+                                <i class="fas fa-lightbulb" style="color:#f59e0b"></i>
+                                <h3 style="margin:0;font-size:0.95rem;font-weight:700">Recommendations</h3>
+                            </div>
+                            <div id="progressionRecommendationsContainer">
+                                <div class="empty-state"><i class="fas fa-lightbulb"></i><p>Loading…</p></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Recommendations -->
-                    <div class="recommendations-panel glass-card">
-                        <h3>Personalized Recommendations</h3>
-                        <div id="progressionRecommendationsContainer">
-                            <div class="empty-state">
-                                <i class="fas fa-lightbulb"></i>
-                                <p>Recommendations will be generated based on your progress</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+
+                <!-- Hidden legacy IDs — keep script.js button handlers from erroring -->
+                <div id="viewProgressionBtn"           style="display:none"></div>
+                <div id="exportProgressionBtn"         style="display:none"></div>
+                <div id="refreshProgressionBtn"        style="display:none"></div>
+                <div id="exportProgressionChartsBtn"   style="display:none"></div>
+                <div id="learningPathContainer"        style="display:none"></div>
             </section>
 
             <!-- Curriculum Gaps Section -->
@@ -3010,6 +2984,7 @@
     </script>
 
     <!-- Configuration (must load first) -->
+    <script src="sidebar-loader.js"></script>
     <script src="config.js"></script>
 
     <!-- PhD Research: Reproducibility Foundation (load early) -->

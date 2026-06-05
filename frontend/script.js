@@ -77,18 +77,19 @@ class EduLLMPlatform {
             this.backendAvailable = connected;
             const settingsStatusEl  = document.getElementById('backendStatus');
             const dashboardStatusEl = document.getElementById('dashboardBackendStatus');
+            const backendDotEl      = document.getElementById('backendDot');
             const welcomeEl = document.getElementById('chatWelcomeMessage');
             if (connected) {
                 console.log('✅ Backend API connected');
                 if (settingsStatusEl)  settingsStatusEl.textContent  = '🟢 Connected';
-                if (dashboardStatusEl) dashboardStatusEl.textContent = '🟢 Connected — NCERT RAG active';
-                if (dashboardStatusEl) dashboardStatusEl.style.color = 'hsl(142 76% 36%)';
+                if (dashboardStatusEl) { dashboardStatusEl.textContent = 'Connected — NCERT RAG active'; dashboardStatusEl.style.color = 'hsl(142 76% 36%)'; }
+                if (backendDotEl) { backendDotEl.style.background = '#10b981'; backendDotEl.style.boxShadow = '0 0 0 2px rgba(16,185,129,0.25)'; }
                 if (welcomeEl) welcomeEl.textContent = 'Welcome to EduLLM! I\'m powered by NCERT RAG — 8,600+ indexed Q&A pairs across Mathematics, Science and Social Science. Ask me anything about the curriculum!';
             } else {
                 console.warn('⚠️ Backend not available — using local mode');
                 if (settingsStatusEl)  settingsStatusEl.textContent  = '🔴 Not connected';
-                if (dashboardStatusEl) dashboardStatusEl.textContent = '🔴 Offline — local mode only';
-                if (dashboardStatusEl) dashboardStatusEl.style.color = 'hsl(0 72% 51%)';
+                if (dashboardStatusEl) { dashboardStatusEl.textContent = 'Offline — local mode only'; dashboardStatusEl.style.color = 'hsl(0 72% 51%)'; }
+                if (backendDotEl) { backendDotEl.style.background = '#ef4444'; backendDotEl.style.boxShadow = '0 0 0 2px rgba(239,68,68,0.25)'; }
                 if (welcomeEl) welcomeEl.textContent = 'Welcome to EduLLM! Backend is offline — running in local mode. Go to Settings to configure backend API key.';
             }
         } catch (e) {
@@ -196,6 +197,16 @@ class EduLLMPlatform {
 
         // Initialize NCERT data processor
         await this.initializeNCERTData();
+
+        // ── Hash-based deep-linking from database-management.html and other pages ──
+        // e.g. index.html#experiments → switch to experiments section on load
+        const hash = window.location.hash.replace('#', '').trim();
+        if (hash && document.getElementById(hash)) {
+            // Use direct method (flowManager may not be ready yet)
+            this.switchSectionDirect(hash);
+            // Clear the hash so back-button behaviour is clean
+            history.replaceState(null, '', window.location.pathname);
+        }
     }
 
     async initializeNCERTData() {
@@ -245,7 +256,22 @@ class EduLLMPlatform {
             });
         }
 
-        // Navigation events - handle nav links
+        // Navigation events — delegated to <nav> so it works even when sidebar-loader.js
+        // injects buttons after bindEvents() runs
+        const sidebarNav = document.querySelector('nav.sidebar-nav');
+        if (sidebarNav) {
+            sidebarNav.addEventListener('click', (e) => {
+                const target = e.target.closest('.nav-link[data-section]');
+                if (target) {
+                    this.switchSection(target.dataset.section);
+                    if (window.innerWidth <= 768) {
+                        document.querySelector('.app-container')?.classList.remove('sidebar-open');
+                    }
+                }
+            });
+        }
+
+        // Navigation events - handle nav links (kept for any statically-added buttons)
         document.querySelectorAll('.nav-link[data-section]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const target = e.target.closest('.nav-link');
@@ -413,7 +439,10 @@ class EduLLMPlatform {
     }
 
     switchSectionDirect(sectionName) {
-        // Update navigation - handle nav links
+        // Track for sidebar-loader.js (may inject buttons after this call)
+        window._currentSidebarSection = sectionName;
+
+        // Update navigation active state (works on both statically and dynamically injected buttons)
         document.querySelectorAll('.nav-link').forEach(btn => {
             btn.classList.remove('active');
         });
@@ -5516,6 +5545,20 @@ function populateRunningTests() {
 }
 
 // Initialize lists when switching to these sections
+document.addEventListener('DOMContentLoaded', () => {
+    // ── Experiment guide: restore open/closed state ──
+    const guideBody    = document.getElementById('expGuideBody');
+    const guideChevron = document.getElementById('expGuideChevron');
+    if (guideBody && guideChevron) {
+        // Default: open. Only collapse if user explicitly closed it before.
+        const saved = localStorage.getItem('expGuideOpen');
+        if (saved === 'false') {
+            guideBody.style.display = 'none';
+            guideChevron.style.transform = 'rotate(-90deg)';
+        }
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     // Listen for section changes
     const observer = new MutationObserver((mutations) => {

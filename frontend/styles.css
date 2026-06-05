@@ -5283,3 +5283,173 @@ textarea.code-input {
     }
 }
 
+
+/* ══════════════════════════════════════════════════════════════
+   Experiments — How to Run Guide
+══════════════════════════════════════════════════════════════ */
+
+.exp-guide-wrap {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.exp-guide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+}
+.exp-guide-header:hover { background: hsl(var(--muted) / 0.5); }
+
+.exp-guide-body {
+    border-top: 1px solid hsl(var(--border));
+    padding: 1.25rem;
+}
+
+/* 2-col step grid */
+.exp-guide-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.exp-guide-step {
+    display: flex;
+    gap: 0.875rem;
+    padding: 1rem;
+    background: hsl(var(--muted) / 0.4);
+    border-radius: 10px;
+    border: 1px solid hsl(var(--border));
+}
+
+.exp-step-num {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.exp-step-content h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0 0 0.4rem;
+    color: hsl(var(--foreground));
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.exp-step-content h4 i { color: #3b82f6; font-size: 0.8rem; }
+
+.exp-step-content p {
+    font-size: 0.8rem;
+    color: hsl(var(--muted-foreground));
+    margin: 0 0 0.5rem;
+    line-height: 1.5;
+}
+
+.exp-code {
+    display: block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    color: #10b981;
+    word-break: break-all;
+    margin: 0.4rem 0;
+}
+
+.exp-guide-tip {
+    font-size: 0.75rem;
+    color: #d97706;
+    background: rgba(245,158,11,0.08);
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+    margin-top: 0.4rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+}
+.exp-guide-tip i { margin-top: 2px; flex-shrink: 0; }
+
+.exp-metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.3rem;
+    margin-top: 0.4rem;
+}
+.exp-metrics-grid span {
+    font-size: 0.75rem;
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    color: hsl(var(--muted-foreground));
+}
+.exp-metrics-grid span strong { color: hsl(var(--foreground)); }
+
+/* Reference table */
+.exp-guide-ref {
+    border-top: 1px solid hsl(var(--border));
+    padding-top: 1rem;
+}
+.exp-guide-ref h5 {
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: hsl(var(--muted-foreground));
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.exp-ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+}
+.exp-ref-table th {
+    background: hsl(var(--muted));
+    padding: 0.4rem 0.75rem;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: hsl(var(--muted-foreground));
+    border-bottom: 1px solid hsl(var(--border));
+}
+.exp-ref-table td {
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+}
+.exp-ref-table tr:last-child td { border-bottom: none; }
+.exp-ref-table tr:hover td { background: hsl(var(--muted) / 0.4); }
+.exp-ref-highlight td {
+    background: rgba(16,185,129,0.06);
+    font-weight: 500;
+}
+.exp-ref-highlight:hover td { background: rgba(16,185,129,0.1) !important; }
+
+@media (max-width: 768px) {
+    .exp-guide-grid { grid-template-columns: 1fr; }
+    .exp-ref-table { font-size: 0.7rem; }
+    .exp-ref-table th, .exp-ref-table td { padding: 0.35rem 0.4rem; }
+}

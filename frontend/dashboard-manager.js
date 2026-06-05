@@ -15,11 +15,14 @@ class DashboardManager {
         };
 
         this.activities = [];
+        // Benchmark query share: 300 Math + 150 each for the other 4 subjects = 900 total
+        // Expressed as % of 900 queries → real PACER evaluation distribution
         this.curriculumCoverage = {
-            mathematics: 85,
-            physics: 72,
-            chemistry: 68,
-            biology: 91
+            mathematics:   33,   // 300 / 900
+            physics:       17,   // 150 / 900
+            chemistry:     17,   // 150 / 900
+            biology:       17,   // 150 / 900
+            socialScience: 17    // 150 / 900
         };
 
         this.initialized = false;
@@ -213,20 +216,17 @@ class DashboardManager {
         this.charts.subject = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Mathematics', 'Physics', 'Chemistry', 'Biology'],
+                labels: ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'Social Science'],
                 datasets: [{
-                    data: [
-                        this.curriculumCoverage.mathematics,
-                        this.curriculumCoverage.physics,
-                        this.curriculumCoverage.chemistry,
-                        this.curriculumCoverage.biology
-                    ],
+                    data: [300, 150, 150, 150, 150],
                     backgroundColor: [
                         'rgb(59, 130, 246)',  // Blue
                         'rgb(139, 92, 246)',  // Purple
                         'rgb(236, 72, 153)',  // Pink
-                        'rgb(16, 185, 129)'   // Green
-                    ]
+                        'rgb(16, 185, 129)',  // Green
+                        'rgb(245, 158, 11)'   // Amber
+                    ],
+                    borderWidth: 0
                 }]
             },
             options: {
@@ -234,13 +234,12 @@ class DashboardManager {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: true,
-                        position: 'right'
+                        display: false
                     },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return context.label + ': ' + context.parsed + '%';
+                                return context.label + ': ' + context.parsed + ' queries';
                             }
                         }
                     }
@@ -2111,28 +2110,34 @@ class DashboardManager {
         const container = document.getElementById('topQueriesList');
         if (!container) return;
 
-        // Sample top queries (in real app, would come from analytics)
+        // Representative queries from the 900-query PACER NCERT benchmark
+        // These are real benchmark query types; no session frequency data exists
         const topQueries = [
-            { query: 'What is the Pythagorean theorem?', count: 45 },
-            { query: 'Explain photosynthesis process', count: 38 },
-            { query: 'Newton\'s laws of motion', count: 32 },
-            { query: 'Quadratic formula derivation', count: 28 },
-            { query: 'What are acids and bases?', count: 24 }
+            { query: 'What is the Pythagorean theorem?',              subject: 'Mathematics' },
+            { query: 'Explain the process of photosynthesis.',         subject: 'Biology' },
+            { query: 'State Newton\'s laws of motion.',                subject: 'Physics' },
+            { query: 'Derive the quadratic formula.',                  subject: 'Mathematics' },
+            { query: 'What are acids, bases and salts?',               subject: 'Chemistry' },
+            { query: 'Describe the structure of the Indian Parliament.',subject: 'Social Science' },
+            { query: 'What is Ohm\'s law? Give its applications.',     subject: 'Physics' },
+            { query: 'Explain the water cycle.',                       subject: 'Geography' },
         ];
 
-        // Update trending badge with total count
-        const trendingBadge = document.getElementById('topQueriesTrending');
-        if (trendingBadge) {
-            const totalCount = topQueries.reduce((sum, q) => sum + q.count, 0);
-            trendingBadge.innerHTML = `<i class="fas fa-fire"></i> ${totalCount} queries`;
-        }
+        const subjectColor = {
+            'Mathematics':    '#3b82f6',
+            'Biology':        '#10b981',
+            'Physics':        '#8b5cf6',
+            'Chemistry':      '#ec4899',
+            'Social Science': '#f59e0b',
+            'Geography':      '#f59e0b',
+        };
 
         container.innerHTML = topQueries.map((item, index) => `
             <div class="top-query-item">
                 <span class="query-rank">#${index + 1}</span>
                 <div class="query-content">
                     <div class="query-text">${item.query}</div>
-                    <div class="query-count">${item.count} times</div>
+                    <div class="query-count" style="color:${subjectColor[item.subject] || '#94a3b8'}">${item.subject}</div>
                 </div>
             </div>
         `).join('');
@@ -2143,12 +2148,12 @@ class DashboardManager {
      */
     updateSystemStats() {
         const updates = [
-            { id: 'dbObjects', value: '17 stores' },
-            { id: 'totalDocs', value: this.metrics.documentsIndexed.toLocaleString() },
-            { id: 'totalChunks', value: '16,369' },
-            { id: 'totalEmbeddings', value: '16,369' },
-            { id: 'graphConcepts', value: '342' },
-            { id: 'activeExperiments', value: '3' }
+            { id: 'dbObjects',          value: '17 stores' },
+            { id: 'totalDocs',          value: this.metrics.documentsIndexed.toLocaleString() },
+            { id: 'totalChunks',        value: '16,369' },
+            { id: 'totalEmbeddings',    value: '16,369' },
+            { id: 'graphConcepts',      value: '50'  },   // actual PACER KG seeded nodes
+            { id: 'activeExperiments',  value: '16'  },   // actual conditions evaluated
         ];
 
         updates.forEach(({ id, value }) => {
@@ -2215,32 +2220,14 @@ class DashboardManager {
         const statusEl = document.getElementById('systemHealthStatus');
         if (!statusEl) return;
 
-        // Calculate health based on metrics
-        const health = {
-            uptime: 99.9,
-            errors: 0,
-            performance: this.metrics.avgResponseTime < 2.0 ? 'Good' : 'Fair'
-        };
-
-        // Update status badge
-        const badge = statusEl.querySelector('.status-badge');
-        if (badge) {
-            if (health.errors === 0 && health.uptime > 99) {
-                badge.className = 'status-badge status-excellent';
-                badge.innerHTML = '<i class="fas fa-check-circle"></i> Excellent';
-            } else if (health.errors < 5) {
-                badge.className = 'status-badge status-good';
-                badge.innerHTML = '<i class="fas fa-check"></i> Good';
-            } else {
-                badge.className = 'status-badge status-warning';
-                badge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Warning';
-            }
-        }
-
-        // Update details
-        document.getElementById('healthUptime').textContent = `Uptime: ${health.uptime}%`;
-        document.getElementById('healthErrors').textContent = `Errors: ${health.errors}`;
-        document.getElementById('healthPerformance').textContent = `Performance: ${health.performance}`;
+        // Status badge — reflects backend connectivity (set by script.js on init)
+        // Details show real PACER corpus facts, not fake operational metrics
+        const uptimeEl = document.getElementById('healthUptime');
+        const errorsEl = document.getElementById('healthErrors');
+        const perfEl   = document.getElementById('healthPerformance');
+        if (uptimeEl) uptimeEl.innerHTML = '<i class="fas fa-database"></i> Corpus: 8,563 docs';
+        if (errorsEl) errorsEl.innerHTML = '<i class="fas fa-layer-group"></i> Chunks: 16,369';
+        if (perfEl)   perfEl.innerHTML   = '<i class="fas fa-bolt"></i> PACER latency: 87 ms';
     }
 
     /**
@@ -2488,36 +2475,34 @@ class DashboardManager {
             const coverageList = document.getElementById('coverageList');
             if (!coverageList) return;
 
+            // Subjects reflect the real PACER benchmark query distribution
+            // (300 Math + 150 × 4 others = 900 total benchmark queries)
             const subjects = [
-                { name: 'Mathematics', key: 'mathematics', color: '#3b82f6' },
-                { name: 'Physics', key: 'physics', color: '#8b5cf6' },
-                { name: 'Chemistry', key: 'chemistry', color: '#ec4899' },
-                { name: 'Biology', key: 'biology', color: '#10b981' }
+                { name: 'Mathematics',   key: 'mathematics',   color: '#3b82f6', queries: 300 },
+                { name: 'Physics',       key: 'physics',       color: '#8b5cf6', queries: 150 },
+                { name: 'Chemistry',     key: 'chemistry',     color: '#ec4899', queries: 150 },
+                { name: 'Biology',       key: 'biology',       color: '#10b981', queries: 150 },
+                { name: 'Social Science',key: 'socialScience', color: '#f59e0b', queries: 150 }
             ];
 
             coverageList.innerHTML = subjects.map(subject => {
-                const percentage = this.curriculumCoverage[subject.key];
+                const percentage = this.curriculumCoverage[subject.key] || 0;
                 return `
                     <div class="coverage-item">
                         <span>${subject.name}</span>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${percentage}%; background: ${subject.color};"></div>
                         </div>
-                        <span>${percentage}%</span>
+                        <span style="min-width:70px;text-align:right">${subject.queries} queries (${percentage}%)</span>
                     </div>
                 `;
             }).join('');
 
-            // Update overall coverage
-            const overall = Math.round(
-                (this.curriculumCoverage.mathematics +
-                 this.curriculumCoverage.physics +
-                 this.curriculumCoverage.chemistry +
-                 this.curriculumCoverage.biology) / 4
-            );
+            // Overall = total benchmark queries covered = 900 / 900 = 100%
+            // Show as fraction instead of misleading average
             const overallEl = document.getElementById('overallCoverage');
             if (overallEl) {
-                overallEl.textContent = `${overall}%`;
+                overallEl.textContent = '900 queries';
             }
 
         } catch (error) {
@@ -2637,10 +2622,11 @@ class DashboardManager {
         this.activities = [];
 
         this.curriculumCoverage = {
-            mathematics: 0,
-            physics: 0,
-            chemistry: 0,
-            biology: 0
+            mathematics:   33,
+            physics:       17,
+            chemistry:     17,
+            biology:       17,
+            socialScience: 17
         };
 
         this.saveToStorage();
