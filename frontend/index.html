@@ -1258,41 +1258,45 @@
                 <div class="experiments-container">
                     <!-- Experiment Controls -->
                     <div class="experiment-controls glass-card">
-                        <div class="exp-ctrl-header">
-                            <span class="exp-ctrl-title"><i class="fas fa-flask"></i> Experiments</span>
-                            <button class="btn-primary exp-new-btn" id="createExperimentBtn">
-                                <i class="fas fa-plus"></i> New
-                            </button>
-                        </div>
 
-                        <!-- Start / End Run -->
-                        <div class="exp-run-row">
-                            <button class="exp-run-btn run-start" id="startRunBtn" disabled>
-                                <i class="fas fa-play"></i> Start Run
-                            </button>
-                            <button class="exp-run-btn run-end" id="endRunBtn" disabled>
-                                <i class="fas fa-stop"></i> End Run
-                            </button>
-                        </div>
+                        <!-- Section label -->
+                        <span class="exp-ctrl-title">
+                            <i class="fas fa-flask"></i> Experiments
+                        </span>
 
-                        <!-- Tool grid: 2×2 -->
-                        <div class="exp-tool-grid">
-                            <button class="exp-tool-btn" id="compareRunsBtn" title="Compare Runs">
-                                <i class="fas fa-exchange-alt"></i><span>Compare</span>
-                            </button>
-                            <button class="exp-tool-btn" id="exportExperimentsBtn" title="Export Data">
-                                <i class="fas fa-download"></i><span>Export</span>
-                            </button>
-                            <button class="exp-tool-btn" id="importExperimentsBtn" title="Import Data">
-                                <i class="fas fa-upload"></i><span>Import</span>
-                            </button>
-                            <button class="exp-tool-btn" id="indexNCERTBtn" title="Index NCERT Data">
-                                <i class="fas fa-database"></i><span>Index</span>
-                            </button>
-                        </div>
+                        <!-- Primary action -->
+                        <button class="btn-primary exp-new-btn" id="createExperimentBtn">
+                            <i class="fas fa-plus"></i> New Experiment
+                        </button>
+
+                        <div class="exp-divider"></div>
+
+                        <!-- Run state -->
+                        <button class="exp-run-btn run-start" id="startRunBtn" disabled>
+                            <i class="fas fa-play"></i> Start Run
+                        </button>
+                        <button class="exp-run-btn run-end" id="endRunBtn" disabled>
+                            <i class="fas fa-stop"></i> End Run
+                        </button>
+
+                        <div class="exp-divider"></div>
+
+                        <!-- Tools -->
+                        <button class="exp-tool-btn" id="compareRunsBtn">
+                            <i class="fas fa-exchange-alt"></i> Compare
+                        </button>
+                        <button class="exp-tool-btn" id="exportExperimentsBtn">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="exp-tool-btn" id="importExperimentsBtn">
+                            <i class="fas fa-upload"></i> Import
+                        </button>
+                        <button class="exp-tool-btn" id="indexNCERTBtn">
+                            <i class="fas fa-database"></i> Index NCERT
+                        </button>
                         <input type="file" id="importFileInput" accept=".json" style="display: none;">
 
-                        <!-- Stats chips row -->
+                        <!-- Stats — auto-pushed to far right -->
                         <div class="exp-stats-row">
                             <span class="exp-stat-chip">
                                 <i class="fas fa-vial"></i>
@@ -1311,6 +1315,7 @@
                             <span class="exp-stat-chip">
                                 <i class="fas fa-cube"></i>
                                 <strong id="vectorStoreCount">0</strong>
+                                <small>vec</small>
                             </span>
                         </div>
                     </div>

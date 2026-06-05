@@ -1623,61 +1623,65 @@ a.nav-link.active {
 }
 
 /* Experiments Container */
+/* ── Experiments: full-width single-column layout ───────── */
 .experiments-container {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 1.5rem;
-}
-
-/* ── Compact Experiment Controls ───────────────────────── */
-.experiment-controls {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    padding: 0.85rem !important;
+    gap: 1rem;
 }
 
-/* Header row: title + New button */
-.exp-ctrl-header {
+/* ── Experiment toolbar — full-width horizontal bar ──────── */
+.experiment-controls {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 0.5rem;
-    margin-bottom: 0.1rem;
+    padding: 0.65rem 1rem !important;
+    flex-wrap: wrap;
 }
+
+/* Section label */
 .exp-ctrl-title {
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    color: hsl(var(--foreground));
+    color: hsl(var(--muted-foreground));
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.07em;
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.3rem;
+    white-space: nowrap;
+    padding-right: 0.5rem;
+    border-right: 1px solid hsl(var(--border));
+    margin-right: 0.25rem;
 }
-.exp-ctrl-title i { color: hsl(var(--primary)); }
+.exp-ctrl-title i { color: hsl(var(--primary)); font-size: 0.8rem; }
 
+/* Primary "New Experiment" button */
 .exp-new-btn {
-    padding: 0.3rem 0.75rem !important;
-    font-size: 0.78rem !important;
+    padding: 0.38rem 0.9rem !important;
+    font-size: 0.8rem !important;
     border-radius: 6px !important;
     height: auto !important;
-    line-height: 1.4 !important;
+    line-height: 1.5 !important;
+    white-space: nowrap;
 }
 
-/* Start / End run — side by side */
-.exp-run-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
+/* Divider between button groups */
+.exp-divider {
+    width: 1px;
+    height: 22px;
+    background: hsl(var(--border));
+    margin: 0 0.15rem;
+    flex-shrink: 0;
 }
+
+/* Start / End run buttons */
 .exp-run-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 0.35rem;
-    padding: 0.38rem 0.5rem;
-    font-size: 0.78rem;
+    padding: 0.38rem 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     border-radius: 6px;
     border: 1px solid hsl(var(--border));
@@ -1688,75 +1692,66 @@ a.nav-link.active {
     white-space: nowrap;
 }
 .exp-run-btn:hover:not(:disabled) { background: hsl(var(--muted)); }
-.exp-run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.exp-run-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 .exp-run-btn.run-start i { color: #22c55e; }
 .exp-run-btn.run-end   i { color: #ef4444; }
 
-/* 2×2 tool grid */
-.exp-tool-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
-}
+/* Secondary tool buttons (Compare / Export / Import / Index) */
 .exp-tool-btn {
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    padding: 0.45rem 0.25rem;
-    font-size: 0.7rem;
+    gap: 0.35rem;
+    padding: 0.38rem 0.8rem;
+    font-size: 0.79rem;
     font-weight: 500;
     border-radius: 6px;
     border: 1px solid hsl(var(--border));
-    background: hsl(var(--muted) / 0.4);
+    background: hsl(var(--muted) / 0.35);
     color: hsl(var(--muted-foreground));
     cursor: pointer;
     transition: background 0.15s, color 0.15s, border-color 0.15s;
-    line-height: 1;
+    white-space: nowrap;
 }
-.exp-tool-btn i {
-    font-size: 0.85rem;
-    color: hsl(var(--primary) / 0.8);
-}
-.exp-tool-btn span { font-size: 0.68rem; }
+.exp-tool-btn i { font-size: 0.8rem; color: hsl(var(--primary) / 0.75); }
 .exp-tool-btn:hover {
     background: hsl(var(--primary) / 0.08);
-    border-color: hsl(var(--primary) / 0.4);
+    border-color: hsl(var(--primary) / 0.35);
     color: hsl(var(--foreground));
 }
 .exp-tool-btn:hover i { color: hsl(var(--primary)); }
 
-/* Stats chips — single inline row */
+/* Stats chips — pushed to the right end */
 .exp-stats-row {
     display: flex;
+    align-items: center;
     gap: 0.35rem;
-    flex-wrap: wrap;
-    padding-top: 0.35rem;
-    border-top: 1px solid hsl(var(--border) / 0.6);
+    margin-left: auto;
+    flex-shrink: 0;
 }
 .exp-stat-chip {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.22rem;
     background: hsl(var(--muted) / 0.5);
     border: 1px solid hsl(var(--border));
     border-radius: 20px;
     padding: 0.18rem 0.55rem;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     color: hsl(var(--muted-foreground));
-    flex: 1;
-    min-width: 0;
-    justify-content: center;
+    white-space: nowrap;
 }
-.exp-stat-chip i { font-size: 0.6rem; opacity: 0.7; }
+.exp-stat-chip i { font-size: 0.58rem; opacity: 0.65; }
 .exp-stat-chip strong {
     font-weight: 700;
     color: hsl(var(--foreground));
-    font-size: 0.75rem;
+    font-size: 0.78rem;
 }
-.exp-stat-chip small { font-size: 0.62rem; opacity: 0.75; }
-.exp-active-chip i { color: #22c55e; font-size: 0.5rem; }
+.exp-stat-chip small { font-size: 0.64rem; opacity: 0.7; }
+.exp-active-chip i { color: #22c55e; font-size: 0.48rem; }
+
+/* List / details — full width */
+.experiments-list  { /* no span needed in flex column */ }
+.experiment-details { }
 
 /* Legacy stat-row (keep for any other uses) */
 .experiment-stats {
@@ -1779,15 +1774,20 @@ a.nav-link.active {
     border-bottom: 1px solid hsl(var(--border));
 }
 .stat-row:last-child { border-bottom: none; }
-.stat-row span { color: hsl(var(--muted-foreground)); }
+.stat-row span  { color: hsl(var(--muted-foreground)); }
 .stat-row strong { color: hsl(var(--foreground)); }
 
+@media (max-width: 768px) {
+    .experiment-controls { gap: 0.35rem; }
+    .exp-stats-row { margin-left: 0; width: 100%; }
+}
+
 .experiments-list {
-    grid-column: span 2;
+    /* full width in flex-column container */
 }
 
 .experiment-details {
-    grid-column: span 2;
+    /* full width in flex-column container */
 }
 
 .experiment-item {
