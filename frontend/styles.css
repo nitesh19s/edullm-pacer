@@ -1636,30 +1636,28 @@ a.nav-link.active {
     align-items: center;
     gap: 0.4rem;
     padding: 0.75rem 1.25rem !important;
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    flex-wrap: wrap;
+    overflow: visible;
     background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--primary) / 0.02) 100%);
     border-bottom: 1px solid hsl(var(--border) / 0.6);
 }
-.experiment-controls::-webkit-scrollbar { height: 3px; }
-.experiment-controls::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 2px; }
 
-/* Section label — icon badge style */
+/* Section label — compact icon-only badge */
 .exp-ctrl-title {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.35rem;
     font-size: 0.7rem;
     font-weight: 800;
     color: hsl(var(--primary));
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     white-space: nowrap;
     background: hsl(var(--primary) / 0.08);
     border: 1px solid hsl(var(--primary) / 0.2);
     border-radius: 6px;
-    padding: 0.3rem 0.7rem;
-    margin-right: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    margin-right: 0.2rem;
     flex-shrink: 0;
 }
 .exp-ctrl-title i { font-size: 0.75rem; }
@@ -1756,54 +1754,52 @@ a.nav-link.active {
 .exp-tool-btn:hover i { color: hsl(var(--primary)); }
 .exp-tool-btn:active { transform: translateY(0); }
 
-/* Stats — pushed right, KPI badge style */
+/* Stats — right end, compact number badges */
 .exp-stats-row {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.35rem;
     margin-left: auto;
     flex-shrink: 0;
-    padding-left: 0.5rem;
+    padding-left: 0.6rem;
     border-left: 1px solid hsl(var(--border) / 0.7);
 }
 .exp-stat-chip {
     display: inline-flex;
-    align-items: baseline;
-    gap: 0.25rem;
-    background: hsl(var(--muted) / 0.6);
+    align-items: center;
+    gap: 0.3rem;
+    background: hsl(var(--muted) / 0.7);
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius);
-    padding: 0.3rem 0.7rem;
-    line-height: 1.4;
+    padding: 0.28rem 0.65rem;
     white-space: nowrap;
-    transition: background 0.15s;
+    transition: background 0.15s, border-color 0.15s;
+    cursor: default;
 }
 .exp-stat-chip i {
-    font-size: 0.65rem;
-    color: hsl(var(--primary) / 0.6);
-    align-self: center;
-    margin-right: 0.1rem;
+    font-size: 0.68rem;
+    color: hsl(var(--primary) / 0.65);
 }
 .exp-stat-chip strong {
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: hsl(var(--foreground));
     letter-spacing: -0.01em;
 }
-.exp-stat-chip small {
-    font-size: 0.72rem;
-    color: hsl(var(--muted-foreground));
-    font-weight: 400;
+/* label hidden — tooltip on title attr */
+.exp-stat-chip small { display: none; }
+.exp-stat-chip:hover {
+    background: hsl(var(--muted));
+    border-color: hsl(var(--primary) / 0.25);
 }
-.exp-stat-chip:hover { background: hsl(var(--muted)); }
 
 /* Active run chip */
 .exp-active-chip {
     background: hsl(142 60% 45% / 0.08);
     border-color: hsl(142 60% 45% / 0.28);
 }
-.exp-active-chip strong { color: hsl(142 60% 28%); }
-.exp-active-chip i { color: #16a34a; font-size: 0.5rem; align-self: center; }
+.exp-active-chip strong { color: hsl(142 60% 28%); font-size: 0.85rem; }
+.exp-active-chip i { color: #16a34a; font-size: 0.5rem; }
 
 /* List / details — full width */
 .experiments-list  { /* no span needed in flex column */ }
