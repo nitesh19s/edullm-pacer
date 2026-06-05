@@ -1,0 +1,4 @@
+metric,dimension,value
+pearson_H1_vs_Groq_Llama-3.3-70B,overall,0.228
+pearson_H1_vs_Groq_Llama-3.1-8B,overall,0.232
+pearson_H1_vs_Gemini_2.5_Flash,overall,0.129

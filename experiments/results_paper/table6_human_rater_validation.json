@@ -1,0 +1,66 @@
+{
+  "cohen_kappa_h1_h2": null,
+  "pearson_human_vs_llm": {
+    "H1": {
+      "Groq Llama-3.3-70B": {
+        "grade_match": {
+          "r": 0.118,
+          "p": 0.1495
+        },
+        "prereq_coverage": {
+          "r": 0.503,
+          "p": 0.0
+        },
+        "bloom_fit": {
+          "r": 0.169,
+          "p": 0.0402
+        },
+        "overall": {
+          "r": 0.228,
+          "p": 0.0
+        }
+      },
+      "Groq Llama-3.1-8B": {
+        "grade_match": {
+          "r": 0.125,
+          "p": 0.1261
+        },
+        "prereq_coverage": {
+          "r": 0.495,
+          "p": 0.0
+        },
+        "bloom_fit": {
+          "r": 0.175,
+          "p": 0.0324
+        },
+        "overall": {
+          "r": 0.232,
+          "p": 0.0
+        }
+      },
+      "Gemini 2.5 Flash": {
+        "grade_match": {
+          "r": 0.17,
+          "p": 0.0376
+        },
+        "prereq_coverage": {
+          "r": 0.41,
+          "p": 0.0
+        },
+        "bloom_fit": {
+          "r": 0.108,
+          "p": 0.1883
+        },
+        "overall": {
+          "r": 0.129,
+          "p": 0.0061
+        }
+      }
+    }
+  },
+  "suggested_weights": {
+    "grade_match": 0.15,
+    "prereq_coverage": 0.64,
+    "bloom_fit": 0.21
+  }
+}
