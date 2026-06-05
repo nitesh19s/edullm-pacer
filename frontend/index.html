@@ -1258,55 +1258,60 @@
                 <div class="experiments-container">
                     <!-- Experiment Controls -->
                     <div class="experiment-controls glass-card">
-                        <h3>Experiment Management</h3>
-
-                        <div class="control-group">
-                            <button class="btn-primary" id="createExperimentBtn">
-                                <i class="fas fa-plus"></i> New Experiment
+                        <div class="exp-ctrl-header">
+                            <span class="exp-ctrl-title"><i class="fas fa-flask"></i> Experiments</span>
+                            <button class="btn-primary exp-new-btn" id="createExperimentBtn">
+                                <i class="fas fa-plus"></i> New
                             </button>
-                            <button class="btn-secondary" id="startRunBtn" disabled>
+                        </div>
+
+                        <!-- Start / End Run -->
+                        <div class="exp-run-row">
+                            <button class="exp-run-btn run-start" id="startRunBtn" disabled>
                                 <i class="fas fa-play"></i> Start Run
                             </button>
-                            <button class="btn-secondary" id="endRunBtn" disabled>
+                            <button class="exp-run-btn run-end" id="endRunBtn" disabled>
                                 <i class="fas fa-stop"></i> End Run
                             </button>
                         </div>
 
-                        <div class="control-group">
-                            <button class="btn-secondary" id="compareRunsBtn">
-                                <i class="fas fa-exchange-alt"></i> Compare Runs
+                        <!-- Tool grid: 2×2 -->
+                        <div class="exp-tool-grid">
+                            <button class="exp-tool-btn" id="compareRunsBtn" title="Compare Runs">
+                                <i class="fas fa-exchange-alt"></i><span>Compare</span>
                             </button>
-                            <button class="btn-secondary" id="exportExperimentsBtn">
-                                <i class="fas fa-download"></i> Export Data
+                            <button class="exp-tool-btn" id="exportExperimentsBtn" title="Export Data">
+                                <i class="fas fa-download"></i><span>Export</span>
                             </button>
-                            <button class="btn-secondary" id="importExperimentsBtn">
-                                <i class="fas fa-upload"></i> Import Data
+                            <button class="exp-tool-btn" id="importExperimentsBtn" title="Import Data">
+                                <i class="fas fa-upload"></i><span>Import</span>
                             </button>
-                            <button class="btn-secondary" id="indexNCERTBtn">
-                                <i class="fas fa-database"></i> Index NCERT Data
+                            <button class="exp-tool-btn" id="indexNCERTBtn" title="Index NCERT Data">
+                                <i class="fas fa-database"></i><span>Index</span>
                             </button>
-                            <input type="file" id="importFileInput" accept=".json" style="display: none;">
                         </div>
+                        <input type="file" id="importFileInput" accept=".json" style="display: none;">
 
-                        <!-- Experiment Stats -->
-                        <div class="experiment-stats">
-                            <h4>Statistics</h4>
-                            <div class="stat-row">
-                                <span>Total Experiments:</span>
+                        <!-- Stats chips row -->
+                        <div class="exp-stats-row">
+                            <span class="exp-stat-chip">
+                                <i class="fas fa-vial"></i>
                                 <strong id="totalExperiments">0</strong>
-                            </div>
-                            <div class="stat-row">
-                                <span>Total Runs:</span>
+                                <small>exps</small>
+                            </span>
+                            <span class="exp-stat-chip">
+                                <i class="fas fa-redo"></i>
                                 <strong id="totalRuns">0</strong>
-                            </div>
-                            <div class="stat-row">
-                                <span>Active Run:</span>
-                                <strong id="activeRun">None</strong>
-                            </div>
-                            <div class="stat-row">
-                                <span>Vector Store:</span>
-                                <strong id="vectorStoreCount">0 vectors</strong>
-                            </div>
+                                <small>runs</small>
+                            </span>
+                            <span class="exp-stat-chip exp-active-chip">
+                                <i class="fas fa-circle"></i>
+                                <strong id="activeRun">—</strong>
+                            </span>
+                            <span class="exp-stat-chip">
+                                <i class="fas fa-cube"></i>
+                                <strong id="vectorStoreCount">0</strong>
+                            </span>
                         </div>
                     </div>
 
