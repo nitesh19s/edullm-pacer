@@ -158,22 +158,30 @@ class ChunkingManager {
                 content: `Chapter 6: Triangles
 
 Section 6.1: Introduction to Triangles
-Triangles are fundamental shapes in geometry. They have three sides, three angles, and three vertices. The sum of all angles in a triangle is always 180 degrees. Triangles can be classified based on their sides (equilateral, isosceles, scalene) or their angles (acute, right, obtuse).
+Triangles are one of the most fundamental geometric shapes, consisting of three sides, three angles, and three vertices. The sum of all interior angles of a triangle is always 180 degrees — a property that holds regardless of the size or shape of the triangle. Triangles are classified in two primary ways: by their sides and by their angles. Based on sides, a triangle is equilateral if all three sides are equal, isosceles if exactly two sides are equal, and scalene if all three sides are of different lengths. Based on angles, a triangle is acute if all angles are less than 90°, right-angled if one angle is exactly 90°, and obtuse if one angle is greater than 90°. Understanding these classifications is essential before studying more advanced properties such as congruence, similarity, and the Pythagorean theorem.
 
-Section 6.2: Similarity of Triangles
-Two triangles are said to be similar if their corresponding angles are equal and their corresponding sides are in proportion. This property is very useful in solving geometric problems. The symbol for similarity is ∼. If triangle ABC is similar to triangle DEF, we write: ABC ∼ DEF.
+Section 6.2: Criteria for Similarity of Triangles
+Two triangles are said to be similar if their corresponding angles are equal and their corresponding sides are proportional. The symbol used for similarity is ∼. If triangle ABC is similar to triangle DEF, we write ABC ∼ DEF. There are three main criteria to establish similarity without measuring all six elements. The Angle-Angle (AA) criterion states that if two angles of one triangle are respectively equal to two angles of another triangle, the triangles are similar. The Side-Angle-Side (SAS) criterion states that if one angle of a triangle is equal to one angle of another triangle and the sides including these angles are proportional, the triangles are similar. The Side-Side-Side (SSS) criterion states that if the corresponding sides of two triangles are in the same ratio, the triangles are similar. These criteria are used extensively in coordinate geometry, mensuration, and real-world applications such as shadow problems, map scaling, and indirect measurement.
+
+Example 6.1: In triangles PQR and XYZ, angle P = angle X = 50° and angle Q = angle Y = 70°. Are the triangles similar?
+Solution: Since two pairs of corresponding angles are equal (angle P = angle X and angle Q = angle Y), by the AA criterion, triangle PQR ∼ triangle XYZ. Therefore, their corresponding sides are proportional: PQ/XY = QR/YZ = PR/XZ.
 
 Section 6.3: Pythagoras Theorem
-In a right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides. This is one of the most important theorems in mathematics. If a triangle ABC is right-angled at B, then: AC² = AB² + BC².
+The Pythagoras theorem is one of the most celebrated results in all of mathematics. It states that in a right-angled triangle, the square of the length of the hypotenuse (the side opposite the right angle) is equal to the sum of the squares of the lengths of the other two sides. If triangle ABC is right-angled at B, then AC² = AB² + BC². Here, AC is the hypotenuse, and AB and BC are called the legs of the right triangle. This theorem is named after the ancient Greek mathematician Pythagoras, although evidence of the result was known in Babylonian, Egyptian, and Indian mathematics long before his time. The theorem can be proved using area arguments, similar triangles, or algebraic manipulation.
 
-Example 1: Find the hypotenuse if the other two sides are 3 cm and 4 cm.
-Solution: Using Pythagoras theorem: c² = 3² + 4² = 9 + 16 = 25. Therefore, c = 5 cm.
+Example 6.2: The two shorter sides of a right-angled triangle are 5 cm and 12 cm. Find the hypotenuse.
+Solution: Let the hypotenuse be h. By Pythagoras theorem: h² = 5² + 12² = 25 + 144 = 169. Therefore, h = 13 cm. The sides 5, 12, 13 form a Pythagorean triple, a set of three positive integers that satisfy the theorem exactly.
+
+Common Pythagorean Triples: (3, 4, 5), (5, 12, 13), (8, 15, 17), (7, 24, 25). These triples are useful in quickly identifying right triangles in examination problems. Multiples of these triples also satisfy the theorem: for example, (6, 8, 10) is a multiple of (3, 4, 5).
 
 Section 6.4: Converse of Pythagoras Theorem
-If in a triangle, the square of one side is equal to the sum of squares of the other two sides, then the triangle is right-angled. This helps us verify if a triangle is right-angled without measuring angles directly.
+The converse of the Pythagoras theorem states that if in a triangle the square of one side is equal to the sum of the squares of the other two sides, then the angle opposite the longest side is a right angle. This result allows us to verify whether a given triangle is right-angled using only the lengths of its sides, without measuring any angle directly. For example, if a triangle has sides 9 cm, 40 cm, and 41 cm, we check: 9² + 40² = 81 + 1600 = 1681 = 41². Since the equation holds, the triangle is right-angled at the vertex opposite the 41 cm side.
 
 Section 6.5: Applications of Pythagoras Theorem
-The Pythagoras theorem has numerous applications in real life, including construction, navigation, computer graphics, and physics. It helps in calculating distances, heights, and diagonal measurements.`,
+The Pythagoras theorem has wide-ranging applications in both academic and real-world contexts. In construction and architecture, it is used to ensure that walls are perpendicular and foundations are square. In navigation, the theorem helps calculate the shortest distance between two points. In computer graphics, it underlies distance calculations between pixels. In physics, it appears in vector addition: when two forces are perpendicular, their resultant magnitude is found using the theorem. In day-to-day life, it can be used to find the length of a ladder needed to reach a certain height on a wall, or to determine the diagonal of a rectangular room.
+
+Example 6.3: A ladder 10 m long leans against a vertical wall. The foot of the ladder is 6 m from the base of the wall. How high does the ladder reach on the wall?
+Solution: Let the height on the wall be h. By Pythagoras theorem: h² + 6² = 10². So h² = 100 − 36 = 64, giving h = 8 m. The ladder reaches 8 m up the wall.`,
                 metadata: { subject: 'mathematics', grade: '10', chapter: '6' }
             },
             {
@@ -181,19 +189,20 @@ The Pythagoras theorem has numerous applications in real life, including constru
                 name: 'NCERT Physics Grade 11 - Newton\'s Laws',
                 content: `Chapter 5: Laws of Motion
 
-Section 5.1: Introduction to Force
-Force is a push or pull that can change the state of motion of an object. It is a vector quantity, meaning it has both magnitude and direction. The SI unit of force is Newton (N). One newton is the force required to give a mass of 1 kg an acceleration of 1 m/s².
+Section 5.1: Introduction to Force and Motion
+Force is a physical quantity that can change the state of rest or motion of an object. It is a vector quantity, possessing both magnitude and direction. The SI unit of force is the Newton (N), defined as the force that gives a mass of one kilogram an acceleration of one metre per second squared. Forces can be classified as contact forces (friction, normal force, tension) and non-contact forces (gravitational, magnetic, electrostatic). The net force on an object is the vector sum of all forces acting on it. When the net force is zero, the object is said to be in equilibrium — either at rest or moving with constant velocity.
 
-Section 5.2: Newton's First Law
-An object at rest stays at rest, and an object in motion stays in motion with constant velocity, unless acted upon by an external force. This law is also called the law of inertia. Inertia is the tendency of an object to resist changes in its state of motion.
+Section 5.2: Newton's First Law of Motion (Law of Inertia)
+Newton's First Law states that an object at rest remains at rest, and an object in uniform motion continues to move in a straight line at constant speed, unless acted upon by an external net force. This law introduces the concept of inertia — the natural tendency of an object to resist any change in its state of motion. Inertia depends on the mass of the object: a heavier object has greater inertia and requires a larger force to change its state. Common examples include a passenger lurching forward when a bus suddenly brakes, or a coin placed on a card that falls into a glass when the card is flicked away rapidly. These demonstrations illustrate that objects tend to maintain their current state unless a net force compels them to change.
 
-Section 5.3: Newton's Second Law
-The acceleration of an object is directly proportional to the net force acting on it and inversely proportional to its mass. Mathematically: F = ma, where F is force, m is mass, and a is acceleration.
+Section 5.3: Newton's Second Law of Motion
+Newton's Second Law provides a quantitative relationship between force, mass, and acceleration. It states that the net force acting on an object is equal to the product of its mass and the acceleration it produces: F = ma. Here F is the net force in Newtons, m is the mass in kilograms, and a is the acceleration in m/s². This law implies that for a given force, a lighter object accelerates more than a heavier one. Conversely, to produce the same acceleration in objects of different masses, a larger force must be applied to the more massive object. The second law also tells us that force and acceleration are in the same direction.
 
-Example: If a force of 10 N acts on a mass of 2 kg, the acceleration is: a = F/m = 10/2 = 5 m/s².
+Example 5.1: A net force of 15 N acts on an object of mass 3 kg. Calculate the acceleration.
+Solution: Using F = ma: a = F/m = 15/3 = 5 m/s². The object accelerates at 5 m/s² in the direction of the applied force.
 
-Section 5.4: Newton's Third Law
-For every action, there is an equal and opposite reaction. When object A exerts a force on object B, object B simultaneously exerts a force of equal magnitude but opposite direction on object A.`,
+Section 5.4: Newton's Third Law of Motion
+Newton's Third Law states that for every action there is an equal and opposite reaction. More precisely, when object A exerts a force on object B, object B simultaneously exerts a force of equal magnitude but opposite direction on object A. These forces are called action-reaction pairs. It is important to note that the two forces in an action-reaction pair act on different objects and therefore cannot cancel each other. Examples include a rocket expelling gases downward (action) and rising upward (reaction), a swimmer pushing water backward (action) and moving forward (reaction), and a gun recoiling backward when a bullet is fired forward.`,
                 metadata: { subject: 'physics', grade: '11', chapter: '5' }
             }
         ];
@@ -457,7 +466,7 @@ For every action, there is an equal and opposite reaction. When object A exerts 
      * Update statistics display in UI
      */
     updateStatisticsDisplay() {
-        const totalChunksEl = document.getElementById('totalChunks');
+        const totalChunksEl = document.getElementById('chunkingTotalChunks');
         if (totalChunksEl) {
             totalChunksEl.textContent = this.statistics.totalChunks;
         }

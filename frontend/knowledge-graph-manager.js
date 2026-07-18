@@ -1006,12 +1006,14 @@ class KnowledgeGraphManager {
             });
         });
 
-        // Simulate force-directed placement (simplified)
-        const iterations = 50;
-        const repulsionStrength = 100;
-        const attractionStrength = 0.1;
+        // Simulate force-directed placement with cooling
+        const iterations = 120;
+        const repulsionStrength = 8000;
+        const attractionStrength = 0.04;
+        const initialTemp = 80;
 
         for (let iter = 0; iter < iterations; iter++) {
+            const temp = initialTemp * (1 - iter / iterations);
             const forces = new Map();
 
             // Initialize forces
@@ -1066,13 +1068,15 @@ class KnowledgeGraphManager {
                 }
             });
 
-            // Apply forces
+            // Apply forces with temperature-limited displacement
             nodes.forEach(node => {
                 const pos = positions.get(node.id);
                 const force = forces.get(node.id);
 
-                pos.x += force.x;
-                pos.y += force.y;
+                const mag = Math.sqrt(force.x * force.x + force.y * force.y) || 1;
+                const disp = Math.min(mag, temp);
+                pos.x += (force.x / mag) * disp;
+                pos.y += (force.y / mag) * disp;
 
                 // Keep within bounds
                 pos.x = Math.max(padding, Math.min(width - padding, pos.x));

@@ -244,6 +244,27 @@ def chunkers() -> dict[str, list[str]]:
     return {"strategies": [s.value for s in available_strategies()]}
 
 
+@app.get("/api/benchmark-stats")
+def benchmark_stats() -> dict:
+    """Distribution of the 798-query PACER benchmark by subject, grade, and Bloom level."""
+    import json
+    from collections import Counter
+
+    qs_path = Path(__file__).parents[4] / "data" / "benchmark" / "queries.jsonl"
+    if not qs_path.exists():
+        raise HTTPException(404, "Benchmark queries file not found")
+    queries = [json.loads(l) for l in qs_path.read_text().splitlines() if l.strip()]
+    subjects = Counter(q.get("subject", "unknown") for q in queries)
+    grades   = Counter(q.get("grade",   "unknown") for q in queries)
+    bloom    = Counter(q.get("bloom_level", "unknown") for q in queries)
+    return {
+        "total":    len(queries),
+        "subjects": dict(subjects),
+        "grades":   dict(grades),
+        "bloom":    dict(bloom),
+    }
+
+
 @app.get("/api/results/{table}")
 def get_results(table: str) -> dict:
     """Serve experiment result files from experiments/results/.

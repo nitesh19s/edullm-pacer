@@ -3,10 +3,10 @@ class EduLLMPlatform {
     constructor() {
         this.currentSection = 'dashboard';
         this.chatHistory = [];
-        // Seeded with real PACER experiment values (900-query NCERT benchmark)
+        // Seeded with real PACER experiment values (798-query evaluated NCERT benchmark)
         this.statistics = {
             documentsIndexed: 8563,   // NCERT Q&A docs in SQLite
-            queriesProcessed: 900,    // benchmark queries evaluated
+            queriesProcessed: 798,    // benchmark queries evaluated
             accuracyRate: 92.41,      // PACER MRR × 100 (bge-large)
             avgResponseTime: 0.087    // PACER query latency in seconds
         };
@@ -479,7 +479,7 @@ class EduLLMPlatform {
             
             // Documents and queries: always show PACER benchmark values
             if (docElement) docElement.textContent = (8563).toLocaleString();
-            if (queryElement) queryElement.textContent = '900';
+            if (queryElement) queryElement.textContent = '798';
             // MRR: show as decimal, not percentage
             if (accuracyElement) accuracyElement.textContent = '0.9241';
             // Latency: show in ms, not seconds
@@ -943,21 +943,6 @@ class EduLLMPlatform {
 
     updateChunkingParameters(paramType, value) {
         document.getElementById(paramType + 'Value').textContent = value;
-        
-        // Recalculate chunk statistics based on parameters
-        const chunkSize = parseInt(document.getElementById('chunkSize').value);
-        const overlap = parseInt(document.getElementById('chunkOverlap').value);
-        
-        const totalTokens = Math.floor(Math.random() * 10000) + 8000;
-        const effectiveChunkSize = chunkSize - overlap;
-        const totalChunks = Math.ceil(totalTokens / effectiveChunkSize);
-        const avgSize = Math.floor(totalTokens / totalChunks);
-        const semanticScore = Math.max(5, 10 - (Math.abs(chunkSize - 500) / 100));
-
-        document.getElementById('totalChunks').textContent = totalChunks;
-        document.getElementById('avgChunkSize').textContent = avgSize;
-        document.getElementById('semanticScore').textContent = semanticScore.toFixed(1);
-
         this.generateSampleChunks();
     }
 
@@ -994,19 +979,19 @@ class EduLLMPlatform {
                 chunkDiv.innerHTML = `
                     <div class="chunk-header">
                         <span class="chunk-id">Chunk ${index + 1}</span>
-                        <span class="chunk-size">${chunk.size} tokens</span>
+                        <span class="chunk-size">${chunk.size} chars</span>
                     </div>
                     <div class="chunk-content">${chunk.content}</div>
                 `;
-                
+
                 // Add click event for chunk details
                 chunkDiv.addEventListener('click', () => {
                     this.showChunkDetails(chunk, index + 1);
                 });
-                
+
                 chunksDisplay.appendChild(chunkDiv);
             });
-            
+
             console.log('✅ Chunks displayed successfully');
             
         } catch (error) {

@@ -430,6 +430,9 @@ class FlowManager {
         const page = this.pageFlow[pageName];
         if (!page || !page.helpText) return;
 
+        const section = document.getElementById(pageName);
+        if (!section || section.querySelector('.page-help-banner')) return;
+
         // Show help tooltip
         const helpBanner = document.createElement('div');
         helpBanner.className = 'page-help-banner';
@@ -443,10 +446,7 @@ class FlowManager {
             </div>
         `;
 
-        const section = document.getElementById(pageName);
-        if (section) {
-            section.insertBefore(helpBanner, section.firstChild);
-        }
+        section.insertBefore(helpBanner, section.firstChild);
 
         // Auto-hide after 10 seconds
         setTimeout(() => {

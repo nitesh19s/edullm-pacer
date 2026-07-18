@@ -42,142 +42,57 @@ class DatabaseInitializer {
      * Create sample experiments and runs
      */
     async createSampleExperiments() {
-        console.log('📊 Creating sample experiments...');
+        console.log('📊 Seeding PACER benchmark experiments...');
 
-        // Experiment 1: RAG Baseline
-        const exp1Id = await this.database.saveExperiment({
-            name: 'RAG System Baseline',
-            description: 'Baseline performance test for RAG system with fixed-size chunking',
-            parameters: {
-                chunkSize: 500,
-                overlap: 50,
-                embeddingModel: 'text-embedding-ada-002',
-                retrievalMethod: 'cosine-similarity'
-            },
-            tags: ['baseline', 'rag', 'chunking'],
-            status: 'completed',
-            metadata: {
-                category: 'performance',
-                priority: 'high'
-            }
-        });
+        const BASE = new Date('2026-04-27T00:00:00Z').getTime();
+        const DAY  = 86400000;
+        const EMB  = { bge: 'BAAI/bge-large-en-v1.5', mini: 'all-MiniLM-L6-v2' };
 
-        // Add runs for experiment 1
-        for (let i = 1; i <= 3; i++) {
-            await this.database.saveExperimentRun({
-                experimentId: exp1Id,
-                timestamp: new Date(Date.now() - (3 - i) * 24 * 60 * 60 * 1000).toISOString(),
-                parameters: {
-                    iteration: i,
-                    temperature: 0.7,
-                    topK: 5
-                },
-                metrics: {
-                    precision: [
-                        { step: 1, value: 0.72 + Math.random() * 0.08 },
-                        { step: 2, value: 0.75 + Math.random() * 0.08 },
-                        { step: 3, value: 0.78 + Math.random() * 0.08 }
-                    ],
-                    recall: [
-                        { step: 1, value: 0.68 + Math.random() * 0.08 },
-                        { step: 2, value: 0.71 + Math.random() * 0.08 },
-                        { step: 3, value: 0.74 + Math.random() * 0.08 }
-                    ],
-                    f1Score: [
-                        { step: 1, value: 0.70 + Math.random() * 0.08 },
-                        { step: 2, value: 0.73 + Math.random() * 0.08 },
-                        { step: 3, value: 0.76 + Math.random() * 0.08 }
-                    ]
-                },
-                results: {
-                    accuracy: 0.75 + Math.random() * 0.1,
-                    avgResponseTime: 450 + Math.random() * 100,
-                    queriesProcessed: 100
-                },
+        const DEFS = [
+            { slug: 'pacer',         name: 'PACER (Adaptive)',        desc: 'Pedagogy-aware adaptive chunking — routes each document to its optimal strategy.',            tags: ['pacer','adaptive'],    params: { chunker:'educational', chunk_size:2000 }, bge:{mrr:0.9241,ndcg:0.9208,cas:0.651,latency:87, chunks:16369}, mini:{mrr:0.8845,ndcg:0.8887,cas:0.644,latency:77, chunks:16369} },
+            { slug: 'recursive512',  name: 'Recursive-512 (Baseline)', desc: 'LangChain RecursiveCharacterTextSplitter, 512-token chunks. Best single baseline by MRR.', tags: ['baseline','recursive'], params: { chunker:'recursive',   chunk_size:512  }, bge:{mrr:0.9354,ndcg:0.8971,cas:0.677,latency:214,chunks:36981}, mini:{mrr:0.9242,ndcg:0.8864,cas:0.672,latency:177,chunks:36981} },
+            { slug: 'recursive1024', name: 'Recursive-1024',           desc: 'RecursiveCharacterTextSplitter at 1024 tokens.',                                            tags: ['baseline','recursive'], params: { chunker:'recursive',   chunk_size:1024 }, bge:{mrr:0.9234,ndcg:0.9024,cas:0.669,latency:114,chunks:18389}, mini:{mrr:0.8958,ndcg:0.8811,cas:0.665,latency:null,chunks:18389} },
+            { slug: 'semantic1024',  name: 'Semantic-1024',             desc: 'Semantic chunking with 1024-token budget, sentence-boundary aware.',                       tags: ['semantic'],             params: { chunker:'semantic',    chunk_size:1024 }, bge:{mrr:0.9188,ndcg:0.9129,cas:0.663,latency:85, chunks:12987}, mini:{mrr:0.8979,ndcg:0.8948,cas:0.661,latency:null,chunks:12987} },
+            { slug: 'fixed1024',     name: 'Fixed-1024',                desc: 'Fixed-size chunking, 1024-token windows, no overlap.',                                     tags: ['baseline','fixed'],     params: { chunker:'fixed',       chunk_size:1024 }, bge:{mrr:0.9187,ndcg:0.9308,cas:0.659,latency:80, chunks:8581 }, mini:{mrr:0.8932,ndcg:0.9097,cas:0.655,latency:49, chunks:8581 } },
+            { slug: 'fixed512',      name: 'Fixed-512',                 desc: 'Fixed-size chunking, 512-token windows.',                                                  tags: ['baseline','fixed'],     params: { chunker:'fixed',       chunk_size:512  }, bge:{mrr:0.9185,ndcg:0.9253,cas:0.658,latency:null,chunks:9749 }, mini:{mrr:0.8926,ndcg:0.9046,cas:0.655,latency:53, chunks:9749 } },
+            { slug: 'hybrid2000',    name: 'Hybrid-2000',               desc: 'Hybrid chunker combining sentence and semantic boundaries at 2000-token budget.',          tags: ['hybrid'],               params: { chunker:'hybrid',      chunk_size:2000 }, bge:{mrr:0.9241,ndcg:0.9208,cas:0.651,latency:103,chunks:16375}, mini:{mrr:0.8845,ndcg:0.8887,cas:0.644,latency:null,chunks:16375} },
+            { slug: 'educational',   name: 'Educational-2000',          desc: 'Educational chunker preserving pedagogical units (definition–example, Q&A pairs).',        tags: ['pacer','educational'],  params: { chunker:'educational', chunk_size:2000 }, bge:{mrr:0.9241,ndcg:0.9208,cas:0.651,latency:null,chunks:16369}, mini:{mrr:0.8845,ndcg:0.8887,cas:0.644,latency:null,chunks:16369} },
+        ];
+
+        for (let i = 0; i < DEFS.length; i++) {
+            const def = DEFS[i];
+            const t = BASE - (7 - i) * DAY;
+
+            const expId = await this.database.saveExperiment({
+                name: def.name,
+                description: def.desc,
+                parameters: { ...def.params, overlap: 200, top_k: 10, corpus: 'NCERT 900-query benchmark' },
+                tags: def.tags,
                 status: 'completed',
-                duration: 3500 + Math.random() * 1000,
-                logs: [
-                    { message: 'Starting RAG evaluation', level: 'info', timestamp: Date.now() },
-                    { message: 'Processing 100 queries', level: 'info', timestamp: Date.now() },
-                    { message: 'Evaluation complete', level: 'info', timestamp: Date.now() }
-                ]
+                runCount: 2,
+                metadata: { runCount: 2, seed: 42, corpus: 'NCERT', evaluated_queries: 798, corpus_size: 900 },
+                createdAt: new Date(t).toISOString(),
+                updatedAt: new Date(BASE).toISOString(),
             });
-        }
 
-        console.log(`✅ Created experiment: RAG System Baseline (${exp1Id})`);
-
-        // Experiment 2: Semantic Chunking
-        const exp2Id = await this.database.saveExperiment({
-            name: 'Semantic Chunking Strategy',
-            description: 'Testing semantic chunking approach vs fixed-size chunking',
-            parameters: {
-                chunkingMethod: 'semantic',
-                minChunkSize: 300,
-                maxChunkSize: 700,
-                embeddingModel: 'text-embedding-ada-002'
-            },
-            tags: ['semantic', 'chunking', 'optimization'],
-            status: 'running',
-            metadata: {
-                category: 'optimization',
-                priority: 'high'
+            const embKeys = ['bge', 'mini'];
+            for (let j = 0; j < embKeys.length; j++) {
+                const emb = embKeys[j];
+                const m = def[emb];
+                await this.database.saveExperimentRun({
+                    experimentId: expId,
+                    name: `Run ${j + 1} — ${EMB[emb]}`,
+                    timestamp: new Date(t + j * 3600000).toISOString(),
+                    parameters: { embedding: EMB[emb], evaluated_queries: 798, corpus_size: 900, corpus: 'NCERT' },
+                    metrics: { mrr: m.mrr, ndcg: m.ndcg, cas: m.cas, latency_ms: m.latency, chunks: m.chunks },
+                    metadata: { name: `Run ${j + 1}` },
+                    status: 'completed',
+                    duration: 3600000,
+                });
             }
-        });
 
-        // Add runs for experiment 2
-        for (let i = 1; i <= 2; i++) {
-            await this.database.saveExperimentRun({
-                experimentId: exp2Id,
-                timestamp: new Date(Date.now() - (2 - i) * 12 * 60 * 60 * 1000).toISOString(),
-                parameters: {
-                    iteration: i,
-                    temperature: 0.8,
-                    topK: 7
-                },
-                metrics: {
-                    precision: [
-                        { step: 1, value: 0.78 + Math.random() * 0.08 },
-                        { step: 2, value: 0.81 + Math.random() * 0.08 }
-                    ],
-                    recall: [
-                        { step: 1, value: 0.75 + Math.random() * 0.08 },
-                        { step: 2, value: 0.78 + Math.random() * 0.08 }
-                    ],
-                    f1Score: [
-                        { step: 1, value: 0.76 + Math.random() * 0.08 },
-                        { step: 2, value: 0.79 + Math.random() * 0.08 }
-                    ]
-                },
-                results: {
-                    accuracy: 0.80 + Math.random() * 0.1,
-                    avgResponseTime: 420 + Math.random() * 80,
-                    queriesProcessed: 100
-                },
-                status: 'completed',
-                duration: 3200 + Math.random() * 800
-            });
+            console.log(`✅ Seeded: ${def.name}`);
         }
-
-        console.log(`✅ Created experiment: Semantic Chunking Strategy (${exp2Id})`);
-
-        // Experiment 3: Hybrid Retrieval
-        const exp3Id = await this.database.saveExperiment({
-            name: 'Hybrid Retrieval Method',
-            description: 'Combining keyword-based and semantic search',
-            parameters: {
-                hybridWeight: 0.6,
-                semanticWeight: 0.4,
-                rerankingEnabled: true
-            },
-            tags: ['hybrid', 'retrieval', 'reranking'],
-            status: 'created',
-            metadata: {
-                category: 'experimental',
-                priority: 'medium'
-            }
-        });
-
-        console.log(`✅ Created experiment: Hybrid Retrieval Method (${exp3Id})`);
     }
 
     /**
