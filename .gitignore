@@ -57,3 +57,7 @@ experiments/__pycache__/
 # Node
 node_modules/
 CLAUDE.md
+*.docx
+__pycache__/
+*.pyc
+.env
