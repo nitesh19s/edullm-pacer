@@ -47,7 +47,7 @@ app.use(helmet({
 const corsOptions = {
     origin: process.env.ALLOWED_ORIGINS
         ? process.env.ALLOWED_ORIGINS.split(',')
-        : ['http://localhost:8000', 'http://localhost:3000', 'http://127.0.0.1:8000', 'http://localhost:5500'],
+        : ['http://localhost:8000', 'http://localhost:3000', 'http://127.0.0.1:8000', 'http://localhost:5500', 'http://localhost:8080', 'http://127.0.0.1:8080'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
     credentials: true,
@@ -89,7 +89,7 @@ app.use('/health', healthRoutes);
 
 // Serve frontend static files with no-cache headers
 const path = require('path');
-const FRONTEND_DIR = process.env.FRONTEND_DIR || path.resolve(__dirname, '..');
+const FRONTEND_DIR = process.env.FRONTEND_DIR || path.resolve(__dirname, '../frontend');
 app.use(express.static(FRONTEND_DIR, {
     etag: false,
     lastModified: false,

@@ -42,7 +42,7 @@ class EduLLMAPIClient {
      */
     async checkConnection() {
         try {
-            const response = await fetch(`${this.baseURL.replace('/api', '')}/`, {
+            const response = await fetch(`${this.baseURL.replace(/\/api.*$/, '')}/health`, {
                 method: 'GET',
                 signal: AbortSignal.timeout(5000)
             });
