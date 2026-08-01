@@ -292,13 +292,71 @@ html.demo-mode .chat-input-area {
         // 3. Compact info bar above rag-container
         var ragSection = document.getElementById('rag');
         if (ragSection) {
-            var samples = [
-                "What is Newton's third law?",
-                'Explain photosynthesis',
-                'What are rational numbers?',
-                'Describe the water cycle',
-                'Who was Mahatma Gandhi?',
+            var ALL_QUESTIONS = [
+                // Physics
+                "What is Newton's third law of motion? (Class 9)",
+                'Explain the law of conservation of energy. (Class 11)',
+                'What is Ohm\'s law and how is it used? (Class 10)',
+                'Describe total internal reflection. (Class 12)',
+                'What is the difference between speed and velocity? (Class 9)',
+                'Explain how a transformer works. (Class 12)',
+                'What are electromagnetic waves? (Class 12)',
+                'State Archimedes\' principle. (Class 9)',
+                // Chemistry
+                'What is the periodic table? How is it arranged? (Class 10)',
+                'Explain covalent and ionic bonds. (Class 11)',
+                'What happens during a chemical reaction? (Class 8)',
+                'What is the pH scale and what does it measure? (Class 10)',
+                'Describe the structure of an atom. (Class 9)',
+                'What is electrolysis? Give an example. (Class 12)',
+                'Explain the nitrogen cycle. (Class 9)',
+                // Biology
+                'Explain photosynthesis with its equation. (Class 10)',
+                'What is the function of mitochondria? (Class 9)',
+                'How does the human digestive system work? (Class 10)',
+                'What is DNA and why is it important? (Class 12)',
+                'Explain the process of cell division. (Class 12)',
+                'What are the differences between arteries and veins? (Class 10)',
+                'Describe the water cycle in nature. (Class 7)',
+                // Mathematics
+                'What are rational numbers? Give examples. (Class 8)',
+                'Explain the Pythagorean theorem. (Class 10)',
+                'What is the quadratic formula? (Class 10)',
+                'How do you find the area of a circle? (Class 7)',
+                'What are arithmetic progressions? (Class 10)',
+                'Explain probability with an example. (Class 10)',
+                'What are matrices and how are they multiplied? (Class 12)',
+                'What is differentiation in calculus? (Class 11)',
+                // Social Science / History
+                'Who was Mahatma Gandhi and what was his role in India\'s independence? (Class 10)',
+                'What were the causes of World War I? (Class 9)',
+                'What is the French Revolution? (Class 9)',
+                'Explain the importance of the Indian Constitution. (Class 11)',
+                'What is democracy and how does it work? (Class 9)',
+                'Who were the Mughals and how did they rule India? (Class 7)',
+                // Geography
+                'What causes earthquakes and tsunamis? (Class 9)',
+                'Explain the greenhouse effect and global warming. (Class 8)',
+                'What are the major climate zones of India? (Class 9)',
+                'How are mountains formed? (Class 9)',
+                'What is soil erosion and how can it be prevented? (Class 8)',
+                // Economics
+                'What is GDP and how is it calculated? (Class 10)',
+                'Explain the difference between demand and supply. (Class 11)',
+                'What is inflation and what causes it? (Class 12)',
+                // English / Literature
+                'What is the theme of the poem "The Road Not Taken"? (Class 9)',
+                'Summarise the story "The Last Leaf" by O. Henry. (Class 10)',
             ];
+
+            // Fisher-Yates shuffle, pick 5
+            var pool = ALL_QUESTIONS.slice();
+            for (var i = pool.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+            }
+            var samples = pool.slice(0, 5);
+
             var chips = samples.map(function (q) {
                 return '<span class="demo-chip" data-q="' + q.replace(/"/g, '&quot;') + '">' + q + '</span>';
             }).join('');
