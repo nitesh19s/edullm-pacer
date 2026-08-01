@@ -329,18 +329,26 @@ class EduLLMAPIClient {
     // ==================== RAG CHAT API ====================
 
     /**
-     * Send chat message
+     * Send chat message via RAG pipeline (CAS-reranked)
      */
     async sendMessage(data) {
-        return this.request('/query', {
+        return this.request('/rag/chat', {
             method: 'POST',
             body: {
-                query: data.message,
-                k: data.retrievalConfig?.topK || 5,
-                filters: (data.context?.subject)
-                    ? { subject: data.context.subject }
-                    : null,
-                language: data.language || 'en'
+                message:   data.message,
+                sessionId: data.sessionId || undefined,
+                context: {
+                    subject:    data.context?.subject    || undefined,
+                    grade:      data.context?.grade      || undefined,
+                    bloomLevel: data.context?.bloomLevel || undefined,
+                    topic:      data.context?.topic      || undefined
+                },
+                retrievalConfig: {
+                    topK:        data.retrievalConfig?.topK      || 5,
+                    collectionId: data.retrievalConfig?.collectionId || undefined,
+                    casWeights:  data.retrievalConfig?.casWeights || undefined,
+                    disableCAS:  data.retrievalConfig?.disableCAS || false
+                }
             }
         });
     }
@@ -371,11 +379,38 @@ class EduLLMAPIClient {
     /**
      * Retrieve context
      */
-    async retrieveContext(query, topK = 5) {
+    async retrieveContext(query, topK = 5, { grade, bloomLevel, casWeights, disableCAS = false } = {}) {
         return this.request('/rag/retrieve', {
             method: 'POST',
-            body: { query, topK }
+            body: { query, topK, grade, bloomLevel, casWeights, disableCAS }
         });
+    }
+
+    /**
+     * Detect pedagogical boundaries in text
+     */
+    async detectBoundaries(text, { minChunkLen = 100, maxChunkLen = 2000 } = {}) {
+        return this.request('/vector/detect-boundaries', {
+            method: 'POST',
+            body: { text, minChunkLen, maxChunkLen }
+        });
+    }
+
+    /**
+     * Classify a chunk's instructional type
+     */
+    async classifyChunk(text) {
+        return this.request('/vector/classify-chunk', {
+            method: 'POST',
+            body: { text }
+        });
+    }
+
+    /**
+     * Get latest PACER ablation experiment results
+     */
+    async getAblationLatest() {
+        return this.request('/experiments/ablation/latest');
     }
 
     /**

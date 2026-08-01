@@ -116,7 +116,7 @@ class EduLLMPlatform {
         // Initialize Research Features Manager
         try {
             if (typeof ResearchFeaturesManager !== 'undefined') {
-                window.researchFeaturesManager = new ResearchFeaturesManager(this.database);
+                window.researchFeaturesManager = new ResearchFeaturesManager(this.database, this.apiClient);
                 await window.researchFeaturesManager.initialize();
                 console.log('✅ Research Features Manager initialized');
             }
@@ -2363,51 +2363,48 @@ class EduLLMPlatform {
         }
     }
 
-    updateAnalyticsMetrics() {
+    async updateAnalyticsMetrics() {
+        // Prefer backend API; fall back to local experimentTracker if not available
+        if (this.backendAvailable && this.apiClient) {
+            try {
+                const resp = await this.apiClient.getAnalyticsDashboard();
+                const m    = resp.data?.metrics || {};
+                const set  = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+                set('totalExperiments', m.experiments    ?? 0);
+                set('totalRuns',        m.runs            ?? 0);
+                set('avgPrecision',     m.avgPrecision    != null ? m.avgPrecision.toFixed(2)  : '0.00');
+                set('avgResponseTime',  m.avgResponseTime != null ? m.avgResponseTime + 'ms'   : '0ms');
+                return;
+            } catch (error) {
+                console.warn('Analytics metrics fetch failed, using local:', error);
+            }
+        }
+
         if (!window.experimentTracker) return;
 
         const stats = window.experimentTracker.getStatistics();
-
-        // Update metric cards
-        const totalExpEl = document.getElementById('totalExperiments');
+        const totalExpEl  = document.getElementById('totalExperiments');
         const totalRunsEl = document.getElementById('totalRuns');
-
-        if (totalExpEl) totalExpEl.textContent = stats.totalExperiments || 0;
+        if (totalExpEl)  totalExpEl.textContent  = stats.totalExperiments || 0;
         if (totalRunsEl) totalRunsEl.textContent = stats.totalRuns || 0;
 
-        // Calculate average metrics from runs
         const allRuns = Array.from(window.experimentTracker.runs.values());
-
         if (allRuns.length > 0) {
-            // Calculate average precision (if metrics exist)
-            let precisionSum = 0;
-            let precisionCount = 0;
-            let responseTimeSum = 0;
-            let responseTimeCount = 0;
-
+            let precisionSum = 0, precisionCount = 0, responseTimeSum = 0, responseTimeCount = 0;
             allRuns.forEach(run => {
-                if (run.metrics.precision && run.metrics.precision.length > 0) {
+                if (run.metrics.precision?.length) {
                     precisionSum += run.metrics.precision[run.metrics.precision.length - 1].value;
                     precisionCount++;
                 }
-                if (run.metrics.response_time && run.metrics.response_time.length > 0) {
+                if (run.metrics.response_time?.length) {
                     responseTimeSum += run.metrics.response_time[run.metrics.response_time.length - 1].value;
                     responseTimeCount++;
                 }
             });
-
-            const avgPrecisionEl = document.getElementById('avgPrecision');
+            const avgPrecisionEl    = document.getElementById('avgPrecision');
             const avgResponseTimeEl = document.getElementById('avgResponseTime');
-
-            if (avgPrecisionEl) {
-                const avgPrecision = precisionCount > 0 ? (precisionSum / precisionCount).toFixed(2) : '0.00';
-                avgPrecisionEl.textContent = avgPrecision;
-            }
-
-            if (avgResponseTimeEl) {
-                const avgResponseTime = responseTimeCount > 0 ? Math.round(responseTimeSum / responseTimeCount) : 0;
-                avgResponseTimeEl.textContent = `${avgResponseTime}ms`;
-            }
+            if (avgPrecisionEl)    avgPrecisionEl.textContent    = precisionCount    > 0 ? (precisionSum    / precisionCount).toFixed(2)    : '0.00';
+            if (avgResponseTimeEl) avgResponseTimeEl.textContent = responseTimeCount > 0 ? Math.round(responseTimeSum / responseTimeCount) + 'ms' : '0ms';
         }
     }
 
@@ -4818,6 +4815,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.analyticsDashboard = new AnalyticsDashboard();
             await window.analyticsDashboard.initialize();
             console.log('✅ Analytics Dashboard created and initialized');
+        }
+        // Seed analytics metric cards from backend
+        if (window.analyticsDashboard) {
+            window.analyticsDashboard.refreshData().catch(() => {});
         }
 
         // Initialize Baseline Comparator

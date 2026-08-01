@@ -1189,7 +1189,133 @@ class AnalyticsDashboard {
         }
     }
 
-    // Getters
+    // ── API integration ───────────────────────────────────────────────────────
+
+    get apiClient() {
+        return window.eduLLM?.apiClient || null;
+    }
+
+    /**
+     * Fetch live metrics from the backend and refresh the metric cards.
+     */
+    async refreshData() {
+        const client = this.apiClient;
+        if (!client) {
+            console.warn('Analytics: backend not available');
+            return;
+        }
+        try {
+            const resp = await client.getAnalyticsDashboard();
+            const m    = resp.data?.metrics || {};
+            this._applyMetrics(m);
+        } catch (error) {
+            console.error('Analytics refresh failed:', error);
+        }
+    }
+
+    _applyMetrics(m) {
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        set('totalExperiments', m.experiments   ?? '—');
+        set('totalRuns',        m.runs           ?? '—');
+        set('avgPrecision',     m.avgPrecision   != null ? m.avgPrecision.toFixed(2)  : '—');
+        set('avgResponseTime',  m.avgResponseTime != null ? m.avgResponseTime + 'ms'  : '—');
+    }
+
+    /**
+     * Generate an analytics report via the backend API, then fall back to local.
+     */
+    async generateReport(dashboardId = 'default_dashboard', options = {}) {
+        const client = this.apiClient;
+        if (client) {
+            try {
+                const resp = await client.generateReport({ type: options.type || 'summary' });
+                const d    = resp.data;
+                const report = {
+                    id:         d.id || this.generateId('report'),
+                    name:       options.name || `Summary Report — ${new Date().toLocaleDateString()}`,
+                    createdAt:  d.generatedAt ? new Date(d.generatedAt).getTime() : Date.now(),
+                    summary:    `${d.metrics?.experiments || 0} experiments, ${d.metrics?.completedRuns || 0} completed runs`,
+                    insights:   (d.insights || []).map(i => ({ ...i, title: this._insightTitle(i) })),
+                    data:       d,
+                    sections:   []
+                };
+                this._applyMetrics(d.metrics || {});
+                this.reports.set(report.id, report);
+                this._lastReport = report;
+                return report;
+            } catch (error) {
+                console.warn('API report generation failed, using local data:', error);
+            }
+        }
+
+        // Fallback to local method
+        return this._generateReportLocal(dashboardId, options);
+    }
+
+    _insightTitle(insight) {
+        const map = { positive: 'Good news', warning: 'Watch out', info: 'Info' };
+        return map[insight.type] || 'Insight';
+    }
+
+    async _generateReportLocal(dashboardId, options) {
+        const dashboard = this.dashboards.get(dashboardId);
+        if (!dashboard) throw new Error(`Dashboard ${dashboardId} not found`);
+
+        const report = {
+            id:          this.generateId('report'),
+            dashboardId,
+            name:        options.name || `Report — ${new Date().toLocaleDateString()}`,
+            createdAt:   Date.now(),
+            summary:     'Generated from local data',
+            insights:    [],
+            sections:    []
+        };
+
+        report.sections.push(await this.generateExecutiveSummary());
+        this.reports.set(report.id, report);
+        await this.save();
+        this._lastReport = report;
+        return report;
+    }
+
+    /**
+     * Export the most recent report as Markdown.
+     */
+    exportAsMarkdown() {
+        const report = this._lastReport || this.getAllReports().slice(-1)[0];
+        if (!report) return '# No report available\n\nGenerate a report first.';
+
+        const date = new Date(report.createdAt).toLocaleString();
+        let md = `# ${report.name}\n\n_Generated: ${date}_\n\n`;
+        md += `## Summary\n\n${report.summary || 'No summary available.'}\n\n`;
+
+        if (report.data?.metrics) {
+            const m = report.data.metrics;
+            md += `## Metrics\n\n`;
+            md += `| Metric | Value |\n|---|---|\n`;
+            md += `| Experiments | ${m.experiments ?? '—'} |\n`;
+            md += `| Total Runs | ${m.runs ?? '—'} |\n`;
+            md += `| Completed Runs | ${m.completedRuns ?? '—'} |\n`;
+            md += `| Avg Precision | ${m.avgPrecision ?? '—'} |\n`;
+            md += `| Avg Recall | ${m.avgRecall ?? '—'} |\n`;
+            md += `| Avg Response Time | ${m.avgResponseTime != null ? m.avgResponseTime + 'ms' : '—'} |\n`;
+            md += `| Chat Sessions | ${m.chatSessions ?? '—'} |\n`;
+            md += `| Chat Messages | ${m.chatMessages ?? '—'} |\n`;
+            md += `| Indexed Documents | ${m.indexedDocuments ?? '—'} |\n\n`;
+        }
+
+        if (report.insights?.length) {
+            md += `## Insights\n\n`;
+            report.insights.forEach(i => {
+                md += `**${i.title || i.type}**: ${i.message}\n\n`;
+            });
+        }
+
+        return md;
+    }
+
+    // ── Getters ───────────────────────────────────────────────────────────────
+
     getDashboard(id) {
         return this.dashboards.get(id);
     }
