@@ -1,0 +1,4 @@
+condition,mean_avg_cas,delta_vs_baseline,spearman_rho_vs_baseline,n_queries,topK,candidate_pool,embed_model,notes
+PACER-Full,0.7960,+0.1002,0.4467,20,5,15 (3x topK),nomic-embed-text,CAS reranking on 3x over-fetched pool; grade+prereq+bloom alignment (alpha=0.45 beta=0.40 gamma=0.15)
+A2-NoBound,0.6958,0.0000,0.4467,20,5,5 (topK),nomic-embed-text,CAS scoring applied but no over-fetch; same pool as baseline so avg CAS identical
+A3-Baseline,0.6958,0.0000,1.0000,20,5,5 (topK),nomic-embed-text,Cosine similarity only; no CAS reranking

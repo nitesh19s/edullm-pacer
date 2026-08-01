@@ -23,12 +23,12 @@
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
-// Load DB and services from project root
-const dbPath = path.resolve(__dirname, '../../edullm-database.db');
-process.env.DB_PATH = dbPath;
+// Load env so DB_PATH and OLLAMA_URL are available
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const { documents, collections, experiments } = require('../services/db');
 const { rerankByCAS, scoreChunk, DEFAULT_WEIGHTS } = require('../services/cas');
+const ollama = require('../services/ollama');
 
 // ── Sample query set ──────────────────────────────────────────────────────────
 // 20 representative NCERT queries across grades 7–12 and Bloom levels
@@ -131,27 +131,16 @@ async function runAblation() {
     }
     console.log(`Vector store: ${allDocs.length} documents\n`);
 
-    // ── NOTE: We run in no-embedding mode (use stored embeddings from DB) ──────
-    // We don't call Ollama here — instead we compute pseudo-embeddings by
-    // averaging the embeddings of already-indexed documents whose text
-    // contains query keywords. This allows offline/unit-test execution.
-    // For production comparison, swap getQueryEmbedding() to call Ollama.
+    // Check Ollama
+    const ollamaOk = await ollama.isAvailable();
+    if (!ollamaOk) {
+        console.error('ERROR: Ollama not available. Start Ollama and retry.');
+        process.exit(1);
+    }
+    console.log(`Ollama embed model: ${ollama.OLLAMA_EMBED_MODEL}\n`);
 
-    function getQueryEmbedding(queryText) {
-        // Keyword match against indexed docs to find a representative embedding
-        const lower = queryText.toLowerCase();
-        const keywords = lower.replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(w => w.length > 3);
-        const scored = allDocs
-            .filter(d => d.embedding)
-            .map(d => ({
-                doc: d,
-                score: keywords.filter(k => d.text.toLowerCase().includes(k)).length
-            }))
-            .filter(r => r.score > 0)
-            .sort((a, b) => b.score - a.score);
-        if (scored.length === 0) return null;
-        // Return the embedding of the best keyword-matched doc as the query embedding proxy
-        return scored[0].doc.embedding;
+    async function getQueryEmbedding(queryText) {
+        return ollama.generateEmbedding(queryText);
     }
 
     const perQueryResults = [];
@@ -162,8 +151,9 @@ async function runAblation() {
     };
 
     for (const query of SAMPLE_QUERIES) {
-        const qEmb = getQueryEmbedding(query.text);
-        if (!qEmb) { console.warn(`  SKIP (no embedding proxy): ${query.text}`); continue; }
+        let qEmb;
+        try { qEmb = await getQueryEmbedding(query.text); } catch (e) { console.warn(`  SKIP: ${query.text} — ${e.message}`); continue; }
+        if (!qEmb) { console.warn(`  SKIP (null embedding): ${query.text}`); continue; }
 
         const queryCtx = { text: query.text, grade: query.grade, bloomLevel: query.bloomLevel };
 
