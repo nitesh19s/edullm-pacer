@@ -523,8 +523,9 @@ class EduLLMPlatform {
                         message,
                         sessionId: this.backendSessionId || undefined,
                         context: {
-                            subject: filters.subject || undefined,
-                            grade:   filters.grade ? parseInt(filters.grade) : undefined
+                            subject:    filters.subject || undefined,
+                            grade:      filters.grade ? parseInt(filters.grade) : undefined,
+                            bloomLevel: this._inferBloomLevel(message)
                         },
                         retrievalConfig: { topK: 5 }
                     };
@@ -538,12 +539,18 @@ class EduLLMPlatform {
 
                         response = {
                             text: msg.content,
-                            sources: ctx.map(c =>
-                                `NCERT ${c.metadata?.subject || 'Content'} Grade ${c.metadata?.grade || ''}${c.metadata?.chapter ? ' — ' + c.metadata.chapter : ''}`
-                            ),
-                            confidence: ctx.length > 0 ? 0.92 : 0.75,
-                            model:      msg.metadata?.model || 'llama3.2',
-                            responseTime: (msg.metadata?.responseTime || 0) / 1000
+                            sources: ctx.map(c => ({
+                                label:          `NCERT ${c.metadata?.subject || 'Content'} Grade ${c.metadata?.grade || ''}${c.metadata?.chapter ? ' — ' + c.metadata.chapter : ''}`,
+                                cas:            c.cas,
+                                gradeMatch:     c.gradeMatch,
+                                prereqCoverage: c.prereqCoverage,
+                                bloomAlignment: c.bloomAlignment,
+                                similarity:     c.similarity
+                            })),
+                            confidence:   ctx.length > 0 ? 0.92 : 0.75,
+                            model:        msg.metadata?.model || 'llama3.2',
+                            responseTime: (msg.metadata?.responseTime || 0) / 1000,
+                            avgCAS:       msg.metadata?.avgCAS
                         };
 
                         this.statistics.avgResponseTime = response.responseTime;
@@ -723,9 +730,21 @@ class EduLLMPlatform {
             const sourcesDiv = document.createElement('div');
             sourcesDiv.className = 'message-sources';
             sources.forEach(source => {
+                const isRich = source && typeof source === 'object' && source.cas !== undefined;
                 const sourceTag = document.createElement('span');
                 sourceTag.className = 'source-tag';
-                sourceTag.textContent = source;
+
+                if (isRich) {
+                    const casScore = (source.cas * 5).toFixed(2); // convert 0-1 to 1-5 scale
+                    const casColor = source.cas >= 0.8 ? '#22c55e' : source.cas >= 0.6 ? '#f59e0b' : '#ef4444';
+                    sourceTag.innerHTML = `
+                        <span class="source-label">${source.label}</span>
+                        <span class="cas-badge" style="background:${casColor}" title="CAS: Grade ${(source.gradeMatch*5).toFixed(1)} | Prereq ${(source.prereqCoverage*5).toFixed(1)} | Bloom ${(source.bloomAlignment*5).toFixed(1)}">
+                            CAS ${casScore}
+                        </span>`;
+                } else {
+                    sourceTag.textContent = typeof source === 'string' ? source : source.label || '';
+                }
                 sourcesDiv.appendChild(sourceTag);
             });
             messageDiv.appendChild(sourcesDiv);
@@ -733,6 +752,20 @@ class EduLLMPlatform {
 
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    _inferBloomLevel(text) {
+        const lower = text.toLowerCase();
+        const map = [
+            [5, /\b(design|create|construct|formulate|propose)\b/],
+            [4, /\b(evaluate|justify|assess|critique|judge)\b/],
+            [3, /\b(analys[ei]|compare|differentiate|distinguish|examine)\b/],
+            [2, /\b(apply|solve|calculate|use|demonstrate)\b/],
+            [1, /\b(explain|describe|summari[sz]e|classify)\b/],
+            [0, /\b(define|list|identify|recall|remember)\b/]
+        ];
+        for (const [level, re] of map) if (re.test(lower)) return level;
+        return 1;
     }
 
     showTypingIndicator() {

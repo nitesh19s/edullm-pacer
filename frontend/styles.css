@@ -821,6 +821,24 @@ a.nav-link.active {
     font-size: 0.75rem;
 }
 
+/* CAS Score Badge */
+.source-tag .source-label {
+    flex: 1;
+}
+
+.cas-badge {
+    display: inline-block;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    cursor: help;
+    flex-shrink: 0;
+}
+
 /* Typing Indicator */
 .typing-indicator {
     display: flex;
