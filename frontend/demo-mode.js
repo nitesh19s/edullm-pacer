@@ -350,7 +350,9 @@ html.demo-mode .chat-input-area {
             var samples = pool.slice(0, 5);
 
             var chips = samples.map(function (q) {
-                return '<span class="demo-chip" data-q="' + q.replace(/"/g, '&quot;') + '">' + q + '</span>';
+                // Strip "(Class X)" suffix from the actual query — keep it only in the label
+                var query = q.replace(/\s*\(Class \d+\)\s*$/i, '').trim();
+                return '<span class="demo-chip" data-q="' + query.replace(/"/g, '&quot;') + '">' + q + '</span>';
             }).join('');
 
             var bar = document.createElement('div');
@@ -362,14 +364,17 @@ html.demo-mode .chat-input-area {
                   '<div class="demo-suggestions">' + chips + '</div>' +
                 '</div>';
 
-            // Wire chip clicks — fill input and send immediately
+            // Wire chip clicks — fill input and send immediately (guard against double-fire)
             bar.querySelectorAll('.demo-chip').forEach(function (chip) {
                 chip.addEventListener('click', function () {
+                    if (chip.dataset.busy) return;
+                    chip.dataset.busy = '1';
+                    setTimeout(function () { delete chip.dataset.busy; }, 3000);
+
                     var inp = document.getElementById('chatInput');
                     var btn = document.getElementById('sendButton');
                     if (!inp) return;
                     inp.value = chip.dataset.q;
-                    inp.dispatchEvent(new Event('input', { bubbles: true }));
                     if (btn) btn.click();
                 });
             });
