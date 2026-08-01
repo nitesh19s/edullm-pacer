@@ -227,7 +227,11 @@ router.get('/sessions/:sessionId', (req, res, next) => {
  */
 router.get('/sessions', (req, res) => {
     const all = sessions.all();
-    res.json({ success: true, data: all, total: all.length });
+    const withTitles = all.map(s => {
+        const first = messages.bySession(s.id).find(m => m.role === 'user');
+        return { ...s, title: first ? first.content.slice(0, 60) : null };
+    });
+    res.json({ success: true, data: withTitles, total: withTitles.length });
 });
 
 /**
