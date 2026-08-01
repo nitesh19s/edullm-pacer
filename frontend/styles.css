@@ -632,6 +632,33 @@ a.nav-link.active {
 .chat-header-right {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
+}
+
+/* History button inside the dark chat header — match filter-select styling */
+.chat-header-right .btn-icon {
+    width: auto;
+    height: 32px;
+    padding: 0 0.6rem;
+    background: hsl(var(--primary-foreground) / 0.15);
+    border: 1px solid hsl(var(--primary-foreground) / 0.2);
+    color: hsl(var(--primary-foreground));
+    border-radius: 6px;
+    transform: none;
+}
+.chat-header-right .btn-icon:hover {
+    background: hsl(var(--primary-foreground) / 0.25);
+    border-color: hsl(var(--primary-foreground) / 0.35);
+    transform: none;
+}
+
+/* CAS toggle on dark header */
+.chat-header-right .cas-toggle-label {
+    color: hsl(var(--primary-foreground) / 0.85);
+    gap: 5px;
+}
+.chat-header-right .cas-toggle-label input[type="checkbox"]:checked + .cas-toggle-text {
+    color: hsl(var(--primary-foreground));
 }
 
 .filter-quick {
