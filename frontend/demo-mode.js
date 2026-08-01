@@ -212,14 +212,15 @@ html.demo-mode .chat-input-area {
 
 /* ===== HEADER ADDITIONS ===== */
 .demo-research-link {
-    display: inline-flex; align-items: center; gap: .35rem;
-    font-size: .8rem; color: #64748b; text-decoration: none;
-    padding: .28rem .65rem;
-    border: 1px solid #e2e8f0; border-radius: .375rem;
-    white-space: nowrap;
-    transition: all .12s;
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: #2563eb; color: #fff;
+    font-size: .78rem; font-weight: 600;
+    padding: .3rem .85rem; border-radius: 999px;
+    text-decoration: none; white-space: nowrap;
+    transition: background .15s;
+    border: none;
 }
-.demo-research-link:hover { color: #1e293b; background: #f1f5f9; }
+.demo-research-link:hover { background: #1d4ed8; color: #fff; }
     `;
     document.head.appendChild(style);
     document.documentElement.classList.add('demo-mode');
