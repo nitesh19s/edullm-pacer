@@ -370,11 +370,15 @@ html.demo-mode .chat-input-area {
                   '<div class="demo-suggestions">' + chips + '</div>' +
                 '</div>';
 
-            // Wire chip clicks
+            // Wire chip clicks — fill input and send immediately
             bar.querySelectorAll('.demo-chip').forEach(function (chip) {
                 chip.addEventListener('click', function () {
                     var inp = document.getElementById('chatInput');
-                    if (inp) { inp.value = chip.dataset.q; inp.focus(); }
+                    var btn = document.getElementById('sendButton');
+                    if (!inp) return;
+                    inp.value = chip.dataset.q;
+                    inp.dispatchEvent(new Event('input', { bubbles: true }));
+                    if (btn) btn.click();
                 });
             });
 
