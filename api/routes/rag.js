@@ -77,7 +77,7 @@ function searchVectorStore(queryEmbedding, { collectionId, topK = 5, fetchK } = 
     const docs = documents.allWithEmbeddings(collectionId || null);
     return docs
         .map(doc => ({ doc, similarity: cosineSimilarity(queryEmbedding, doc.embedding) }))
-        .filter(r => r.similarity > 0.3)
+        .filter(r => r.similarity > 0.2)
         .sort((a, b) => b.similarity - a.similarity)
         .slice(0, limit)
         .map(r => {
@@ -98,20 +98,21 @@ function buildPrompt(message, retrievedDocs, context = {}) {
         : '';
 
     const contextBlock = retrievedDocs.length
-        ? 'Relevant context from NCERT knowledge base:\n' +
+        ? 'Relevant excerpts from NCERT textbooks:\n' +
           retrievedDocs.map((d, i) => `[${i + 1}] ${d.text.slice(0, 600)}`).join('\n\n') +
-          '\n\nUsing the above context where relevant, answer the following question:'
-        : 'Answer the following question based on NCERT curriculum:';
+          '\n\nUsing the above excerpts where helpful, answer the student\'s question:'
+        : 'Answer the following question using your knowledge of the Indian NCERT school curriculum. Give a complete, accurate explanation as an experienced NCERT teacher would:';
 
     return [
-        'You are an expert NCERT teacher for Indian students.',
+        'You are an experienced NCERT teacher helping Indian school students understand their curriculum.',
+        'Always give a clear, complete answer. Never say you cannot find information — use your curriculum knowledge to explain.',
         subjectLine,
         '',
         contextBlock,
         '',
-        `Question: ${message}`,
+        `Student question: ${message}`,
         '',
-        'Provide a clear, accurate, curriculum-aligned answer in student-friendly language.'
+        'Answer in simple, student-friendly language. Be thorough but concise.'
     ].filter(Boolean).join('\n');
 }
 
@@ -166,7 +167,11 @@ router.post('/chat', async (req, res, next) => {
         console.warn(`[RAG] Embedding failed, answering without context: ${err.message}`);
     }
 
-    const prompt = buildPrompt(message, retrievedDocs, context || {});
+    // Only pass context to LLM if it's actually relevant — noisy low-similarity
+    // docs confuse the model more than no context at all.
+    const MIN_CONTEXT_SIM = 0.4;
+    const contextDocs = retrievedDocs.filter(d => (d.similarity || 0) >= MIN_CONTEXT_SIM);
+    const prompt = buildPrompt(message, contextDocs, context || {});
 
     let generatedText, modelUsed, tokensUsed;
     try {
