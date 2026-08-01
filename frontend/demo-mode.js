@@ -209,13 +209,6 @@ html.demo-mode .chat-input-area {
 }
 
 /* ===== HEADER ADDITIONS ===== */
-.demo-badge {
-    display: inline-flex; align-items: center; gap: .35rem;
-    background: #2563eb; color: #fff;
-    font-size: .71rem; font-weight: 700; letter-spacing: .04em;
-    padding: .24rem .7rem; border-radius: 999px;
-    white-space: nowrap;
-}
 .demo-research-link {
     display: inline-flex; align-items: center; gap: .35rem;
     font-size: .8rem; color: #64748b; text-decoration: none;
@@ -231,19 +224,13 @@ html.demo-mode .chat-input-area {
 
     // ── DOM modifications after parse ─────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
-        // 1. Header: badge + research-view link
+        // 1. Header: only the Research View link (no Student Demo badge — you're already here)
         var hc = document.querySelector('.header-content');
         if (hc) {
-            var badge = document.createElement('span');
-            badge.className = 'demo-badge';
-            badge.innerHTML = '<i class="fas fa-graduation-cap"></i>&nbsp;Student Demo';
-
             var link = document.createElement('a');
             link.href = './';
             link.className = 'demo-research-link';
             link.innerHTML = '<i class="fas fa-flask"></i> Research View';
-
-            hc.appendChild(badge);
             hc.appendChild(link);
         }
 
