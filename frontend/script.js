@@ -275,6 +275,35 @@ class EduLLMPlatform {
             });
         }
 
+        // CAS toggle
+        const casToggle = document.getElementById('casToggle');
+        if (casToggle) {
+            casToggle.addEventListener('change', () => {
+                const label = casToggle.closest('.cas-toggle-label');
+                if (label) label.title = casToggle.checked
+                    ? 'CAS reranking ON — pedagogical grade & Bloom alignment active'
+                    : 'CAS reranking OFF — cosine similarity only';
+            });
+        }
+
+        // Session history panel
+        const historyBtn      = document.getElementById('chatHistoryBtn');
+        const historyPanel    = document.getElementById('sessionHistoryPanel');
+        const closeHistoryBtn = document.getElementById('closeSessionHistory');
+
+        if (historyBtn && historyPanel) {
+            historyBtn.addEventListener('click', async () => {
+                const isOpen = historyPanel.style.display !== 'none';
+                historyPanel.style.display = isOpen ? 'none' : 'block';
+                if (!isOpen) await this.loadSessionHistory();
+            });
+        }
+        if (closeHistoryBtn && historyPanel) {
+            closeHistoryBtn.addEventListener('click', () => {
+                historyPanel.style.display = 'none';
+            });
+        }
+
         // Filter events
         ['subjectFilter', 'gradeFilter', 'sourceFilter'].forEach(filterId => {
             const filter = document.getElementById(filterId);
@@ -467,9 +496,7 @@ class EduLLMPlatform {
             ]);
             if (ragStats.success) {
                 this.statistics.queriesProcessed = ragStats.data.totalMessages || 0;
-                if (ragStats.data.averageResponseTime > 0) {
-                    this.statistics.avgResponseTime = ragStats.data.averageResponseTime / 1000;
-                }
+                // averageResponseTime is not in /rag/stats; it's tracked per-chat response
             }
             if (vectorStats.success) {
                 this.statistics.documentsIndexed = vectorStats.data.totalDocuments || 0;
@@ -519,6 +546,7 @@ class EduLLMPlatform {
             if (this.backendAvailable && this.apiClient) {
                 try {
                     const filters = this.getCurrentFilters();
+                    const casEnabled = document.getElementById('casToggle')?.checked !== false;
                     const payload = {
                         message,
                         sessionId: this.backendSessionId || undefined,
@@ -527,7 +555,7 @@ class EduLLMPlatform {
                             grade:      filters.grade ? parseInt(filters.grade) : undefined,
                             bloomLevel: this._inferBloomLevel(message)
                         },
-                        retrievalConfig: { topK: 5 }
+                        retrievalConfig: { topK: 5, disableCAS: !casEnabled }
                     };
 
                     const result = await this.apiClient.sendMessage(payload);
@@ -557,6 +585,21 @@ class EduLLMPlatform {
                         this.statistics.accuracyRate    = ctx.length > 0 ? 94 : 80;
                         this.hideTypingIndicator();
                         this.addMessageToChat(response.text, 'assistant', response.sources);
+
+                        // Auto-track as a learning interaction for progression analytics
+                        if (window.researchFeaturesManager) {
+                            const f = this.getCurrentFilters();
+                            window.researchFeaturesManager.trackLearningInteraction({
+                                conceptId:    message.trim().toLowerCase().replace(/\W+/g, '_').slice(0, 60),
+                                conceptName:  message.slice(0, 80),
+                                subject:      f.subject !== 'all' ? f.subject : 'General',
+                                grade:        f.grade ? parseInt(f.grade) : undefined,
+                                success:      true,
+                                responseTime: msg.metadata?.responseTime || 0,
+                                confidence:   ctx.length > 0 ? 0.92 : 0.75
+                            });
+                        }
+
                         input.value = '';
                         return;
                     }
@@ -786,6 +829,60 @@ class EduLLMPlatform {
             grade: gradeFilter && gradeFilter.value !== 'all' ? gradeFilter.value : null,
             source: sourceFilter && sourceFilter.value !== 'all' ? sourceFilter.value : null
         };
+    }
+
+    async loadSessionHistory() {
+        const listEl = document.getElementById('sessionHistoryList');
+        if (!listEl) return;
+        if (!this.backendAvailable || !this.apiClient) {
+            listEl.innerHTML = '<p class="text-muted" style="padding:8px 12px;font-size:0.82rem">Backend not connected.</p>';
+            return;
+        }
+        try {
+            const resp = await this.apiClient.getChatSessions();
+            const sessions = resp.data || [];
+            if (sessions.length === 0) {
+                listEl.innerHTML = '<p class="text-muted" style="padding:8px 12px;font-size:0.82rem">No previous sessions.</p>';
+                return;
+            }
+            listEl.innerHTML = sessions.slice(0, 20).map(s => {
+                const date    = new Date(s.lastActivity || s.createdAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' });
+                const preview = `${s.messageCount || 0} message${s.messageCount !== 1 ? 's' : ''} · ${s.id.slice(0, 8)}`;
+                return `<div class="session-history-item" data-session-id="${s.id}">
+                    <i class="fas fa-comment-dots" style="color:hsl(var(--primary));font-size:0.75rem;flex-shrink:0"></i>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${preview}</span>
+                    <span class="session-date">${date}</span>
+                </div>`;
+            }).join('');
+
+            listEl.querySelectorAll('.session-history-item').forEach(el => {
+                el.addEventListener('click', () => this.loadSession(el.dataset.sessionId));
+            });
+        } catch (e) {
+            listEl.innerHTML = '<p class="text-muted" style="padding:8px 12px;font-size:0.82rem">Could not load sessions.</p>';
+        }
+    }
+
+    async loadSession(sessionId) {
+        if (!this.apiClient) return;
+        try {
+            const resp = await this.apiClient.getChatSession(sessionId);
+            const messages = resp.data?.history || [];
+            if (messages.length === 0) return;
+
+            const chatMessages = document.getElementById('chatMessages');
+            // Clear current chat
+            chatMessages.innerHTML = '<div class="message-date">Restored session</div>';
+            messages.forEach(m => {
+                this.addMessageToChat(m.content, m.role === 'assistant' ? 'assistant' : 'user');
+            });
+            // Resume this session
+            this.backendSessionId = sessionId;
+            document.getElementById('sessionHistoryPanel').style.display = 'none';
+            this.showNotification('Session restored', 'success');
+        } catch (e) {
+            this.showNotification('Could not load session', 'error');
+        }
     }
 
     generateFallbackResponse(query) {

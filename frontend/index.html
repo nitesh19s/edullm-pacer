@@ -594,6 +594,13 @@
                             </div>
                         </div>
                         <div class="chat-header-right">
+                            <label class="cas-toggle-label" title="Pedagogical CAS reranking — grades &amp; Bloom alignment">
+                                <input type="checkbox" id="casToggle" checked>
+                                <span class="cas-toggle-text">CAS</span>
+                            </label>
+                            <button id="chatHistoryBtn" class="btn-icon" title="Previous sessions">
+                                <i class="fas fa-history"></i>
+                            </button>
                             <div class="filter-quick">
                                 <select id="subjectFilter" class="filter-select">
                                     <option value="all">All Subjects</option>
@@ -659,6 +666,17 @@
                         </div>
                         <div class="typing-dots">
                             <span></span><span></span><span></span>
+                        </div>
+                    </div>
+
+                    <!-- Session History Panel -->
+                    <div id="sessionHistoryPanel" class="session-history-panel" style="display:none;">
+                        <div class="session-history-header">
+                            <span><i class="fas fa-history"></i> Previous sessions</span>
+                            <button id="closeSessionHistory" class="btn-icon"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div id="sessionHistoryList" class="session-history-list">
+                            <p class="text-muted" style="padding:8px 12px;font-size:0.82rem">Loading...</p>
                         </div>
                     </div>
 

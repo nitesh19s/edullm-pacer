@@ -721,8 +721,37 @@ function initABTesting() {
                     <thead><tr><th>Condition</th><th>MRR</th><th>nDCG@10</th><th>CAS</th><th>Chunks</th><th>Latency</th><th>Note</th></tr></thead>
                     <tbody>${tableRows}</tbody>
                 </table>
+                <div id="liveAblationBanner" style="font-size:0.78rem;color:hsl(var(--muted-foreground));margin-bottom:10px">
+                    Live CAS reranking results: <span id="liveAblationCAS">loading…</span>
+                </div>
                 <canvas id="abTestChart_ablation" style="max-height:240px"></canvas>
             `;
+
+            // Fetch live ablation results from backend
+            const apiClient = window.eduLLM?.apiClient;
+            if (apiClient) {
+                apiClient.getAblationLatest().then(resp => {
+                    const banner = document.getElementById('liveAblationCAS');
+                    if (!banner) return;
+                    const conds = resp.data?.experiment?.metrics?.conditions;
+                    if (conds) {
+                        const full = conds['PACER-Full']?.meanAvgCAS;
+                        const base = conds['A3-Baseline']?.meanAvgCAS;
+                        if (full != null && base != null) {
+                            const delta = ((full - base) / base * 100).toFixed(1);
+                            banner.innerHTML = `PACER-Full avg CAS <strong>${full.toFixed(4)}</strong> vs Baseline <strong>${base.toFixed(4)}</strong> — <span style="color:#10b981">+${delta}% improvement</span> (n=${resp.data?.experiment?.config?.nQueries || 20} queries, nomic-embed-text)`;
+                        } else {
+                            banner.textContent = 'No data yet — run node api/scripts/run-ablation.js to generate';
+                        }
+                    }
+                }).catch(() => {
+                    const banner = document.getElementById('liveAblationCAS');
+                    if (banner) banner.textContent = 'Backend not connected';
+                });
+            } else {
+                const banner = document.getElementById('liveAblationCAS');
+                if (banner) banner.textContent = 'Backend not connected';
+            }
 
             makeChart('abTestChart_ablation', {
                 type: 'bar',
