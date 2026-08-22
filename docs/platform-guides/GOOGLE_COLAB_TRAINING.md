@@ -1,18 +1,23 @@
 # Google Colab Fine-tuning Guide
 
-## Quick Start: Fine-tune NCERT Model in 3 Hours
+## Quick Start: Fine-tune NCERT Model
 
-Your dataset is ready! This guide will help you fine-tune a llama3.2 model on Google Colab's free T4 GPU using Unsloth (2x faster training).
+Your dataset is ready! This guide will help you fine-tune a Mistral 7B model on Google Colab's free T4 GPU.
 
 **What you have:**
-- ✅ 56 training Q&A pairs (ncert_qa_train.json)
-- ✅ 14 test Q&A pairs (ncert_qa_test.json)
+- ✅ 7,794 training Q&A pairs (ncert_qa_train.json) — Math, Science, Social Science, Grades 7-10
+- ✅ 867 test Q&A pairs (ncert_qa_test.json)
 - ✅ Alpaca format (instruction/input/output)
 
 **What you'll get:**
 - 🎯 Fine-tuned "ncert-edu" model
 - 📦 GGUF format for Ollama
 - 🚀 Ready to deploy locally
+
+**Time estimates on free T4 GPU:**
+- Mistral 7B, 1 epoch: ~1.5–2 hours (recommended for free Colab)
+- Mistral 7B, 2 epochs: ~3–4 hours
+- TinyLlama 1.1B, 2 epochs: ~30–45 minutes (faster, lower quality)
 
 ---
 
@@ -52,8 +57,8 @@ Copy and run this in the first cell (RECOMMENDED - Most Reliable):
 ## Step 3: Upload Your Dataset
 
 Click the folder icon 📁 on the left sidebar, then upload:
-- `ncert_qa_train.json`
-- `ncert_qa_test.json`
+- `ncert_qa_train.json` (~7,794 pairs, ~15 MB)
+- `ncert_qa_test.json` (~867 pairs, ~1.7 MB)
 
 Or use this code to upload:
 
@@ -183,8 +188,8 @@ dataset = load_dataset("json", data_files={
     "test": "ncert_qa_test.json"
 })
 
-print(f"Training examples: {len(dataset['train'])}")
-print(f"Test examples: {len(dataset['test'])}")
+print(f"Training examples: {len(dataset['train'])}")   # expect 7794
+print(f"Test examples: {len(dataset['test'])}")        # expect 867
 
 # Format function for Alpaca-style prompts
 alpaca_prompt = """Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
@@ -254,18 +259,20 @@ class DataCollatorForCompletionOnlyLM:
         return batch
 
 # Create training arguments
+# num_train_epochs=1 is safe for free T4 (~1.5-2 hrs on 7794 examples).
+# Increase to 2 if your Colab session stays alive, or use Colab Pro.
 training_args = TrainingArguments(
     per_device_train_batch_size=2,
     gradient_accumulation_steps=4,
-    warmup_steps=10,
-    num_train_epochs=2,
+    warmup_steps=100,
+    num_train_epochs=1,
     learning_rate=2e-4,
     fp16=not torch.cuda.is_bf16_supported(),
     bf16=torch.cuda.is_bf16_supported(),
-    logging_steps=10,
+    logging_steps=50,
     eval_strategy="steps",
-    eval_steps=30,
-    save_steps=30,
+    eval_steps=200,
+    save_steps=200,
     save_strategy="steps",
     output_dir="outputs",
     optim="adamw_8bit",
@@ -289,8 +296,8 @@ trainer = Trainer(
 
 print("✅ Trainer configured!")
 print(f"📊 Training: {len(tokenized_dataset['train'])} examples, {len(tokenized_dataset['test'])} test examples")
-print(f"📊 Will train for 2 epochs")
-print(f"⏱️  Estimated time: 60-75 minutes on T4 GPU (Mistral 7B)")
+print(f"📊 Will train for 1 epoch")
+print(f"⏱️  Estimated time: 1.5–2 hours on T4 GPU (Mistral 7B)")
 ```
 
 ---
@@ -306,8 +313,8 @@ print(f"💾 GPU memory: {start_gpu_memory} GB / {max_memory} GB")
 
 # Start training
 print("🚀 Starting training...")
-print(f"📊 Training for 2 epochs on {len(tokenized_dataset['train'])} examples")
-print(f"⏱️  Estimated time: 60-75 minutes\n")
+print(f"📊 Training for 1 epoch on {len(tokenized_dataset['train'])} examples")
+print(f"⏱️  Estimated time: 1.5–2 hours on T4 GPU\n")
 
 trainer_stats = trainer.train()
 
@@ -323,10 +330,10 @@ print(f"🎯 Final training loss: {trainer_stats.metrics['train_loss']:.4f}")
 ```
 
 **What you should see:**
-- Progress bars showing training steps
+- Progress bars showing training steps (~3,897 steps for 1 epoch)
 - Loss decreasing over time (start ~2.0, end ~0.5-1.0)
 - GPU memory usage ~12-13 GB
-- Training time: 60-75 minutes for Mistral 7B
+- Training time: 1.5–2 hours for Mistral 7B on free T4
 
 ---
 
@@ -538,14 +545,15 @@ gradient_accumulation_steps = 8,  # Changed from 4
 ```
 
 ### Training too slow
-**Current setup:** ~30-45 minutes for 56 examples
-**If slower:** Check GPU is enabled (Runtime → Change runtime type)
+**Current setup:** ~1.5–2 hours for 7,794 examples (1 epoch, Mistral 7B, free T4)
+**If slower:** Check GPU is enabled (Runtime → Change runtime type → T4 GPU)
+**For faster runs:** Switch to TinyLlama (~30–45 min for 1 epoch) — still good quality
 
 ### Model quality not good enough
 **Try:**
-1. Increase `max_steps` to 240 (4 epochs)
-2. Generate more training data (aim for 200-300 examples)
-3. Review and improve answer quality in dataset
+1. Train for 2 epochs (set `num_train_epochs=2`, expect ~3–4 hours on T4)
+2. Use Colab Pro (A100 GPU — ~30 min for 2 epochs on the full dataset)
+3. Review a sample of answers in the dataset and remove low-quality ones
 
 ### Download fails in Colab
 **Alternative:** Mount Google Drive first:
@@ -565,10 +573,10 @@ model.save_pretrained_gguf(
 
 ## Next Steps After Fine-tuning
 
-1. **Compare performance:** Test base llama3.2 vs ncert-edu on same questions
-2. **Evaluate on test set:** Run all 14 test questions through both models
+1. **Compare performance:** Test base `llama3:latest` vs `ncert-edu` on same questions
+2. **Evaluate on test set:** Run all 867 test questions through both models
 3. **Measure improvement:** Check answer quality, accuracy, curriculum alignment
-4. **Iterate:** Based on results, adjust training or add more data
+4. **Iterate:** If quality is good with 1 epoch, retrain with 2 epochs for further gains
 
 ---
 
@@ -577,7 +585,7 @@ model.save_pretrained_gguf(
 **Training metrics you should see:**
 - Initial loss: ~2.5-3.0
 - Final loss: ~0.5-1.0 (good convergence)
-- Training time: 30-45 minutes
+- Training time: 1.5–2 hours (1 epoch, Mistral 7B, free T4)
 
 **Model behavior changes:**
 - ✅ More curriculum-aligned answers
@@ -594,10 +602,10 @@ model.save_pretrained_gguf(
 
 ## Cost Breakdown
 
-- Google Colab T4 GPU: **$0** (free tier)
+- Google Colab T4 GPU: **$0** (free tier, 1 epoch ~1.5–2 hrs)
 - Unsloth library: **$0** (open source)
-- Training time: **30-45 minutes**
-- Total cost: **$0** ✅
+- Training time: **1.5–2 hours** (free T4) | **~30 min** (Colab Pro A100)
+- Total cost: **$0** (free tier) ✅
 
 ---
 
@@ -611,7 +619,7 @@ ollama list
 ollama run ncert-edu "Explain photosynthesis"
 
 # Compare with base model
-ollama run llama3.2 "Explain photosynthesis"
+ollama run llama3:latest "Explain photosynthesis"
 
 # Remove old model if needed
 ollama rm ncert-edu
