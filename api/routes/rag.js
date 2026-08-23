@@ -93,27 +93,28 @@ function searchVectorStore(queryEmbedding, { collectionId, topK = 5, fetchK } = 
 }
 
 function buildPrompt(message, retrievedDocs, context = {}) {
-    const subjectLine = context.subject
-        ? `Subject: ${context.subject}${context.grade ? ` | Grade: ${context.grade}` : ''}${context.topic ? ` | Topic: ${context.topic}` : ''}`
+    const grade   = context.grade   ? `Class ${context.grade}` : '9';
+    const subject = context.subject || 'Science';
+
+    const instruction = `Answer the following question based on NCERT ${grade} ${subject} curriculum.`;
+
+    const contextSnippet = retrievedDocs.length
+        ? '\n\nContext from NCERT textbook:\n' +
+          retrievedDocs.map((d, i) => `[${i + 1}] ${d.text.slice(0, 500)}`).join('\n\n')
         : '';
 
-    const contextBlock = retrievedDocs.length
-        ? 'Relevant excerpts from NCERT textbooks:\n' +
-          retrievedDocs.map((d, i) => `[${i + 1}] ${d.text.slice(0, 600)}`).join('\n\n') +
-          '\n\nUsing the above excerpts where helpful, answer the student\'s question:'
-        : 'Answer the following question using your knowledge of the Indian NCERT school curriculum. Give a complete, accurate explanation as an experienced NCERT teacher would:';
+    const input = `${message}${contextSnippet}`;
 
-    return [
-        'You are an experienced NCERT teacher helping Indian school students understand their curriculum.',
-        'Always give a clear, complete answer. Never say you cannot find information — use your curriculum knowledge to explain.',
-        subjectLine,
-        '',
-        contextBlock,
-        '',
-        `Student question: ${message}`,
-        '',
-        'Answer in simple, student-friendly language. Be thorough but concise.'
-    ].filter(Boolean).join('\n');
+    return `Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
+
+### Instruction:
+${instruction}
+
+### Input:
+${input}
+
+### Response:
+`;
 }
 
 // ── routes ────────────────────────────────────────────────────────────────────

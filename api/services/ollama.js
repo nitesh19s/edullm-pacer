@@ -4,7 +4,7 @@
  */
 
 const OLLAMA_URL         = process.env.OLLAMA_URL         || 'http://localhost:11434';
-const OLLAMA_MODEL       = process.env.OLLAMA_MODEL       || 'llama3.2';
+const OLLAMA_MODEL       = process.env.OLLAMA_MODEL       || 'ncert-edu';
 const OLLAMA_EMBED_MODEL = process.env.OLLAMA_EMBED_MODEL || 'nomic-embed-text';
 const OLLAMA_TIMEOUT_MS  = parseInt(process.env.OLLAMA_TIMEOUT_MS || '120000');
 
